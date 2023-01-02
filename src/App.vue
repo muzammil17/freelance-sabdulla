@@ -1,23 +1,46 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="glossy">
+  <q-layout view="hHh Lpr lF">
+    <q-header class="glossy">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-          icon="menu"
-        />
+        <q-toolbar-title>
+          <q-btn
+            flat
+            dense
+            round
+            @click="leftDrawerOpen = !leftDrawerOpen"
+            aria-label="Menu"
+            icon="menu"
+          />
+          <!-- <span class="icon-wrapper">
+            <span>
+              <img
+                width="80"
+                src="https://www.ribat.com.pk/wp-content/uploads/2022/01/Ribat-Logo.png"
+              />
+            </span>
+          </span> -->
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+          <!-- Quasar App  -->
+        </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <span class="icon-wrapper">
+          <span>
+            <img
+              width="80"
+              src="https://www.ribat.com.pk/wp-content/uploads/2022/01/Ribat-Logo.png"
+            />
+          </span>
+        </span>
+        <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-grey-2">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      class="bg-white-2"
+    >
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
         <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
@@ -112,3 +135,29 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.icon-wrapper {
+  // // display: flex;
+  // height: 100%;
+  // // z-index: 99999;
+  // position: relative;
+  // span {
+  //   position: absolute;
+  // }
+  span {
+    // display: flex;
+    margin-left: 50px;
+    img {
+      background-color: #fff !important;
+      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  }
+}
+.toolbar-custom-wrapper {
+  box-shadow: 0px;
+}
+</style>
