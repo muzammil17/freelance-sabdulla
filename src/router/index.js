@@ -1,20 +1,40 @@
 import { createRouter, createWebHistory } from "vue-router";
+import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
+import { store } from "@/store/store";
+import { computed } from "vue";
+import { IS_AUTHENTICATED } from "@/action/actionTypes";
+
+const IsAuthenticated = computed(() => {
+  return store.getters[IS_AUTHENTICATED];
+});
 
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: HomeView,
+    redirect: "/login",
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/login",
+    name: "Login",
+    component: LoginView,
+    beforeEnter: (to, from, next) => {
+      if (IsAuthenticated.value) next("/dashboard");
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: HomeView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next("/login");
+      else {
+        next();
+      }
+    },
   },
 ];
 

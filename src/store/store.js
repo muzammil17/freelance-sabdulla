@@ -16,5 +16,5 @@ export const store = createStore({
     user: userModule,
   },
 
-  // plugins: [vuexLocal.plugin],
+  plugins: [vuexLocal.plugin],
 });

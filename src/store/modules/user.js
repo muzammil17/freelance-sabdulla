@@ -1,12 +1,20 @@
-import { GET_USER_TOKEN, LOGIN_SUCCESS } from "@/action/actionTypes";
+import {
+  GET_USER_TOKEN,
+  IS_AUTHENTICATED,
+  LOGIN_SUCCESS,
+} from "@/action/actionTypes";
+import { loginRequest } from "@/action";
 
 export const userModule = {
   state: () => ({
     user: null,
+    authenticated: false,
   }),
   mutations: {
     [LOGIN_SUCCESS]: (state, payload) => {
+      console.log("payload", payload);
       state.user = payload;
+      state.authenticated = true;
     },
   },
 
@@ -14,7 +22,10 @@ export const userModule = {
     [GET_USER_TOKEN]: (state) => {
       return state.user;
     },
+    [IS_AUTHENTICATED]: (state) => {
+      return state.authenticated;
+    },
   },
 
-  actions: {},
+  actions: { loginRequest },
 };
