@@ -7,10 +7,12 @@
             flat
             dense
             round
-            @click="leftDrawerOpen = !leftDrawerOpen"
+            @click="toggleLeftDrawerOpen"
             aria-label="Menu"
             icon="menu"
           />
+
+          {{ leftDrawerOpen }}
           <!-- <span class="icon-wrapper">
             <span>
               <img
@@ -35,7 +37,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
+    <!-- <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -109,7 +111,9 @@
           </q-item-section>
         </q-item>
       </q-list>
-    </q-drawer>
+    </q-drawer> -->
+
+    <DrawerView :leftDrawerOpen="leftDrawerOpen" />
 
     <q-page-container>
       <HelloWorld />
@@ -119,6 +123,7 @@
 
 <script>
 import { ref } from "vue";
+import DrawerView from "./components/drawer/DrawerView.vue";
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
@@ -126,11 +131,23 @@ export default {
 
   components: {
     HelloWorld,
+    DrawerView,
   },
 
   setup() {
+    const leftDrawerOpen = ref(false);
+
+    console.log({ leftDrawerOpen });
+
+    const toggleLeftDrawerOpen = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    };
+
     return {
-      leftDrawerOpen: ref(false),
+      leftDrawerOpen,
+
+      // functions
+      toggleLeftDrawerOpen,
     };
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-white-2">
+  <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-2">
     <q-list>
       <q-item-label header>Essential Links</q-item-label>
       <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
@@ -59,26 +59,21 @@
       </q-item>
     </q-list>
   </q-drawer>
+
+  {{ leftDrawerOpen }}
 </template>
 
 <script>
-import { defineProps } from "vue";
+import { defineComponent } from "vue";
 
 // import { ref } from "vue";s
 
-export default {
-  // props: ["leftDrawerOpen"],
+export default defineComponent({
   name: "DrawerView",
-
+  props: ["leftDrawerOpen"],
   components: {},
   setup() {
-    defineProps(["leftDrawerOpen"]);
-    // console.log("props", props);
-    // console.log("leftDrawerOpen", leftDrawerOpen);
-
-    return {
-      // leftDrawerOpened,
-    };
+    return {};
   },
-};
+});
 </script>
