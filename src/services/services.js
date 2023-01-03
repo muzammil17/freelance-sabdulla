@@ -30,12 +30,15 @@ export const deleteCall = async (url, headers) =>
 export const postCall = async (url, data, headers) =>
   new Promise(async (resolve, reject) => {
     try {
+      console.log("data", data);
       const response = await axios.post(`${API_URL}${url}`, data, {
         headers: headers ? { ...headers } : {},
       });
-
+      console.log("response", response);
       resolve(response);
     } catch (e) {
+      console.log("err", e);
+
       reject(e);
     }
   });

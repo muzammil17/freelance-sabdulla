@@ -17,6 +17,6 @@ export const loginRequest = async (context, { payload, responseCallback }) => {
     return result;
   } catch (error) {
     //   alert(messages["toast-msgs"]["error"], error.response.data.message)
-    console.log("error", error.response.data);
+    console.log("error", error);
   }
 };

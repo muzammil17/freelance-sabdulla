@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import { store } from "@/store/store";
 import { computed } from "vue";
 import { IS_AUTHENTICATED } from "@/action/actionTypes";
+import { DASHBOARD_VIEW_URL, LOGIN_VIEW_URL } from "@/constants";
 
 const IsAuthenticated = computed(() => {
   return store.getters[IS_AUTHENTICATED];
@@ -12,10 +13,10 @@ const IsAuthenticated = computed(() => {
 const routes = [
   {
     path: "/",
-    redirect: "/login",
+    redirect: LOGIN_VIEW_URL,
   },
   {
-    path: "/login",
+    path: LOGIN_VIEW_URL,
     name: "Login",
     component: LoginView,
     beforeEnter: (to, from, next) => {
@@ -26,11 +27,11 @@ const routes = [
     },
   },
   {
-    path: "/dashboard",
+    path: DASHBOARD_VIEW_URL,
     name: "Dashboard",
     component: HomeView,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next("/login");
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
       else {
         next();
       }
