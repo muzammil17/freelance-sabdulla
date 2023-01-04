@@ -35,7 +35,15 @@ import {
   IS_AUTHENTICATED,
   LOGOUT_SUCCESS,
 } from "@/action/actionTypes";
-import { QDrawer, QList, QIcon, QItem, QItemSection, QItemLabel } from "quasar";
+import {
+  QDrawer,
+  QList,
+  QIcon,
+  QItem,
+  QItemSection,
+  QItemLabel,
+  useQuasar,
+} from "quasar";
 import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -47,9 +55,12 @@ export default defineComponent({
   components: { QDrawer, QList, QIcon, QItem, QItemSection, QItemLabel },
   setup() {
     const $store = useStore();
+    const $q = useQuasar();
+
     const $router = useRouter();
     const handleLogout = () => {
       console.log("logout");
+      toastMessage("Logout Successfully", true);
       $store.commit(LOGOUT_SUCCESS);
       $router.replace(LOGIN_VIEW_URL);
     };
@@ -68,8 +79,18 @@ export default defineComponent({
     const handleRoute = (url) => {
       $router.push(url);
     };
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
 
-    console.log("getPrivateMenu", getPrivateMenu);
+        position: "top",
+        timeout: 2000,
+      });
+    };
+
     return {
       //GETTERS
       getPublicMenu,
@@ -78,6 +99,7 @@ export default defineComponent({
       //handlers
       handleRoute,
       handleLogout,
+      toastMessage,
     };
   },
 });

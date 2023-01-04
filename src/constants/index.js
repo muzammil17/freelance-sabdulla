@@ -1,8 +1,13 @@
-export const API_URL = "http://api.ribat.com.pk/";
+export const API_URL = "https://api.ribat.com.pk/";
 
 export const LOGIN_URL = {
   url: "v1/Authenticate",
-  accessToken: false,
+  accesstoken: false,
+  headers: false,
+};
+export const GET_USER_ALLOWED_MENU_URL = {
+  url: "v1/UserAccount/GetUserAllowedMenus",
+  accesstoken: true,
   headers: false,
 };
 

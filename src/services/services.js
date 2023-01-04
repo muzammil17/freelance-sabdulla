@@ -1,12 +1,31 @@
 /* eslint-disable */
+import { GET_JWT_TOKEN } from "@/action/actionTypes";
 import { API_URL } from "@/constants";
+import { store } from "@/store/store";
 import axios from "axios";
+import { computed } from "vue";
 
-export const getCall = async (url, headers) =>
+const USER_TOKEN = computed(() => {
+  return store.getters[GET_JWT_TOKEN];
+});
+const token = (value) => {
+  return {
+    Authorization: `Bearer ${value}`,
+  };
+};
+export const getCall = async (urlObj, headers) =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await axios.get(`${API_URL}${url}`, {
-        headers: headers ? { ...headers } : {},
+      const response = await axios.get(`${API_URL}${urlObj.url}`, {
+        headers: headers
+          ? {
+              ...headers,
+            }
+          : {
+              ...(urlObj?.accesstoken
+                ? { Authorization: `Bearer ${USER_TOKEN.value}` }
+                : {}),
+            },
       });
 
       resolve(response);
@@ -14,11 +33,17 @@ export const getCall = async (url, headers) =>
       reject(e);
     }
   });
-export const deleteCall = async (url, headers) =>
+export const deleteCall = async (urlObj, headers) =>
   new Promise(async (resolve, reject) => {
     try {
       const response = await axios.delete(`${API_URL}${url}`, {
-        headers: headers ? { ...headers } : {},
+        headers: headers
+          ? { ...headers }
+          : {
+              ...(urlObj?.accesstoken
+                ? { Authorization: `Bearer ${USER_TOKEN.value}` }
+                : {}),
+            },
       });
 
       resolve(response);
@@ -27,12 +52,18 @@ export const deleteCall = async (url, headers) =>
     }
   });
 
-export const postCall = async (url, data, headers) =>
+export const postCall = async (urlObj, data = {}, headers) =>
   new Promise(async (resolve, reject) => {
     try {
       console.log("data", data);
-      const response = await axios.post(`${API_URL}${url}`, data, {
-        headers: headers ? { ...headers } : {},
+      const response = await axios.post(`${API_URL}${urlObj.url}`, data, {
+        headers: headers
+          ? { ...headers }
+          : {
+              ...(urlObj?.accesstoken
+                ? { Authorization: `Bearer ${USER_TOKEN.value}` }
+                : {}),
+            },
       });
       console.log("response", response);
       resolve(response);

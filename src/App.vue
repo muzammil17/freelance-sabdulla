@@ -18,13 +18,11 @@
           flat
           dense
           round
-          class=""
+          class="toggle-btn"
           @click="toggleLeftDrawerOpen"
           aria-label="Menu"
           icon="menu"
         />
-
-        <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
 
@@ -48,11 +46,10 @@ export default {
   },
 
   setup() {
-    const leftDrawerOpen = ref(false);
-
-    console.log({ leftDrawerOpen });
+    const leftDrawerOpen = ref(true);
 
     const toggleLeftDrawerOpen = () => {
+      console.log("leftDrawerOpen", leftDrawerOpen.value);
       leftDrawerOpen.value = !leftDrawerOpen.value;
     };
 
@@ -85,6 +82,11 @@ export default {
   }
   .toolbar-custom-wrapper {
     box-shadow: 0px;
+  }
+  .toggle-btn {
+    @media only screen and (min-width: 1008px) {
+      display: none !important;
+    }
   }
 }
 .page-wrapper {

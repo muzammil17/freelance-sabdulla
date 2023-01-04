@@ -55,13 +55,10 @@
 <script>
 import { reactive } from "vue";
 import { useStore } from "vuex";
-import {
-  LOGIN_ACTION_REQUEST,
-  LOGIN_SUCCESS,
-  IS_AUTHENTICATED,
-} from "@/action/actionTypes";
+import { LOGIN_ACTION_REQUEST, IS_AUTHENTICATED } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
 import { DASHBOARD_VIEW_URL } from "@/constants";
+import { useQuasar } from "quasar";
 
 export default {
   name: "LoginView",
@@ -69,6 +66,8 @@ export default {
   components: {},
 
   setup() {
+    const $q = useQuasar();
+
     const formState = reactive({
       userId: "",
       pwd: "",
@@ -82,16 +81,34 @@ export default {
       console.log("values", formState, values.target.value);
       $store.dispatch(LOGIN_ACTION_REQUEST, {
         payload: formState,
-        responseCallback: () => {},
+        responseCallback: (status, res) => {
+          if (status && res) {
+            toastMessage(res.message, true);
+            $router.push(DASHBOARD_VIEW_URL);
+          } else {
+            toastMessage(res.message, false);
+          }
+        },
       });
-      $store.commit(LOGIN_SUCCESS, { data: "user" });
-      $router.push(DASHBOARD_VIEW_URL);
     };
     console.log("$store", $store);
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
+
+        position: "top",
+        timeout: 2000,
+      });
+    };
+
     return {
       //states
       formState,
       //handlers
+      toastMessage,
       onSubmit,
     };
   },

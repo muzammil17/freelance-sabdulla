@@ -1,3 +1,3 @@
 import { loginRequest } from "./user/auth-actions";
-
-export { loginRequest };
+import { getUserAllowedMenusRequest } from "./menu/menu-actions";
+export { loginRequest, getUserAllowedMenusRequest };

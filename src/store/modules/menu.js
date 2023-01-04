@@ -1,5 +1,10 @@
-import { GET_PRIVATE_MENU, GET_PUBLIC_MENU } from "@/action/actionTypes";
+import {
+  GET_PRIVATE_MENU,
+  GET_PUBLIC_MENU,
+  SET_USER_PRIVATE_MENU,
+} from "@/action/actionTypes";
 import { DASHBOARD_VIEW_URL, LOGIN_VIEW_URL } from "@/constants";
+import { getUserAllowedMenusRequest } from "@/action";
 
 export const menuModule = {
   state: () => ({
@@ -8,7 +13,11 @@ export const menuModule = {
       { label: "Register Form", icon: "dashboard", url: DASHBOARD_VIEW_URL },
     ],
   }),
-  mutations: {},
+  mutations: {
+    [SET_USER_PRIVATE_MENU]: (state, payload) => {
+      state.privateMenu = payload;
+    },
+  },
 
   getters: {
     [GET_PRIVATE_MENU]: (state) => {
@@ -19,5 +28,5 @@ export const menuModule = {
     },
   },
 
-  actions: {},
+  actions: { getUserAllowedMenusRequest },
 };

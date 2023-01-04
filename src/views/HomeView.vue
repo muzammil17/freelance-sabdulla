@@ -72,15 +72,23 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import {
+  reactive,
+  computed,
+  onBeforeMount,
+  onMounted,
+  defineComponent,
+} from "vue";
 import { useStore } from "vuex";
 import {
   // LOGIN_ACTION_REQUEST,
   IS_AUTHENTICATED,
+  GET_USER_ALLOWED_MENU_ACTION_REQUEST,
+  GET_USER_DETAIS_GETTER,
 } from "@/action/actionTypes";
 
-export default {
-  name: "LoginView",
+export default defineComponent({
+  name: "HomeView",
 
   components: {},
 
@@ -93,22 +101,39 @@ export default {
     });
     const $store = useStore();
 
-    const isLoggedIn = $store.getters[IS_AUTHENTICATED];
+    const isLoggedIn = computed(() => {
+      return $store.getters[IS_AUTHENTICATED];
+    });
+
+    const getUserGetter = computed(() => {
+      return $store.getters[GET_USER_DETAIS_GETTER];
+    });
+
+    onMounted(() => {
+      console.log("onmounted");
+    });
+    onBeforeMount(() => {
+      console.log("onbeforemounted");
+      $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
+        payload: getUserGetter.value,
+        responseCallback: () => {},
+      });
+    });
+
     console.log("isLoggedIn", isLoggedIn);
     const onSubmit = (values) => {
       console.log("values", formState, values.target.value);
-      // $store.commit(LOGIN_SUCCESS, { data: "user" });
-      // $router.push(DASHBOARD_VIEW_URL);
     };
     console.log("$store", $store);
     return {
       //states
       formState,
+      getUserGetter,
       //handlers
       onSubmit,
     };
   },
-};
+});
 </script>
 <style scoped lang="scss">
 .title {

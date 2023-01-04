@@ -1,22 +1,24 @@
 import { LOGIN_URL } from "@/constants";
 import { postCall } from "@/services/services";
+import { LOGIN_SUCCESS } from "../actionTypes";
 
 export const loginRequest = async (context, { payload, responseCallback }) => {
-  console.log(context, payload);
   try {
     const result = await postCall(
-      LOGIN_URL.url,
+      LOGIN_URL,
       payload,
       LOGIN_URL.headers ? {} : null
     );
 
-    // if (result.data.user) {
-    console.log("result", responseCallback, result);
-    // }
+    if (result.data.success) {
+      context.commit(LOGIN_SUCCESS, result.data?.data);
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
 
     return result;
   } catch (error) {
-    //   alert(messages["toast-msgs"]["error"], error.response.data.message)
     console.log("error", error);
   }
 };
