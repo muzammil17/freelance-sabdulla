@@ -3,7 +3,11 @@ import {
   GET_PUBLIC_MENU,
   SET_USER_PRIVATE_MENU,
 } from "@/action/actionTypes";
-import { DASHBOARD_VIEW_URL, LOGIN_VIEW_URL } from "@/constants";
+import {
+  DASHBOARD_VIEW_URL,
+  LOGIN_VIEW_URL,
+  MEMBER_VIEW_URL,
+} from "@/constants";
 import { getUserAllowedMenusRequest } from "@/action";
 
 export const menuModule = {
@@ -11,6 +15,7 @@ export const menuModule = {
     publicMenu: [{ label: "Login", icon: "login", url: LOGIN_VIEW_URL }],
     privateMenu: [
       { label: "Register Form", icon: "dashboard", url: DASHBOARD_VIEW_URL },
+      { label: "Membership", icon: "dashboard", url: MEMBER_VIEW_URL },
     ],
   }),
   mutations: {

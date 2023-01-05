@@ -14,3 +14,33 @@ export const GET_USER_ALLOWED_MENU_URL = {
 //PAGES ROUTES
 export const LOGIN_VIEW_URL = "/login";
 export const DASHBOARD_VIEW_URL = "/dashboard";
+export const MEMBER_VIEW_URL = "/membership";
+
+export const checkPhoneLandline = (value) => {
+  let regex = /^[0-9]{3}-[0-9]{8}$/gm;
+  let result = value.match(regex);
+  if (result?.length) {
+    return true;
+  } else {
+    return false;
+  }
+};
+export const checkPhoneMobile = (value) => {
+  let regex = /^[0-9]{4}-[0-9]{7}$/gm;
+  let result = value.match(regex);
+  if (result?.length) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const checkCNIC = (value) => {
+  let regex = /^[0-9]{5}-[0-9]{7}-[0-9]$/gm;
+  let result = value.match(regex);
+  if (result?.length) {
+    return true;
+  } else {
+    return false;
+  }
+};
