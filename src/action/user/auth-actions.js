@@ -10,7 +10,7 @@ export const loginRequest = async (context, { payload, responseCallback }) => {
       LOGIN_URL.headers ? {} : null
     );
 
-    if (result.data.success) {
+    if (result.data.data?.isAuthenticated) {
       context.commit(LOGIN_SUCCESS, result.data?.data);
       responseCallback(true, result.data);
     } else {
