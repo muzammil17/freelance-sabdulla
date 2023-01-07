@@ -1,6 +1,6 @@
 import {
   GET_JWT_TOKEN,
-  GET_USER_DETAIS_GETTER,
+  GET_USER_DETAIL_GETTER,
   GET_USER_TOKEN,
   IS_AUTHENTICATED,
   LOGIN_SUCCESS,
@@ -32,7 +32,7 @@ export const userModule = {
     [IS_AUTHENTICATED]: (state) => {
       return state.authenticated;
     },
-    [GET_USER_DETAIS_GETTER]: (state) => {
+    [GET_USER_DETAIL_GETTER]: (state) => {
       return state.user;
     },
     [GET_JWT_TOKEN]: (state) => {

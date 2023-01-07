@@ -72,19 +72,13 @@
 </template>
 
 <script>
-import {
-  reactive,
-  computed,
-  onBeforeMount,
-  onMounted,
-  defineComponent,
-} from "vue";
+import { reactive, computed, onBeforeMount, defineComponent } from "vue";
 import { useStore } from "vuex";
 import {
   // LOGIN_ACTION_REQUEST,
   IS_AUTHENTICATED,
   GET_USER_ALLOWED_MENU_ACTION_REQUEST,
-  GET_USER_DETAIS_GETTER,
+  GET_USER_DETAIL_GETTER,
 } from "@/action/actionTypes";
 
 export default defineComponent({
@@ -106,12 +100,9 @@ export default defineComponent({
     });
 
     const getUserGetter = computed(() => {
-      return $store.getters[GET_USER_DETAIS_GETTER];
+      return $store.getters[GET_USER_DETAIL_GETTER];
     });
 
-    onMounted(() => {
-      console.log("onmounted");
-    });
     onBeforeMount(() => {
       console.log("onbeforemounted");
       $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {

@@ -1,3 +1,10 @@
 import { loginRequest } from "./user/auth-actions";
 import { getUserAllowedMenusRequest } from "./menu/menu-actions";
-export { loginRequest, getUserAllowedMenusRequest };
+import { getMemberTypesRequest, saveMemberRequest } from "./member/member";
+
+export {
+  loginRequest,
+  getUserAllowedMenusRequest,
+  getMemberTypesRequest,
+  saveMemberRequest,
+};
