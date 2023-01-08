@@ -9,6 +9,7 @@ export const GET_USER_DETAIL_GETTER = "GET_USER_DETAIL_GETTER";
 
 //member getters
 export const GET_MEMBER_TYPES = "GET_MEMBER_TYPES";
+export const GET_MEMBERS_LIST_GETT = "GET_MEMBERS_LIST_GETT";
 
 ///////////////vuex MUTATIONS
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -17,6 +18,7 @@ export const SET_USER_PRIVATE_MENU = "SET_USER_PRIVATE_MENU";
 
 //member MUTATIONS
 export const SET_MEMBER_TYPES = "SET_MEMBER_TYPES";
+export const SET_MEMBERS_LIST_MUT = "SET_MEMBERS_LIST_MUT";
 
 ///////////////vuex actions
 export const LOGIN_ACTION_REQUEST = "loginRequest";
@@ -25,3 +27,5 @@ export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
 
 export const GET_MEMBER_TYPES_REQUEST = "getMemberTypesRequest";
 export const SAVE_MEMBER_REQUEST = "saveMemberRequest";
+export const GET_MEMBERS_REQUEST = "getMembersRequest";
+export const GET_MEMBER_DETAIL_REQUEST = "getMemberDetailRequest";

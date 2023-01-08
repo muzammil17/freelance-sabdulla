@@ -1,5 +1,5 @@
 <template>
-  <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-2">
+  <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-1">
     <q-list>
       <q-item-label header>Menu</q-item-label>
       <q-item
@@ -75,7 +75,7 @@ export default defineComponent({
     const getPrivateMenu = computed(() => {
       return $store.getters[GET_PRIVATE_MENU];
     });
-
+    console.log("getPrivateMenu", getPrivateMenu.value);
     const handleRoute = (url) => {
       $router.push(url);
     };

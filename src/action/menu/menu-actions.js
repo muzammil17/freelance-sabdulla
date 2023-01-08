@@ -1,6 +1,6 @@
 import { GET_USER_ALLOWED_MENU_URL } from "@/constants";
 import { postCall } from "@/services/services";
-import { GET_PRIVATE_MENU } from "../actionTypes";
+import { SET_USER_PRIVATE_MENU } from "../actionTypes";
 
 export const getUserAllowedMenusRequest = async (
   context,
@@ -15,7 +15,7 @@ export const getUserAllowedMenusRequest = async (
     );
 
     if (result.data.success) {
-      context.commit(GET_PRIVATE_MENU, result.data?.data);
+      context.commit(SET_USER_PRIVATE_MENU, result.data?.data);
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);

@@ -39,6 +39,7 @@
           <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-10">
             <div>
               <q-btn
+                :loading="loader"
                 class="submit-btn"
                 label="Login"
                 type="submit"
@@ -53,11 +54,11 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { LOGIN_ACTION_REQUEST, IS_AUTHENTICATED } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
-import { DASHBOARD_VIEW_URL } from "@/constants";
+import { VIEW_MEMBERS_LIST_URL } from "@/constants";
 import { useQuasar } from "quasar";
 
 export default {
@@ -67,6 +68,7 @@ export default {
 
   setup() {
     const $q = useQuasar();
+    const loader = ref(false);
 
     const formState = reactive({
       userId: "",
@@ -78,13 +80,15 @@ export default {
     const isLoggedIn = $store.getters[IS_AUTHENTICATED];
     console.log("isLoggedIn", isLoggedIn);
     const onSubmit = (values) => {
+      loader.value = true;
       console.log("values", formState, values.target.value);
       $store.dispatch(LOGIN_ACTION_REQUEST, {
         payload: formState,
         responseCallback: (status, res) => {
+          loader.value = false;
           if (status && res) {
             toastMessage(res.message, true);
-            $router.push(DASHBOARD_VIEW_URL);
+            $router.push(VIEW_MEMBERS_LIST_URL);
           } else {
             toastMessage(res.message, false);
           }
@@ -107,6 +111,7 @@ export default {
     return {
       //states
       formState,
+      loader,
       //handlers
       toastMessage,
       onSubmit,

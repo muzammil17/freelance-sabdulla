@@ -72,12 +72,11 @@
 </template>
 
 <script>
-import { reactive, computed, onBeforeMount, defineComponent } from "vue";
+import { reactive, computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import {
   // LOGIN_ACTION_REQUEST,
   IS_AUTHENTICATED,
-  GET_USER_ALLOWED_MENU_ACTION_REQUEST,
   GET_USER_DETAIL_GETTER,
 } from "@/action/actionTypes";
 
@@ -101,14 +100,6 @@ export default defineComponent({
 
     const getUserGetter = computed(() => {
       return $store.getters[GET_USER_DETAIL_GETTER];
-    });
-
-    onBeforeMount(() => {
-      console.log("onbeforemounted");
-      $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
-        payload: getUserGetter.value,
-        responseCallback: () => {},
-      });
     });
 
     console.log("isLoggedIn", isLoggedIn);

@@ -1,13 +1,7 @@
 <template>
   <div class="row justify-center">
     <div class="col-lg-6 col-xl-6 col-md-8 col-sm-8 col-xs-10">
-      <h5 class="title">
-        {{
-          memberDetailpageName === pageName
-            ? "Member Detail"
-            : "Membership Form"
-        }}
-      </h5>
+      <h5 class="title">Member Detail</h5>
     </div>
     <div class="col-lg-10 col-xl-10 col-md-11 col-sm-10 col-xs-11">
       <q-form @submit="onSubmit">
@@ -261,23 +255,6 @@
                 (val) => (val && val.length > 0) || 'City type is required',
               ]"
             />
-          </div>
-
-          <div
-            class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
-            v-if="memberDetailpageName !== pageName"
-          >
-            <div class="submit-btn-wrapper">
-              <q-btn
-                :loading="loader"
-                class="submit-btn"
-                :label="
-                  pageName === editpageName ? 'Edit Member' : 'Add Member'
-                "
-                type="submit"
-                color="primary"
-              />
-            </div>
           </div>
         </div>
       </q-form>

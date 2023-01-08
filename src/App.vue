@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import { GET_USER_DETAIL_GETTER } from "./action/actionTypes";
 import DrawerView from "./components/drawer/DrawerView.vue";
 
 export default {
@@ -47,15 +49,26 @@ export default {
 
   setup() {
     const leftDrawerOpen = ref(true);
+    const $store = useStore();
 
     const toggleLeftDrawerOpen = () => {
       console.log("leftDrawerOpen", leftDrawerOpen.value);
       leftDrawerOpen.value = !leftDrawerOpen.value;
     };
+    // onBeforeMount(() => {
+    //   console.log("onbeforemounted");
+    //   $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
+    //     payload: getUserGetter.value,
+    //     responseCallback: () => {},
+    //   });
+    // });
+    const getUserGetter = computed(() => {
+      return $store.getters[GET_USER_DETAIL_GETTER];
+    });
 
     return {
       leftDrawerOpen,
-
+      getUserGetter,
       // functions
       toggleLeftDrawerOpen,
     };
@@ -77,6 +90,9 @@ export default {
         box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
         position: absolute;
         top: 10px;
+        @media only screen and (max-width: 724px) {
+          width: 40px;
+        }
       }
     }
   }
