@@ -6,8 +6,11 @@ import {
   getMembersRequest,
   getMemberDetailRequest,
 } from "./member/member";
+import { getCitiesRequest, getAreasRequest } from "./areas/areas";
 
 export {
+  getAreasRequest,
+  getCitiesRequest,
   getMemberDetailRequest,
   getMembersRequest,
   loginRequest,

@@ -2,19 +2,6 @@
   <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-1">
     <q-list>
       <q-item-label header>Menu</q-item-label>
-      <q-item
-        clickable
-        v-for="item in IsAuthenticated ? getPrivateMenu : getPublicMenu"
-        :key="item"
-        @click="handleRoute(item.url)"
-      >
-        <q-item-section avatar>
-          <q-icon :name="item.icon" />
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ item?.label }}</q-item-label>
-        </q-item-section>
-      </q-item>
       <q-item clickable @click="handleLogout" v-show="IsAuthenticated">
         <q-item-section avatar>
           <q-icon name="logout" />
@@ -24,7 +11,48 @@
           <!-- <q-item-label caption>quasar.dev</q-item-label> -->
         </q-item-section>
       </q-item>
+      <q-item
+        clickable
+        @click="handleRoute(LOGIN_VIEW_URL)"
+        v-show="!IsAuthenticated"
+      >
+        <q-item-section avatar>
+          <q-icon name="login" />
+        </q-item-section>
+        <q-item-section>
+          <q-item-label>Login</q-item-label>
+          <!-- <q-item-label caption>quasar.dev</q-item-label> -->
+        </q-item-section>
+      </q-item>
     </q-list>
+    <!-- ************************** -->
+    <q-list class="rounded-borders" v-if="IsAuthenticated">
+      <q-expansion-item
+        :content-inset-level="1"
+        expand-separator
+        icon="dashboard"
+        v-for="(item, index) in IsAuthenticated
+          ? getUserAllowedMenusGetter?.filter((dt) => !dt?.parentMenuId)
+          : getPublicMenu"
+        :key="index"
+        :label="item?.menuName"
+      >
+        <q-item
+          clickable
+          v-ripple
+          v-for="items in IsAuthenticated
+            ? getUserAllowedMenusGetter?.filter(
+                (dt) => dt?.parentMenuId && item?.menuId === dt?.parentMenuId
+              )
+            : getPublicMenu"
+          :key="items"
+          @click="handleRoute(items.menuUrl)"
+        >
+          <q-item-section>{{ items?.menuName }}</q-item-section>
+        </q-item>
+      </q-expansion-item>
+    </q-list>
+    <!-- ************************** -->
   </q-drawer>
 </template>
 
@@ -32,6 +60,7 @@
 import {
   GET_PRIVATE_MENU,
   GET_PUBLIC_MENU,
+  GET_USER_ALLOWED_MENUS_GETT,
   IS_AUTHENTICATED,
   LOGOUT_SUCCESS,
 } from "@/action/actionTypes";
@@ -75,7 +104,12 @@ export default defineComponent({
     const getPrivateMenu = computed(() => {
       return $store.getters[GET_PRIVATE_MENU];
     });
-    console.log("getPrivateMenu", getPrivateMenu.value);
+
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
+    });
+
+    console.log("getPrivateMenu", getUserAllowedMenusGetter.value);
     const handleRoute = (url) => {
       $router.push(url);
     };
@@ -96,6 +130,8 @@ export default defineComponent({
       getPublicMenu,
       IsAuthenticated,
       getPrivateMenu,
+      getUserAllowedMenusGetter,
+
       //handlers
       handleRoute,
       handleLogout,

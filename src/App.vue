@@ -35,9 +35,13 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount, watch } from "vue";
 import { useStore } from "vuex";
-import { GET_USER_DETAIL_GETTER } from "./action/actionTypes";
+import {
+  GET_USER_ALLOWED_MENU_ACTION_REQUEST,
+  GET_USER_DETAIL_GETTER,
+  IS_AUTHENTICATED,
+} from "./action/actionTypes";
 import DrawerView from "./components/drawer/DrawerView.vue";
 
 export default {
@@ -55,13 +59,27 @@ export default {
       console.log("leftDrawerOpen", leftDrawerOpen.value);
       leftDrawerOpen.value = !leftDrawerOpen.value;
     };
-    // onBeforeMount(() => {
-    //   console.log("onbeforemounted");
-    //   $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
-    //     payload: getUserGetter.value,
-    //     responseCallback: () => {},
-    //   });
-    // });
+    onBeforeMount(() => {
+      console.log("onbeforemounted");
+      if (isLoggedIn.value) {
+        $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
+          payload: getUserGetter.value,
+          responseCallback: () => {},
+        });
+      }
+    });
+    const isLoggedIn = computed(() => {
+      return $store.getters[IS_AUTHENTICATED];
+    });
+
+    watch(isLoggedIn, () => {
+      if (isLoggedIn.value) {
+        $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
+          payload: getUserGetter.value,
+          responseCallback: () => {},
+        });
+      }
+    });
     const getUserGetter = computed(() => {
       return $store.getters[GET_USER_DETAIL_GETTER];
     });
@@ -69,6 +87,7 @@ export default {
     return {
       leftDrawerOpen,
       getUserGetter,
+      isLoggedIn,
       // functions
       toggleLeftDrawerOpen,
     };

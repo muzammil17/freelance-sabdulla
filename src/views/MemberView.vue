@@ -302,6 +302,9 @@ import {
   GET_MEMBER_TYPES,
   SAVE_MEMBER_REQUEST,
   GET_MEMBERS_LIST_GETT,
+  GET_CITIES_REQUEST,
+  GET_CITIES_GETT,
+  GET_AREAS_REQUEST,
 } from "@/action/actionTypes";
 import {
   checkPhoneMobile,
@@ -336,6 +339,9 @@ export default defineComponent({
       referencId: "",
       membershipTypeId: null,
     });
+
+    let citiesOptions = ref(null);
+
     const formState = ref({ ...initialState.value });
     const editpageName = "Edit Membership";
     const memberDetailpageName = "MemberDetail";
@@ -356,7 +362,28 @@ export default defineComponent({
         payload: true,
         responseCallback: () => {},
       });
+      $store.dispatch(GET_CITIES_REQUEST, {
+        payload: true,
+        responseCallback: (status, res) => {
+          console.log({ res }, { status });
+          if (status) {
+            let options = [];
+            console.log("res", res);
+            if (res?.data?.length) {
+              for (const item of res?.data) {
+                options.push({ value: item?.cityId, label: item?.cityName });
+              }
+            }
+            citiesOptions.value = options;
+          }
+        },
+      });
+      $store.dispatch(GET_AREAS_REQUEST, {
+        payload: { isActive: true },
+        responseCallback: () => {},
+      });
     });
+    console.log({ citiesOptions: citiesOptions?.value });
 
     onMounted(() => {
       console.log("currentRoute", $router.currentRoute.value);
@@ -408,6 +435,10 @@ export default defineComponent({
 
     const getUserGetter = computed(() => {
       return $store.getters[GET_USER_DETAIL_GETTER];
+    });
+
+    const getCitiesGetter = computed(() => {
+      return $store.getters[GET_CITIES_GETT];
     });
 
     console.log("isLoggedIn", isLoggedIn);
@@ -472,6 +503,8 @@ export default defineComponent({
       pageName,
       editpageName,
       memberDetailpageName,
+      getCitiesGetter,
+      citiesOptions,
       onSubmit,
       checkPhoneMobile,
       checkPhoneLandline,

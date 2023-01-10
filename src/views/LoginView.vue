@@ -58,7 +58,6 @@ import { reactive, ref } from "vue";
 import { useStore } from "vuex";
 import { LOGIN_ACTION_REQUEST, IS_AUTHENTICATED } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
-import { VIEW_MEMBERS_LIST_URL } from "@/constants";
 import { useQuasar } from "quasar";
 
 export default {
@@ -88,7 +87,7 @@ export default {
           loader.value = false;
           if (status && res) {
             toastMessage(res.message, true);
-            $router.push(VIEW_MEMBERS_LIST_URL);
+            $router.push("/");
           } else {
             toastMessage(res.message, false);
           }

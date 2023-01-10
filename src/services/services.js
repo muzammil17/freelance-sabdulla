@@ -31,7 +31,13 @@ export const getCall = async (urlObj, params = "", query = "", headers) =>
                 : {}),
             },
       });
-
+      if (response?.data?.length && response.status === 200) {
+        let data = {
+          success: true,
+          data: response.data,
+        };
+        resolve({ data });
+      }
       resolve(response);
     } catch (e) {
       if (e?.response?.status === 401) {

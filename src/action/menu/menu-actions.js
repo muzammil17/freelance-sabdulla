@@ -11,6 +11,8 @@ export const getUserAllowedMenusRequest = async (
     const result = await postCall(
       GET_USER_ALLOWED_MENU_URL,
       payload,
+      "",
+      "",
       GET_USER_ALLOWED_MENU_URL.headers ? {} : null
     );
 

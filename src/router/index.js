@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import MemberView from "../views/MemberView.vue";
 import MemberListView from "../views/MemberListView.vue";
 import MemberDetailView from "@/views/MemberDetail.vue";
+import DashboardEmpty from "@/views/DashboardEmpty.vue";
 
 import { store } from "@/store/store";
 import { computed } from "vue";
@@ -24,14 +25,21 @@ const IsAuthenticated = computed(() => {
 const routes = [
   {
     path: "/",
-    redirect: LOGIN_VIEW_URL,
+    name: "RibaatEmpty",
+    component: DashboardEmpty,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      else {
+        next();
+      }
+    },
   },
   {
     path: LOGIN_VIEW_URL,
     name: "Login",
     component: LoginView,
     beforeEnter: (to, from, next) => {
-      if (IsAuthenticated.value) next("/dashboard");
+      if (IsAuthenticated.value) next("/");
       else {
         next();
       }

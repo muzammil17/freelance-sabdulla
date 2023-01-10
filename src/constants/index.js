@@ -35,6 +35,19 @@ export const GET_MEMBER_DETAIL_URL = {
   headers: false,
 };
 
+//areas requests
+export const GET_AREA_URL = {
+  url: "v1/Area/GetAreas",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_CITIES_URL = {
+  url: "v1/City/GetCities",
+  accesstoken: true,
+  headers: false,
+};
+
 //PAGES ROUTES
 export const LOGIN_VIEW_URL = "/login";
 
