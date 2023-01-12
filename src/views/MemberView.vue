@@ -190,11 +190,11 @@
               class="input-field"
               hint="ex: 0333-0972217"
               v-model="formState.phoneMobile"
-              label="Mobile Number"
+              label="Mobile Number *"
               lazy-rules
               :rules="[
                 (val) =>
-                  !val || checkPhoneMobile(val) || 'Invalid Mobile number',
+                  (val && checkPhoneMobile(val)) || 'Invalid Mobile number',
               ]"
             />
           </div>
@@ -223,7 +223,7 @@
               lazy-rules
             />
           </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               :disable="memberDetailpageName === pageName ? true : false"
               outlined
@@ -233,8 +233,33 @@
               label="Area"
               lazy-rules
             />
+          </div> -->
+          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+            <q-select
+              label="City *"
+              outlined
+              :disable="memberDetailpageName === pageName ? true : false"
+              aria-modal="false"
+              behavior="menu"
+              v-model="formState.cityId"
+              :options="citiesOptions"
+              :rules="[(val) => val || 'City  is required']"
+            />
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+            <q-select
+              label="Area *"
+              outlined
+              :disable="memberDetailpageName === pageName ? true : false"
+              aria-modal="false"
+              behavior="menu"
+              v-model="formState.areaId"
+              :options="areasOptions"
+              :rules="[(val) => val || 'Area zone  is required']"
+            />
+          </div>
+
+          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
               type="text"
@@ -247,8 +272,9 @@
                 (val) => (val && val.length > 0) || 'Area type is required',
               ]"
             />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+          </div> -->
+
+          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
               :disable="memberDetailpageName === pageName ? true : false"
@@ -261,7 +287,7 @@
                 (val) => (val && val.length > 0) || 'City type is required',
               ]"
             />
-          </div>
+          </div> -->
 
           <div
             class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
@@ -305,6 +331,7 @@ import {
   GET_CITIES_REQUEST,
   GET_CITIES_GETT,
   GET_AREAS_REQUEST,
+  GET_AREAS_GETT,
 } from "@/action/actionTypes";
 import {
   checkPhoneMobile,
@@ -335,12 +362,12 @@ export default defineComponent({
       address2: "",
       cityId: "",
       areaId: "",
-      area: "",
       referencId: "",
       membershipTypeId: null,
     });
 
     let citiesOptions = ref(null);
+    let areasOptions = ref(null);
 
     const formState = ref({ ...initialState.value });
     const editpageName = "Edit Membership";
@@ -378,10 +405,6 @@ export default defineComponent({
           }
         },
       });
-      $store.dispatch(GET_AREAS_REQUEST, {
-        payload: { isActive: true },
-        responseCallback: () => {},
-      });
     });
     console.log({ citiesOptions: citiesOptions?.value });
 
@@ -404,6 +427,15 @@ export default defineComponent({
               label: editMemberObj?.membershipTypeDesc,
               value: editMemberObj?.membershipTypeId,
             };
+            setMember.cityId = {
+              label: editMemberObj?.cityName,
+              value: editMemberObj?.cityId,
+            };
+            setMember.areaId = {
+              label: editMemberObj?.areaName,
+              value: editMemberObj?.areaId,
+            };
+            console.log({ editMemberObj });
             setMember.gender = editMemberObj.gender.toLowerCase();
             formState.value = setMember;
           }
@@ -429,6 +461,43 @@ export default defineComponent({
       memberShipTypesOptions.value = options;
     });
 
+    //watcher cities
+
+    watch(formState.value, (currentVal, prev) => {
+      if (
+        currentVal.cityId &&
+        currentVal.cityId?.value === prev.cityId?.value
+      ) {
+        $store.dispatch(GET_AREAS_REQUEST, {
+          payload: { isActive: true, cityId: currentVal.cityId?.value },
+          responseCallback: (status, res) => {
+            if (status && res?.data) {
+              console.log("res", res);
+
+              let options = [];
+              console.log("res", res);
+              if (res?.data?.length) {
+                for (const item of res?.data) {
+                  options.push({
+                    value: item?.areaId,
+                    label: item?.areaName,
+                  });
+                }
+              }
+              const ifExist = options?.find(
+                (dt) => dt?.value === currentVal.areaId?.value
+              );
+              if (!ifExist) {
+                formState.value = { ...formState.value, areaId: null };
+              }
+              areasOptions.value = options;
+            }
+          },
+        });
+      }
+    });
+    //watcher cities
+
     const isLoggedIn = computed(() => {
       return $store.getters[IS_AUTHENTICATED];
     });
@@ -440,6 +509,9 @@ export default defineComponent({
     const getCitiesGetter = computed(() => {
       return $store.getters[GET_CITIES_GETT];
     });
+    const getAreasGetter = computed(() => {
+      return $store.getters[GET_AREAS_GETT];
+    });
 
     console.log("isLoggedIn", isLoggedIn);
     const onSubmit = () => {
@@ -449,8 +521,10 @@ export default defineComponent({
         dob: formState.value.dob.replaceAll("/", "-"),
         membershipTypeId: formState.value.membershipTypeId.value,
         membershipTypeDesc: formState.value.membershipTypeId.label,
-        cityId: 1,
-        areaId: 1,
+        cityId: formState.value.cityId?.value,
+        cityName: formState.value.cityId?.label,
+        areaId: formState.value.areaId?.value,
+        areaName: formState?.value?.areaId?.label,
       };
       Object.keys(payloadObj).forEach((key) => {
         if (!payloadObj[key]) {
@@ -466,6 +540,7 @@ export default defineComponent({
           console.log({ res });
           loader.value = false;
           if (status) {
+            formState.value = { ...initialState.value };
             toastMessage("Form submitted successfully", status);
           } else {
             toastMessage("Something went wrong", status);
@@ -499,12 +574,15 @@ export default defineComponent({
       ],
       loader,
       getMemberListGetter,
-      //handlers
       pageName,
       editpageName,
       memberDetailpageName,
       getCitiesGetter,
       citiesOptions,
+      getAreasGetter,
+      areasOptions,
+      //handlers
+
       onSubmit,
       checkPhoneMobile,
       checkPhoneLandline,

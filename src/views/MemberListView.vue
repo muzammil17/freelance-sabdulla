@@ -30,6 +30,16 @@
             search
               ? dt?.fullName?.toLowerCase()?.includes(search?.toLowerCase())
                 ? dt
+                : dt?.gender?.toLowerCase()?.includes(search?.toLowerCase())
+                ? dt
+                : dt?.phoneMobile
+                    ?.toLowerCase()
+                    ?.includes(search?.toLowerCase())
+                ? dt
+                : dt?.membershipTypeDesc
+                    ?.toLowerCase()
+                    ?.includes(search?.toLowerCase())
+                ? dt
                 : dt?.cnic?.toLowerCase()?.includes(search?.toLowerCase())
                 ? dt
                 : dt?.address1?.toLowerCase()?.includes(search?.toLowerCase())

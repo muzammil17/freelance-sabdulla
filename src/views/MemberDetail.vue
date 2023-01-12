@@ -219,13 +219,16 @@
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
               outlined
+              :disable="memberDetailpageName === pageName ? true : false"
               type="text"
               class="input-field"
-              v-model="formState.area"
-              label="Area"
+              v-model="formState.cityId"
+              label="City type *"
               lazy-rules
+              :rules="[
+                (val) => (val && val.length > 0) || 'City type is required',
+              ]"
             />
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
@@ -239,20 +242,6 @@
               lazy-rules
               :rules="[
                 (val) => (val && val.length > 0) || 'Area type is required',
-              ]"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="memberDetailpageName === pageName ? true : false"
-              type="text"
-              class="input-field"
-              v-model="formState.cityId"
-              label="City type *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'City type is required',
               ]"
             />
           </div>
@@ -279,6 +268,7 @@ import {
   GET_MEMBER_TYPES,
   SAVE_MEMBER_REQUEST,
   GET_MEMBERS_LIST_GETT,
+  GET_MEMBER_DETAIL_REQUEST,
 } from "@/action/actionTypes";
 import {
   checkPhoneMobile,
@@ -333,6 +323,11 @@ export default defineComponent({
         payload: true,
         responseCallback: () => {},
       });
+      console.log({ memberId });
+      $store.dispatch(GET_MEMBER_DETAIL_REQUEST, {
+        payload: { memberId: memberId?.memberId },
+        responseCallback: () => {},
+      });
     });
 
     onMounted(() => {
@@ -349,12 +344,16 @@ export default defineComponent({
             (dt) => dt?.memberId == memberId?.memberId
           );
           if (editMemberObj) {
+            console.log({ editMemberObj });
+
             let setMember = { ...editMemberObj };
             setMember.membershipTypeId = {
               label: editMemberObj?.membershipTypeDesc,
               value: editMemberObj?.membershipTypeId,
             };
-            setMember.gender = editMemberObj.gender.toLowerCase();
+            setMember.cityId = editMemberObj?.cityName;
+            (setMember.areaId = editMemberObj?.areaName),
+              (setMember.gender = editMemberObj.gender.toLowerCase());
             formState.value = setMember;
           }
         }

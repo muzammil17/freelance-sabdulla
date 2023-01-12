@@ -7,13 +7,13 @@ export const getAreasRequest = async (
   { payload, responseCallback }
 ) => {
   console.log("payload", payload);
-  const { isActive } = payload;
+  const { isActive, cityId } = payload;
   try {
     // &cityId=${cityId}
     const result = await getCall(
       GET_AREA_URL,
       "",
-      `activeOnly=${isActive}`,
+      `activeOnly=${isActive}&cityId=${cityId}`,
 
       GET_AREA_URL.headers ? {} : null
     );
