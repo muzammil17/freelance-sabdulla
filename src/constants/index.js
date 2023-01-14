@@ -49,14 +49,26 @@ export const GET_CITIES_URL = {
 };
 
 //PAGES ROUTES
-export const LOGIN_VIEW_URL = "/login";
+export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
 
-export const DASHBOARD_VIEW_URL = "/dashboard";
-export const MEMBER_VIEW_URL = "/membership-form";
-export const EDIT_MEMBER_URL = "/edit-member/:memberId";
+export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
+export const MEMBER_VIEW_URL = {
+  title: "Membership Form",
+  url: "/membership-form",
+};
+export const EDIT_MEMBER_URL = {
+  title: "Edit Member",
+  url: "/edit-member/:memberId",
+};
 
-export const VIEW_MEMBERS_LIST_URL = "/members";
-export const VIEW_MEMBER_DETAIL_URL = "/member-detail/:memberId";
+export const VIEW_MEMBERS_LIST_URL = {
+  title: "Members List",
+  url: "/members",
+};
+export const VIEW_MEMBER_DETAIL_URL = {
+  title: "Member Detail",
+  url: "/member-detail/:memberId",
+};
 
 export const checkPhoneLandline = (value) => {
   let regex = /^[0-9]{3}-[0-9]{8}$/gm;
@@ -96,6 +108,8 @@ export const memberColumns = [
   {
     name: "title",
     label: "Title",
+    style: "width: 500px",
+
     align: "left",
     field: "title",
     sortable: true,
@@ -107,13 +121,7 @@ export const memberColumns = [
     field: "fullName",
     sortable: true,
   },
-  {
-    name: "gender",
-    align: "left",
-    label: "Gender",
-    field: "gender",
-    sortable: true,
-  },
+
   {
     name: "cnic",
     align: "center",
@@ -126,15 +134,11 @@ export const memberColumns = [
     align: "left",
     label: "Address 1",
     field: "address1",
+
+    classes: "col-address",
     sortable: true,
   },
-  {
-    name: "membershipTypeDesc",
-    align: "left",
-    label: "Membership type",
-    field: "membershipTypeDesc",
-    sortable: true,
-  },
+
   {
     name: "phoneMobile",
     align: "center",

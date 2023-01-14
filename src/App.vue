@@ -35,7 +35,9 @@
 </template>
 
 <script>
+import { useMeta } from "quasar";
 import { ref, computed, onBeforeMount, watch } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import {
   GET_USER_ALLOWED_MENU_ACTION_REQUEST,
@@ -54,6 +56,7 @@ export default {
   setup() {
     const leftDrawerOpen = ref(true);
     const $store = useStore();
+    const $router = useRouter();
 
     const toggleLeftDrawerOpen = () => {
       console.log("leftDrawerOpen", leftDrawerOpen.value);
@@ -70,6 +73,13 @@ export default {
     });
     const isLoggedIn = computed(() => {
       return $store.getters[IS_AUTHENTICATED];
+    });
+
+    watch($router.currentRoute, (currentRoute) => {
+      const pageMetadata = {
+        title: `Ribaat ${currentRoute.name ? currentRoute.name : ""}`,
+      };
+      useMeta(pageMetadata);
     });
 
     watch(isLoggedIn, () => {

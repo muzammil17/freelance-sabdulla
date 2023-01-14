@@ -2,18 +2,10 @@
   <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-1">
     <q-list>
       <q-item-label header>Menu</q-item-label>
-      <q-item clickable @click="handleLogout" v-show="IsAuthenticated">
-        <q-item-section avatar>
-          <q-icon name="logout" />
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>Log out</q-item-label>
-          <!-- <q-item-label caption>quasar.dev</q-item-label> -->
-        </q-item-section>
-      </q-item>
+
       <q-item
         clickable
-        @click="handleRoute(LOGIN_VIEW_URL)"
+        @click="handleRoute(LOGIN_VIEW_URL.url)"
         v-show="!IsAuthenticated"
       >
         <q-item-section avatar>
@@ -52,7 +44,17 @@
         </q-item>
       </q-expansion-item>
     </q-list>
+
     <!-- ************************** -->
+    <q-item clickable @click="handleLogout" v-show="IsAuthenticated">
+      <q-item-section avatar>
+        <q-icon name="logout" />
+      </q-item-section>
+      <q-item-section>
+        <q-item-label>Log out</q-item-label>
+        <!-- <q-item-label caption>quasar.dev</q-item-label> -->
+      </q-item-section>
+    </q-item>
   </q-drawer>
 </template>
 
@@ -91,7 +93,7 @@ export default defineComponent({
       console.log("logout");
       toastMessage("Logout Successfully", true);
       $store.commit(LOGOUT_SUCCESS);
-      $router.replace(LOGIN_VIEW_URL);
+      $router.replace(LOGIN_VIEW_URL.url);
     };
 
     const IsAuthenticated = computed(() => {

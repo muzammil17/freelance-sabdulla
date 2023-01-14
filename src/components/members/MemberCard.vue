@@ -50,7 +50,7 @@ export default defineComponent({
   setup() {
     const $router = useRouter();
     const handleRoute = (id) => {
-      $router.push(VIEW_MEMBER_DETAIL_URL.replace(":id", id));
+      $router.push(VIEW_MEMBER_DETAIL_URL.url.replace(":id", id));
     };
     return {
       //states

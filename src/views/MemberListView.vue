@@ -24,6 +24,7 @@
       <q-table
         title="Members"
         dense
+        :pagination="initialPagination"
         class="table-header-wrapper"
         :rows="
           membersRows.filter((dt) =>
@@ -79,8 +80,23 @@
               @click="deleteRow(props)"
               icon="delete"
             ></q-btn>
-          </q-td> </template
-      ></q-table>
+          </q-td>
+        </template>
+
+        <!-- <template v-slot:top-right>
+          <q-input
+            borderless
+            dense
+            debounce="300"
+            v-model="search"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template> -->
+      </q-table>
     </div>
   </div>
 </template>
@@ -110,7 +126,12 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $q = useQuasar();
-
+    const initialPagination = {
+      sortBy: "desc",
+      descending: false,
+      rowsPerPage: 10,
+      // rowsNumber: xx if getting data from a server
+    };
     const $router = useRouter();
 
     const search = ref(null);
@@ -160,17 +181,19 @@ export default defineComponent({
     });
     console.log("membersListGetter", membersListGetter.value);
     const handleRoute = () => {
-      $router.push(MEMBER_VIEW_URL);
+      $router.push(MEMBER_VIEW_URL.url);
     };
 
     const editRow = (prop) => {
-      $router.push(EDIT_MEMBER_URL?.replace(":memberId", prop.row?.memberId));
+      $router.push(
+        EDIT_MEMBER_URL.url?.replace(":memberId", prop.row?.memberId)
+      );
       console.log("prop", prop.row);
     };
 
     const memberInfo = (prop) => {
       $router.push(
-        VIEW_MEMBER_DETAIL_URL?.replace(":memberId", prop.row?.memberId)
+        VIEW_MEMBER_DETAIL_URL.url?.replace(":memberId", prop.row?.memberId)
       );
     };
 
@@ -182,6 +205,8 @@ export default defineComponent({
       membersList,
       membersRows,
       memberColumns,
+      initialPagination,
+      $q,
       //handlers
       handleRoute,
       memberInfo,
@@ -190,21 +215,29 @@ export default defineComponent({
   },
 });
 </script>
-<style scoped lang="scss">
-.edit-memberbtn {
-  color: #c36;
-}
-.title {
-  text-align: center;
-  margin: 0px;
-  margin-bottom: 20px;
-}
+<style lang="scss">
 .table-header-wrapper {
   border-radius: 10px;
+  .edit-memberbtn {
+    color: #c36;
+  }
+  .q-table {
+    .col-address {
+      max-width: 200px !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 
+  .title {
+    text-align: center;
+    margin: 0px;
+    margin-bottom: 20px;
+  }
   .q-table__top {
-    background-color: #c36 !important;
-    color: #fff !important;
+    // background-color: #c36 !important;
+    // color: #fff !important;
   }
 }
 .search-wrapper {

@@ -25,18 +25,18 @@ const IsAuthenticated = computed(() => {
 const routes = [
   {
     path: "/",
-    name: "RibaatEmpty",
+    name: "Home",
     component: DashboardEmpty,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }
     },
   },
   {
-    path: LOGIN_VIEW_URL,
-    name: "Login",
+    path: LOGIN_VIEW_URL.url,
+    name: LOGIN_VIEW_URL.title,
     component: LoginView,
     beforeEnter: (to, from, next) => {
       if (IsAuthenticated.value) next("/");
@@ -46,55 +46,56 @@ const routes = [
     },
   },
   {
-    path: DASHBOARD_VIEW_URL,
-    name: "Dashboard",
+    path: DASHBOARD_VIEW_URL.url,
+    name: DASHBOARD_VIEW_URL.title,
     component: HomeView,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }
     },
   },
   {
-    path: VIEW_MEMBERS_LIST_URL,
-    name: "MembersList",
+    path: VIEW_MEMBERS_LIST_URL.url,
+    name: VIEW_MEMBERS_LIST_URL.title,
     component: MemberListView,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }
     },
   },
   {
-    path: VIEW_MEMBER_DETAIL_URL,
-    name: "MemberDetail",
+    path: VIEW_MEMBER_DETAIL_URL.url,
+    name: VIEW_MEMBER_DETAIL_URL.title,
     component: MemberDetailView,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }
     },
   },
   {
-    path: MEMBER_VIEW_URL,
-    name: "Membership",
+    path: MEMBER_VIEW_URL.url,
+    name: MEMBER_VIEW_URL.title,
     component: MemberView,
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }
     },
   },
   {
-    path: EDIT_MEMBER_URL,
-    name: "Edit Membership",
+    path: EDIT_MEMBER_URL.url,
+    name: EDIT_MEMBER_URL.title,
     component: MemberView,
+
     beforeEnter: (to, from, next) => {
-      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL);
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }

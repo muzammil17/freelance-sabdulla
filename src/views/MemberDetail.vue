@@ -9,7 +9,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               v-model="formState.title"
               label="Membership title *"
               hint="ex: Zakat"
@@ -24,7 +26,9 @@
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               outlined
               type="text"
               class="input-field"
@@ -37,7 +41,9 @@
             <q-select
               label="Membership type *"
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               aria-modal="false"
               behavior="menu"
               v-model="formState.membershipTypeId"
@@ -48,7 +54,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               v-model="formState.firstName"
               label="First Name *"
               hint="ex: John"
@@ -64,7 +72,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               v-model="formState.lastName"
               label="Last Name *"
               hint="ex: Doe"
@@ -82,7 +92,9 @@
               outlined
               v-model="formState.dob"
               mask="date"
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               label="Date of birth"
               hint="ex: 2000/12/30"
               lazy-rules
@@ -128,7 +140,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-option-group
               inline
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               name="gender"
               :options="genderOptions"
               type="radio"
@@ -139,7 +153,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               type="email"
               class="input-field"
               v-model="formState.email"
@@ -151,7 +167,9 @@
             <q-input
               outlined
               type="tel"
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               class="input-field"
               v-model="formState.cnic"
               hint="ex: 42101-7429960-1"
@@ -164,7 +182,9 @@
             <q-input
               outlined
               type="tel"
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               class="input-field"
               v-model="formState.phoneLandline"
               hint="ex: 021-34569692"
@@ -179,7 +199,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               type="tel"
               class="input-field"
               hint="ex: 0333-0972217"
@@ -194,7 +216,9 @@
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               outlined
               type="text"
               class="input-field"
@@ -209,7 +233,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               type="text"
               class="input-field"
               v-model="formState.address2"
@@ -220,7 +246,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               type="text"
               class="input-field"
               v-model="formState.cityId"
@@ -235,7 +263,9 @@
             <q-input
               outlined
               type="text"
-              :disable="memberDetailpageName === pageName ? true : false"
+              :disable="
+                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
+              "
               class="input-field"
               v-model="formState.areaId"
               label="Area type *"
@@ -274,6 +304,7 @@ import {
   checkPhoneMobile,
   checkPhoneLandline,
   checkCNIC,
+  VIEW_MEMBER_DETAIL_URL,
 } from "@/constants/index";
 import moment from "moment";
 import { useQuasar } from "quasar";
@@ -332,7 +363,7 @@ export default defineComponent({
 
     onMounted(() => {
       console.log("currentRoute", $router.currentRoute.value);
-      if (pageName === editpageName || pageName === memberDetailpageName) {
+      if (pageName === VIEW_MEMBER_DETAIL_URL.title) {
         console.log("getMemberListGetter", getMemberListGetter.value);
         if (!getMemberListGetter?.value) {
           $router.back();
@@ -448,6 +479,7 @@ export default defineComponent({
       pageName,
       editpageName,
       memberDetailpageName,
+      VIEW_MEMBER_DETAIL_URL,
       onSubmit,
       checkPhoneMobile,
       checkPhoneLandline,

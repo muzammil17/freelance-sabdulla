@@ -3,8 +3,8 @@
     <div class="col-lg-6 col-xl-6 col-md-8 col-sm-8 col-xs-10">
       <h5 class="title">
         {{
-          memberDetailpageName === pageName
-            ? "Member Detail"
+          EDIT_MEMBER_URL.title === pageName
+            ? "Update Member Details"
             : "Membership Form"
         }}
       </h5>
@@ -15,22 +15,17 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               v-model="formState.title"
               label="Membership title *"
               hint="ex: Zakat"
               lazy-rules
               class="input-field"
-              :rules="[
-                (val) => (val && val.length > 0) || 'title is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
-              ]"
+              :rules="[(val) => (val && val.length > 0) || 'title is required']"
             >
             </q-input>
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
               outlined
               type="text"
               class="input-field"
@@ -43,7 +38,6 @@
             <q-select
               label="Membership type *"
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               aria-modal="false"
               behavior="menu"
               v-model="formState.membershipTypeId"
@@ -54,7 +48,6 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               v-model="formState.firstName"
               label="First Name *"
               hint="ex: John"
@@ -62,7 +55,7 @@
               class="input-field"
               :rules="[
                 (val) => (val && val.length > 0) || 'First Name is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
+                (val) => (val && val.length <= 20) || 'Limit exceeded',
               ]"
             >
             </q-input>
@@ -70,7 +63,6 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               v-model="formState.lastName"
               label="Last Name *"
               hint="ex: Doe"
@@ -78,7 +70,7 @@
               class="input-field"
               :rules="[
                 (val) => (val && val.length > 0) || 'Last Name is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
+                (val) => (val && val.length <= 20) || 'Limit exceeded',
               ]"
             >
             </q-input>
@@ -88,7 +80,6 @@
               outlined
               v-model="formState.dob"
               mask="date"
-              :disable="memberDetailpageName === pageName ? true : false"
               label="Date of birth"
               hint="ex: 2000/12/30"
               lazy-rules
@@ -134,7 +125,6 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-option-group
               inline
-              :disable="memberDetailpageName === pageName ? true : false"
               name="gender"
               :options="genderOptions"
               type="radio"
@@ -145,7 +135,6 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               type="email"
               class="input-field"
               v-model="formState.email"
@@ -157,7 +146,7 @@
             <q-input
               outlined
               type="tel"
-              :disable="memberDetailpageName === pageName ? true : false"
+              mask="#####-#######-#"
               class="input-field"
               v-model="formState.cnic"
               hint="ex: 42101-7429960-1"
@@ -170,9 +159,9 @@
             <q-input
               outlined
               type="tel"
-              :disable="memberDetailpageName === pageName ? true : false"
               class="input-field"
               v-model="formState.phoneLandline"
+              mask="###-########"
               hint="ex: 021-34569692"
               label="Phone Landline"
               lazy-rules
@@ -185,9 +174,9 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               type="tel"
               class="input-field"
+              mask="####-#######"
               hint="ex: 0333-0972217"
               v-model="formState.phoneMobile"
               label="Mobile Number *"
@@ -200,7 +189,6 @@
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
               outlined
               type="text"
               class="input-field"
@@ -215,7 +203,6 @@
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               type="text"
               class="input-field"
               v-model="formState.address2"
@@ -223,22 +210,11 @@
               lazy-rules
             />
           </div>
-          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              :disable="memberDetailpageName === pageName ? true : false"
-              outlined
-              type="text"
-              class="input-field"
-              v-model="formState.area"
-              label="Area"
-              lazy-rules
-            />
-          </div> -->
+
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-select
               label="City *"
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               aria-modal="false"
               behavior="menu"
               v-model="formState.cityId"
@@ -250,7 +226,6 @@
             <q-select
               label="Area *"
               outlined
-              :disable="memberDetailpageName === pageName ? true : false"
               aria-modal="false"
               behavior="menu"
               v-model="formState.areaId"
@@ -259,46 +234,15 @@
             />
           </div>
 
-          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              type="text"
-              :disable="memberDetailpageName === pageName ? true : false"
-              class="input-field"
-              v-model="formState.areaId"
-              label="Area type *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'Area type is required',
-              ]"
-            />
-          </div> -->
-
-          <!-- <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="memberDetailpageName === pageName ? true : false"
-              type="text"
-              class="input-field"
-              v-model="formState.cityId"
-              label="City type *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'City type is required',
-              ]"
-            />
-          </div> -->
-
-          <div
-            class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
-            v-if="memberDetailpageName !== pageName"
-          >
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="submit-btn-wrapper">
               <q-btn
                 :loading="loader"
                 class="submit-btn"
                 :label="
-                  pageName === editpageName ? 'Edit Member' : 'Add Member'
+                  EDIT_MEMBER_URL.title === pageName
+                    ? 'Edit Member'
+                    : 'Add Member'
                 "
                 type="submit"
                 color="primary"
@@ -322,7 +266,6 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import {
-  IS_AUTHENTICATED,
   GET_USER_DETAIL_GETTER,
   GET_MEMBER_TYPES_REQUEST,
   GET_MEMBER_TYPES,
@@ -332,11 +275,13 @@ import {
   GET_CITIES_GETT,
   GET_AREAS_REQUEST,
   GET_AREAS_GETT,
+  GET_MEMBER_DETAIL_REQUEST,
 } from "@/action/actionTypes";
 import {
   checkPhoneMobile,
   checkPhoneLandline,
   checkCNIC,
+  EDIT_MEMBER_URL,
 } from "@/constants/index";
 import moment from "moment";
 import { useQuasar } from "quasar";
@@ -370,13 +315,11 @@ export default defineComponent({
     let areasOptions = ref(null);
 
     const formState = ref({ ...initialState.value });
-    const editpageName = "Edit Membership";
-    const memberDetailpageName = "MemberDetail";
 
     const $store = useStore();
     const $router = useRouter();
-    const memberId = $router.currentRoute.value.params;
     const pageName = $router.currentRoute.value.name;
+    const memberId = $router.currentRoute.value.params.memberId;
 
     const $q = useQuasar();
 
@@ -389,6 +332,13 @@ export default defineComponent({
         payload: true,
         responseCallback: () => {},
       });
+      if (memberId) {
+        $store.dispatch(GET_MEMBER_DETAIL_REQUEST, {
+          payload: { memberId },
+          responseCallback: () => {},
+        });
+      }
+
       $store.dispatch(GET_CITIES_REQUEST, {
         payload: true,
         responseCallback: (status, res) => {
@@ -406,12 +356,9 @@ export default defineComponent({
         },
       });
     });
-    console.log({ citiesOptions: citiesOptions?.value });
 
     onMounted(() => {
-      console.log("currentRoute", $router.currentRoute.value);
-      if (pageName === editpageName || pageName === memberDetailpageName) {
-        console.log("getMemberListGetter", getMemberListGetter.value);
+      if (pageName === EDIT_MEMBER_URL.title) {
         if (!getMemberListGetter?.value) {
           $router.back();
         } else {
@@ -419,25 +366,49 @@ export default defineComponent({
             JSON.stringify(Object.values(getMemberListGetter?.value))
           );
           let editMemberObj = memberList?.find(
-            (dt) => dt?.memberId == memberId?.memberId
+            (dt) => dt?.memberId == memberId
           );
+          console.log({ editMemberObj }, memberList);
           if (editMemberObj) {
+            console.log({ editMemberObj });
+
             let setMember = { ...editMemberObj };
             setMember.membershipTypeId = {
               label: editMemberObj?.membershipTypeDesc,
               value: editMemberObj?.membershipTypeId,
             };
             setMember.cityId = {
+              value: editMemberObj.cityId,
               label: editMemberObj?.cityName,
-              value: editMemberObj?.cityId,
             };
+
             setMember.areaId = {
+              value: editMemberObj.areaId,
               label: editMemberObj?.areaName,
-              value: editMemberObj?.areaId,
             };
-            console.log({ editMemberObj });
             setMember.gender = editMemberObj.gender.toLowerCase();
             formState.value = setMember;
+            $store.dispatch(GET_AREAS_REQUEST, {
+              payload: { isActive: true, cityId: editMemberObj.cityId },
+              responseCallback: (status, res) => {
+                if (status && res?.data) {
+                  console.log("res", res);
+
+                  let options = [];
+                  console.log("res", res);
+                  if (res?.data?.length) {
+                    for (const item of res?.data) {
+                      options.push({
+                        value: item?.areaId,
+                        label: item?.areaName,
+                      });
+                    }
+                  }
+
+                  areasOptions.value = options;
+                }
+              },
+            });
           }
         }
       }
@@ -498,10 +469,6 @@ export default defineComponent({
     });
     //watcher cities
 
-    const isLoggedIn = computed(() => {
-      return $store.getters[IS_AUTHENTICATED];
-    });
-
     const getUserGetter = computed(() => {
       return $store.getters[GET_USER_DETAIL_GETTER];
     });
@@ -513,11 +480,13 @@ export default defineComponent({
       return $store.getters[GET_AREAS_GETT];
     });
 
-    console.log("isLoggedIn", isLoggedIn);
     const onSubmit = () => {
       loader.value = true;
       let payloadObj = {
         ...formState.value,
+        ...(EDIT_MEMBER_URL.title === pageName
+          ? { memberId: Number(memberId) }
+          : {}),
         dob: formState.value.dob.replaceAll("/", "-"),
         membershipTypeId: formState.value.membershipTypeId.value,
         membershipTypeDesc: formState.value.membershipTypeId.label,
@@ -526,13 +495,18 @@ export default defineComponent({
         areaId: formState.value.areaId?.value,
         areaName: formState?.value?.areaId?.label,
       };
+
       Object.keys(payloadObj).forEach((key) => {
         if (!payloadObj[key]) {
           delete payloadObj[key];
         }
       });
+
       $store.dispatch(SAVE_MEMBER_REQUEST, {
-        payload: payloadObj,
+        payload: {
+          data: payloadObj,
+          bool: EDIT_MEMBER_URL.title === pageName ? true : false,
+        },
         responseCallback: (status, res) => {
           Object.assign(formState.value, {
             ...initialState,
@@ -540,14 +514,20 @@ export default defineComponent({
           console.log({ res });
           loader.value = false;
           if (status) {
-            formState.value = { ...initialState.value };
-            toastMessage("Form submitted successfully", status);
+            if (EDIT_MEMBER_URL.title !== pageName) {
+              formState.value = { ...initialState.value };
+            }
+            toastMessage(
+              `Form ${
+                EDIT_MEMBER_URL.title === pageName ? "updated" : "submitted"
+              } successfully`,
+              status
+            );
           } else {
             toastMessage("Something went wrong", status);
           }
         },
       });
-      console.log("values", formState, getUserGetter.value);
     };
 
     const toastMessage = (message, bool) => {
@@ -575,12 +555,11 @@ export default defineComponent({
       loader,
       getMemberListGetter,
       pageName,
-      editpageName,
-      memberDetailpageName,
       getCitiesGetter,
       citiesOptions,
       getAreasGetter,
       areasOptions,
+      EDIT_MEMBER_URL,
       //handlers
 
       onSubmit,

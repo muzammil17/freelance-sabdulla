@@ -13,11 +13,11 @@ import { getUserAllowedMenusRequest } from "@/action";
 
 export const menuModule = {
   state: () => ({
-    publicMenu: [{ label: "Login", icon: "login", url: LOGIN_VIEW_URL }],
+    publicMenu: [{ label: "Login", icon: "login", url: LOGIN_VIEW_URL.url }],
     privateMenu: [
-      { label: "Members", icon: "menu", url: VIEW_MEMBERS_LIST_URL },
+      { label: "Members", icon: "menu", url: VIEW_MEMBERS_LIST_URL.url },
 
-      { label: "Membership form", icon: "dashboard", url: MEMBER_VIEW_URL },
+      { label: "Membership form", icon: "dashboard", url: MEMBER_VIEW_URL.url },
     ],
 
     userAllowedMenu: null,

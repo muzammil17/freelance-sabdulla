@@ -42,7 +42,7 @@ export const getCall = async (urlObj, params = "", query = "", headers) =>
     } catch (e) {
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
-        router.replace(LOGIN_VIEW_URL);
+        router.replace(LOGIN_VIEW_URL.url);
       }
       reject(e);
     }
@@ -71,7 +71,7 @@ export const deleteCall = async (urlObj, params = "", query = "", headers) =>
     } catch (e) {
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
-        router.replace(LOGIN_VIEW_URL);
+        router.replace(LOGIN_VIEW_URL.url);
       }
       reject(e);
     }
@@ -109,7 +109,7 @@ export const postCall = async (
       console.log("err", e);
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
-        router.replace(LOGIN_VIEW_URL);
+        router.replace(LOGIN_VIEW_URL.url);
       }
       reject(e);
     }
@@ -144,7 +144,7 @@ export const patchCall = async (
     } catch (e) {
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
-        router.replace(LOGIN_VIEW_URL);
+        router.replace(LOGIN_VIEW_URL.url);
       }
       reject(null);
     }

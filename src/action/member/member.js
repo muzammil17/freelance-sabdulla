@@ -42,9 +42,9 @@ export const saveMemberRequest = async (
   try {
     const result = await postCall(
       SAVE_MEMBER_URL,
-      payload,
+      payload.data,
       "",
-      ``,
+      `existing=${payload.bool}`,
       SAVE_MEMBER_URL.headers ? {} : null
     );
 
