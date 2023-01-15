@@ -1,5 +1,11 @@
 <template>
-  <q-drawer :model-value="leftDrawerOpen" bordered class="bg-white-1">
+  <q-drawer
+    :model-value="leftDrawerOpen"
+    show-if-above
+    :breakpoint="500"
+    bordered
+    class="cf"
+  >
     <q-list>
       <q-item-label header>Menu</q-item-label>
 
