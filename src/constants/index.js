@@ -47,10 +47,15 @@ export const GET_CITIES_URL = {
   accesstoken: true,
   headers: false,
 };
+//PROGRAMS REQUESTS
+export const GET_PROGRAMS_URL = {
+  url: "v1/Programs/GetPrograms",
+  accesstoken: true,
+  headers: false,
+};
 
 //PAGES ROUTES
 export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
-
 export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
 export const MEMBER_VIEW_URL = {
   title: "Membership Form",
@@ -68,6 +73,14 @@ export const VIEW_MEMBERS_LIST_URL = {
 export const VIEW_MEMBER_DETAIL_URL = {
   title: "Member Detail",
   url: "/member-detail/:memberId",
+};
+export const VIEW_PROGRAMS_URL = {
+  title: "Programs",
+  url: "/programs",
+};
+export const VIEW_PROGRAM_Detail_URL = {
+  title: "Program information",
+  url: "/program/:id",
 };
 
 export const checkPhoneLandline = (value) => {

@@ -7,8 +7,10 @@ import {
   getMemberDetailRequest,
 } from "./member/member";
 import { getCitiesRequest, getAreasRequest } from "./areas/areas";
+import { getProgramsRequest } from "./programs/program-actions";
 
 export {
+  getProgramsRequest,
   getAreasRequest,
   getCitiesRequest,
   getMemberDetailRequest,

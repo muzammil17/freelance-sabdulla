@@ -5,6 +5,8 @@ import MemberView from "../views/MemberView.vue";
 import MemberListView from "../views/MemberListView.vue";
 import MemberDetailView from "@/views/MemberDetail.vue";
 import DashboardEmpty from "@/views/DashboardEmpty.vue";
+import ProgramsView from "@/views/program-views/ProgramsView.vue";
+import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
 
 import { store } from "@/store/store";
 import { computed } from "vue";
@@ -16,6 +18,8 @@ import {
   MEMBER_VIEW_URL,
   VIEW_MEMBERS_LIST_URL,
   VIEW_MEMBER_DETAIL_URL,
+  VIEW_PROGRAMS_URL,
+  VIEW_PROGRAM_Detail_URL,
 } from "@/constants";
 
 const IsAuthenticated = computed(() => {
@@ -40,6 +44,28 @@ const routes = [
     component: LoginView,
     beforeEnter: (to, from, next) => {
       if (IsAuthenticated.value) next("/");
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: VIEW_PROGRAMS_URL.url,
+    name: VIEW_PROGRAMS_URL.title,
+    component: ProgramsView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: VIEW_PROGRAM_Detail_URL.url,
+    name: VIEW_PROGRAM_Detail_URL.title,
+    component: ProgramDetailView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
         next();
       }

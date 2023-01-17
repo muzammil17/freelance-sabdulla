@@ -11,6 +11,7 @@
               />
             </span>
           </span>
+          <span class="page-title"> {{ pageName }} </span>
 
           <!-- Quasar App  -->
         </q-toolbar-title>
@@ -127,6 +128,7 @@ export default {
     const $store = useStore();
     const $router = useRouter();
     const $q = useQuasar();
+    let pageName = ref(null);
 
     const toggleLeftDrawerOpen = () => {
       console.log("leftDrawerOpen", leftDrawerOpen.value);
@@ -149,6 +151,7 @@ export default {
       const pageMetadata = {
         title: `Ribaat ${currentRoute.name ? currentRoute.name : ""}`,
       };
+      pageName.value = currentRoute.name;
       useMeta(pageMetadata);
     });
 
@@ -212,6 +215,7 @@ export default {
       getPublicMenu,
       IsAuthenticated,
       getUserAllowedMenusGetter,
+      pageName,
       // functions
       handleLogout,
       toastMessage,
@@ -253,6 +257,10 @@ export default {
 }
 
 .page-wrapper {
-  padding-top: 110px !important;
+  padding-top: 120px !important;
+}
+.page-title {
+  margin-left: 100px;
+  color: #000;
 }
 </style>

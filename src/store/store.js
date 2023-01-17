@@ -5,6 +5,7 @@ import VuexPersistence from "vuex-persist";
 import { menuModule } from "./modules/menu";
 import { memberModule } from "./modules/member";
 import { areaModule } from "./modules/areas";
+import { programModule } from "./modules/program";
 
 export const vuexLocal = new VuexPersistence({
   key: "STORAGE_KEY",
@@ -20,6 +21,7 @@ export const store = createStore({
     menu: menuModule,
     member: memberModule,
     area: areaModule,
+    program: programModule,
   },
 
   plugins: [vuexLocal.plugin],

@@ -1,4 +1,4 @@
-///////////////vuex getters
+///////////////////////////////////vuex getters///////////////////////////////////////
 export const GET_USER_TOKEN = "getUserToken";
 export const IS_AUTHENTICATED = "IS_AUTHENTICATED";
 
@@ -16,7 +16,10 @@ export const GET_MEMBERS_LIST_GETT = "GET_MEMBERS_LIST_GETT";
 export const GET_CITIES_GETT = "GET_CITIES_GETT";
 export const GET_AREAS_GETT = "GET_AREAS_GETT";
 
-///////////////vuex MUTATIONS
+//program GETTERS
+export const GET_ALL_PROGRAMS_GETT = "GET_ALL_PROGRAMS_GETT";
+
+////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const SET_USER_PRIVATE_MENU = "SET_USER_PRIVATE_MENU";
@@ -29,7 +32,11 @@ export const SET_MEMBERS_LIST_MUT = "SET_MEMBERS_LIST_MUT";
 export const SET_CITIES_MUT = "SET_CITIES_MUT";
 export const SET_AREAS_MUT = "SET_AREAS_MUT";
 
-///////////////vuex actions
+//program mutations
+export const SET_ALL_PROGRAMS_MUT = "SET_ALL_PROGRAMS_MUT";
+
+////////////////////////////////////vuex actions/////////////////////////////////////////////
+
 export const LOGIN_ACTION_REQUEST = "loginRequest";
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
   "getUserAllowedMenusRequest";
@@ -42,3 +49,6 @@ export const GET_MEMBER_DETAIL_REQUEST = "getMemberDetailRequest";
 //areas actions
 export const GET_CITIES_REQUEST = "getCitiesRequest";
 export const GET_AREAS_REQUEST = "getAreasRequest";
+
+//program actions
+export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
