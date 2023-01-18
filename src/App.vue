@@ -24,6 +24,21 @@
           aria-label="Menu"
           icon="menu"
         />
+        <span class="carticonwrapper">
+          <q-btn
+            flat
+            class="cart-icon"
+            dense
+            round
+            aria-label="Menu"
+            @click="handleRoute(VIEW_CART_LIST_URL.url)"
+          >
+            <q-icon class="icon-basket" name="ion-basket" />
+          </q-btn>
+          <span class="count" v-if="getCartItemsGetter.length">{{
+            getCartItemsGetter.length
+          }}</span>
+        </span>
       </q-toolbar>
     </q-header>
     <!-- <DrawerView :leftDrawerOpen="leftDrawerOpen" /> -->
@@ -36,7 +51,20 @@
       <q-scroll-area class="fit">
         <q-list>
           <q-item-label header>Menu</q-item-label>
-
+          <q-item
+            class="lt-md"
+            clickable
+            @click="handleRoute(VIEW_CART_LIST_URL.url)"
+            v-show="IsAuthenticated"
+          >
+            <q-item-section avatar>
+              <q-icon name="ion-basket" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Cart</q-item-label>
+              <!-- <q-item-label caption>quasar.dev</q-item-label> -->
+            </q-item-section>
+          </q-item>
           <q-item
             clickable
             @click="handleRoute(LOGIN_VIEW_URL.url)"
@@ -47,7 +75,6 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>Login</q-item-label>
-              <!-- <q-item-label caption>quasar.dev</q-item-label> -->
             </q-item-section>
           </q-item>
         </q-list>
@@ -105,6 +132,7 @@ import { ref, computed, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import {
+  GET_CART_ITEMS_GETT,
   GET_PRIVATE_MENU,
   GET_PUBLIC_MENU,
   GET_USER_ALLOWED_MENUS_GETT,
@@ -113,7 +141,8 @@ import {
   IS_AUTHENTICATED,
   LOGOUT_SUCCESS,
 } from "./action/actionTypes";
-import { LOGIN_VIEW_URL } from "./constants";
+import { LOGIN_VIEW_URL, VIEW_CART_LIST_URL } from "./constants";
+import { Cart } from "@/assets";
 // import DrawerView from "./components/drawer/DrawerView.vue";
 
 export default {
@@ -166,7 +195,9 @@ export default {
     const getUserGetter = computed(() => {
       return $store.getters[GET_USER_DETAIL_GETTER];
     });
-
+    const getCartItemsGetter = computed(() => {
+      return $store.getters[GET_CART_ITEMS_GETT];
+    });
     ///drawer components
 
     const handleLogout = () => {
@@ -216,6 +247,9 @@ export default {
       IsAuthenticated,
       getUserAllowedMenusGetter,
       pageName,
+      Cart,
+      VIEW_CART_LIST_URL,
+      getCartItemsGetter,
       // functions
       handleLogout,
       toastMessage,
@@ -252,6 +286,35 @@ export default {
   .toggle-btn {
     @media only screen and (min-width: 1008px) {
       display: none !important;
+    }
+  }
+  .carticonwrapper {
+    display: flex !important;
+    align-items: flex-start !important;
+    position: relative;
+    @media only screen and (max-width: 1008px) {
+      display: none !important;
+    }
+    .cart-icon {
+      // margin-right: 200px;
+
+      .icon-basket {
+        color: #000;
+      }
+    }
+    .count {
+      position: absolute;
+      right: -4px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+      background-color: #c36;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
     }
   }
 }

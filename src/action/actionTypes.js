@@ -18,6 +18,7 @@ export const GET_AREAS_GETT = "GET_AREAS_GETT";
 
 //program GETTERS
 export const GET_ALL_PROGRAMS_GETT = "GET_ALL_PROGRAMS_GETT";
+export const GET_CART_ITEMS_GETT = "GET_CART_ITEMS_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -34,6 +35,7 @@ export const SET_AREAS_MUT = "SET_AREAS_MUT";
 
 //program mutations
 export const SET_ALL_PROGRAMS_MUT = "SET_ALL_PROGRAMS_MUT";
+export const SET_ADD_CART_ITEM_MUT = "SET_ADD_CART_ITEM_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 

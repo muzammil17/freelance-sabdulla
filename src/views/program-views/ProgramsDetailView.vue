@@ -10,7 +10,9 @@
           <q-card class="my-card all-prog-cards">
             <q-card-section class="card-header">
               <div class="text-h6">{{ item.progDesc }}</div>
-              <!-- <div class="text-subtitle2">by John Doe</div> -->
+              <div class="text-subtitle2 price-tag" v-if="item.isDetail">
+                Rs.{{ item.standardPrice }}
+              </div>
             </q-card-section>
 
             <q-card-section>
@@ -27,6 +29,13 @@
                 @click="handleRoute(item.progId)"
                 >View</q-btn
               >
+              <q-btn
+                v-if="item.isDetail"
+                rounded
+                class="view-btn"
+                @click="handleAddtoCart(item)"
+                >Add to Cart</q-btn
+              >
             </q-card-actions>
           </q-card>
         </div>
@@ -39,6 +48,7 @@
 import {
   GET_ALL_PROGRAMS_GETT,
   GET_PROGRAMS_REQUEST,
+  SET_ADD_CART_ITEM_MUT,
 } from "@/action/actionTypes";
 import { VIEW_PROGRAM_Detail_URL } from "@/constants";
 import { useQuasar } from "quasar";
@@ -85,12 +95,29 @@ export default defineComponent({
     const handleRoute = (id) => {
       $router.push(VIEW_PROGRAM_Detail_URL.url.replace(":id", id));
     };
+    const handleAddtoCart = (item) => {
+      $store.commit(SET_ADD_CART_ITEM_MUT, item);
+      toastMessage(`${item.progDetailDesc} added to cart`, true);
+    };
+
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
+
+        position: "top",
+        timeout: 2000,
+      });
+    };
 
     return {
       //states
       allProgramsGetters,
       //handlers
       handleRoute,
+      handleAddtoCart,
     };
   },
 });
@@ -106,6 +133,10 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .price-tag {
+    color: #c36;
+  }
   .card-header {
     padding-bottom: 0px;
   }

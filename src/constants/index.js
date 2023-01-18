@@ -82,6 +82,10 @@ export const VIEW_PROGRAM_Detail_URL = {
   title: "Program information",
   url: "/program/:id",
 };
+export const VIEW_CART_LIST_URL = {
+  title: "Cart",
+  url: "/cart",
+};
 
 export const checkPhoneLandline = (value) => {
   let regex = /^[0-9]{3}-[0-9]{8}$/gm;
@@ -121,7 +125,7 @@ export const memberColumns = [
   {
     name: "title",
     label: "Title",
-    style: "width: 500px",
+    // style: "width: 500px",
 
     align: "left",
     field: "title",
@@ -160,4 +164,28 @@ export const memberColumns = [
     sortable: true,
   },
   { name: "actions", label: "Actions", field: "", align: "center" },
+];
+
+export const cartColumns = [
+  {
+    name: "progDetailDesc",
+    label: "Item",
+    align: "left",
+    field: "progDetailDesc",
+    sortable: true,
+  },
+  {
+    name: "quantity",
+    label: "Quantity",
+    align: "left",
+    field: "quantity",
+    sortable: true,
+  },
+  {
+    name: "unitPrice",
+    label: "Price",
+    align: "left",
+    field: "unitPrice",
+    sortable: true,
+  },
 ];

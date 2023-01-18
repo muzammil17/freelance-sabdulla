@@ -8,6 +8,7 @@ import DashboardEmpty from "@/views/DashboardEmpty.vue";
 import ProgramsView from "@/views/program-views/ProgramsView.vue";
 import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
 
+import CartView from "@/views/CartView.vue";
 import { store } from "@/store/store";
 import { computed } from "vue";
 import { IS_AUTHENTICATED } from "@/action/actionTypes";
@@ -16,6 +17,7 @@ import {
   EDIT_MEMBER_URL,
   LOGIN_VIEW_URL,
   MEMBER_VIEW_URL,
+  VIEW_CART_LIST_URL,
   VIEW_MEMBERS_LIST_URL,
   VIEW_MEMBER_DETAIL_URL,
   VIEW_PROGRAMS_URL,
@@ -75,6 +77,17 @@ const routes = [
     path: DASHBOARD_VIEW_URL.url,
     name: DASHBOARD_VIEW_URL.title,
     component: HomeView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: VIEW_CART_LIST_URL.url,
+    name: VIEW_CART_LIST_URL.title,
+    component: CartView,
     beforeEnter: (to, from, next) => {
       if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
       else {
