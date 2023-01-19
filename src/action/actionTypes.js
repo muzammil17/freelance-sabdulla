@@ -19,6 +19,8 @@ export const GET_AREAS_GETT = "GET_AREAS_GETT";
 //program GETTERS
 export const GET_ALL_PROGRAMS_GETT = "GET_ALL_PROGRAMS_GETT";
 export const GET_CART_ITEMS_GETT = "GET_CART_ITEMS_GETT";
+export const GET_CART_ITEMS_TOTAL_PRICE_GETT =
+  "GET_CART_ITEMS_TOTAL_PRICE_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";

@@ -1,6 +1,7 @@
 import {
   GET_ALL_PROGRAMS_GETT,
   GET_CART_ITEMS_GETT,
+  GET_CART_ITEMS_TOTAL_PRICE_GETT,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
 } from "@/action/actionTypes";
@@ -12,6 +13,7 @@ export const programModule = {
   state: () => ({
     programs: [],
     cart: [],
+    totalPrice: 0,
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
@@ -43,6 +45,11 @@ export const programModule = {
         };
         cartItems.push(payloadData);
       }
+      let totalPrice = 0;
+      for (const item of cartItems) {
+        totalPrice += item.unitPrice;
+      }
+      state.totalPrice = totalPrice;
       state.cart = cartItems;
     },
   },
@@ -53,6 +60,9 @@ export const programModule = {
     },
     [GET_CART_ITEMS_GETT]: (state) => {
       return state.cart;
+    },
+    [GET_CART_ITEMS_TOTAL_PRICE_GETT]: (state) => {
+      return state.totalPrice;
     },
   },
 

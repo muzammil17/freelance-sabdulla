@@ -178,7 +178,9 @@ export const cartColumns = [
     name: "quantity",
     label: "Quantity",
     align: "left",
+    width: "100px",
     field: "quantity",
+    classes: "quantity-input",
     sortable: true,
   },
   {
