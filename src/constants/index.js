@@ -186,7 +186,7 @@ export const cartColumns = [
   {
     name: "standardPrice",
     label: "Price",
-    align: "left",
+    align: "right",
     field: "standardPrice",
     sortable: true,
   },

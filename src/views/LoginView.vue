@@ -40,6 +40,7 @@
             <div>
               <q-btn
                 :loading="loader"
+                :disable="loader"
                 class="submit-btn"
                 label="Login"
                 type="submit"

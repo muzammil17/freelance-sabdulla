@@ -81,6 +81,9 @@ export default defineComponent({
       });
     });
     watch(progId, (currentVal) => {
+      $q.loading.show({
+        delay: 400, // ms
+      });
       $store.dispatch(GET_PROGRAMS_REQUEST, {
         payload: { activeOnly: true, parentProgId: currentVal.params.id },
         responseCallback: () => {

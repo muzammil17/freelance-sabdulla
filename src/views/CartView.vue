@@ -21,25 +21,59 @@
             </template>
           </q-select>
         </div>
-        <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
-          <span class="add-btn-wrapper">
-            <q-btn label="Add member" color="primary" />
-          </span>
+        <div
+          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
+          v-if="memberInput?.memberId"
+        >
+          <q-table
+            title="Member Detail"
+            dense
+            hide-pagination
+            :pagination="initialPagination"
+            class="table-header-wrapper"
+            :rows="[memberInput]"
+            :columns="memberColumns"
+            row-key="name"
+          >
+            <template v-slot:body-cell-actions="props">
+              <!-- @click="memberInfo(props)" -->
+              <q-td :props="props">
+                <q-btn
+                  dense
+                  round
+                  flat
+                  class="edit-memberbtn"
+                  icon="info"
+                ></q-btn>
+              </q-td>
+            </template>
+          </q-table>
         </div>
       </div>
     </div>
 
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
       <q-table
-        :hide-pagination="true"
         title="Cart"
-        dense
         :pagination="initialPagination"
         class="table-header-wrapper"
         :rows="cartData"
         :columns="cartColumns"
-        row-key="name"
+        selection="multiple"
+        row-key="progDetailDesc"
+        v-model:selected="selected"
       >
+        <template v-slot:top>
+          <span class="cart-table-header">
+            <h6>Cart Items</h6>
+            <q-btn
+              color="primary"
+              @click="deleteItems"
+              label="Remove"
+              class="delete-item"
+            />
+          </span>
+        </template>
         <template v-slot:body-cell-quantity="props">
           <q-td :props="props">
             <q-input
@@ -60,7 +94,7 @@
             </q-td>
             <q-td class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-4">
               <span class="total-value">
-                Rs. {{ getCartItemsTotalPriceGetter }}
+                <span> Rs. {{ getCartItemsTotalPriceGetter }} </span>
               </span>
             </q-td>
           </q-tr>
@@ -78,9 +112,9 @@ import {
   SET_CART_UPDATED_ITEMS_MUT,
   GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT,
 } from "@/action/actionTypes";
-import { defineComponent, onBeforeMount, computed, watch, ref } from "vue";
+import { defineComponent, onBeforeMount, computed, ref } from "vue";
 import { useStore } from "vuex";
-import { cartColumns } from "@/constants";
+import { cartColumns, memberColumns } from "@/constants";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
@@ -95,6 +129,8 @@ export default defineComponent({
     const $router = useRouter();
 
     let memberInput = ref("");
+    let selected = ref([]);
+
     let cartData = ref(null);
     let memberOptions = ref(null);
 
@@ -126,10 +162,6 @@ export default defineComponent({
 
     const getOptionsMembersGetter = computed(() => {
       return $store.getters[GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT];
-    });
-
-    watch(getOptionsMembersGetter.value, () => {
-      console.log({ getOptionsMembersGetter });
     });
 
     const getCartItemsGetter = computed(() => {
@@ -178,6 +210,20 @@ export default defineComponent({
       $store.commit(SET_CART_UPDATED_ITEMS_MUT, clone);
     };
 
+    const deleteItems = () => {
+      let clone = cartData.value.slice(0);
+
+      let selectedCartItems = selected?.value?.map((dt) => dt?.progId);
+      if (selectedCartItems?.length) {
+        let filterDeletedItems = clone.filter(
+          (dt) => !selectedCartItems.includes(dt?.progId)
+        );
+        console.log({ filterDeletedItems }, { selectedCartItems }, { clone });
+        cartData.value = filterDeletedItems;
+        $store.commit(SET_CART_UPDATED_ITEMS_MUT, filterDeletedItems);
+      }
+    };
+
     return {
       //states
       cartColumns,
@@ -188,9 +234,13 @@ export default defineComponent({
       getOptionsMembersGetter,
       memberOptions,
       memberInput,
+      memberColumns,
+      selected,
+
       //handlers
       filterFn,
       handleChangeQuantity,
+      deleteItems,
     };
   },
 });
@@ -199,6 +249,17 @@ export default defineComponent({
 .quantity-input {
   // height: 20px;
   width: 100px;
+}
+.cart-table-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h6 {
+    margin: 0px;
+  }
+  .delete-item {
+  }
 }
 .member-select-wrapper-row {
   margin: 20px 0px;
@@ -214,6 +275,10 @@ export default defineComponent({
     font-size: 16px;
   }
   .total-value {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    text-align: right;
     font-weight: bold;
     color: #c36;
     font-size: 16px;

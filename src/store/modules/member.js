@@ -42,6 +42,7 @@ export const memberModule = {
           options.push({
             value: item.memberId,
             label: item?.firstName,
+            fullName: `${item?.firstName} ${item?.lastName}`,
             ...item,
           });
         }
