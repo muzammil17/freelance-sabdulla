@@ -4,6 +4,7 @@ import {
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
+  SET_CART_UPDATED_ITEMS_MUT,
 } from "@/action/actionTypes";
 // import {
 // } from "@/constants";
@@ -18,6 +19,14 @@ export const programModule = {
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
       state.programs = payload;
+    },
+    [SET_CART_UPDATED_ITEMS_MUT]: (state, payload) => {
+      let totalPrice = 0;
+      for (const item of payload) {
+        totalPrice += item.unitPrice;
+      }
+      state.totalPrice = totalPrice;
+      state.cart = payload;
     },
     [SET_ADD_CART_ITEM_MUT]: (state, payload) => {
       let cartItems = JSON.parse(JSON.stringify(state.cart));

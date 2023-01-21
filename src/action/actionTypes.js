@@ -11,6 +11,8 @@ export const GET_USER_ALLOWED_MENUS_GETT = "GET_USER_ALLOWED_MENUS_GETT";
 //member getters
 export const GET_MEMBER_TYPES = "GET_MEMBER_TYPES";
 export const GET_MEMBERS_LIST_GETT = "GET_MEMBERS_LIST_GETT";
+export const GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT =
+  "GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT";
 
 //area gettters
 export const GET_CITIES_GETT = "GET_CITIES_GETT";
@@ -38,6 +40,7 @@ export const SET_AREAS_MUT = "SET_AREAS_MUT";
 //program mutations
 export const SET_ALL_PROGRAMS_MUT = "SET_ALL_PROGRAMS_MUT";
 export const SET_ADD_CART_ITEM_MUT = "SET_ADD_CART_ITEM_MUT";
+export const SET_CART_UPDATED_ITEMS_MUT = "SET_CART_UPDATED_ITEMS_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 

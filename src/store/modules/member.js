@@ -1,4 +1,5 @@
 import {
+  GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT,
   GET_MEMBERS_LIST_GETT,
   GET_MEMBER_TYPES,
   SET_MEMBERS_LIST_MUT,
@@ -32,6 +33,20 @@ export const memberModule = {
     },
     [GET_MEMBERS_LIST_GETT]: (state) => {
       return state.members;
+    },
+    [GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT]: (state) => {
+      let cloneMembers = state?.members?.slice(0);
+      let options = [];
+      if (cloneMembers?.length) {
+        for (const item of cloneMembers) {
+          options.push({
+            value: item.memberId,
+            label: item?.firstName,
+            ...item,
+          });
+        }
+      }
+      return options;
     },
   },
 

@@ -169,7 +169,7 @@ export const memberColumns = [
 export const cartColumns = [
   {
     name: "progDetailDesc",
-    label: "Item",
+    label: "Program Detail",
     align: "left",
     field: "progDetailDesc",
     sortable: true,
@@ -184,10 +184,10 @@ export const cartColumns = [
     sortable: true,
   },
   {
-    name: "unitPrice",
+    name: "standardPrice",
     label: "Price",
     align: "left",
-    field: "unitPrice",
+    field: "standardPrice",
     sortable: true,
   },
 ];
