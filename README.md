@@ -1,4 +1,4 @@
-# sadbulla-project
+# ribaat-project
 
 ## Project setup and commands to start the project
 

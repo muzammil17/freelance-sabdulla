@@ -24,7 +24,7 @@
           aria-label="Menu"
           icon="menu"
         />
-        <span class="carticonwrapper">
+        <span class="carticonwrapper" v-if="IsAuthenticated">
           <q-btn
             flat
             class="cart-icon"
