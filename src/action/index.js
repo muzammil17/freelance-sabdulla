@@ -7,9 +7,13 @@ import {
   getMemberDetailRequest,
 } from "./member/member";
 import { getCitiesRequest, getAreasRequest } from "./areas/areas";
-import { getProgramsRequest } from "./programs/program-actions";
+import {
+  getProgramsRequest,
+  saveReceiptRequest,
+} from "./programs/program-actions";
 
 export {
+  saveReceiptRequest,
   getProgramsRequest,
   getAreasRequest,
   getCitiesRequest,

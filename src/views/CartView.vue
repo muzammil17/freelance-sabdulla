@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-center q-col-gutter-xs">
+  <div class="row justify-center q-col-gutter-md">
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
       <div class="row q-col-gutter-sm member-select-wrapper-row items-start">
         <div class="col-lg-8 col-xl-8 col-md-8 col-sm-8 col-xs-12">
@@ -101,6 +101,16 @@
         </template>
       </q-table>
     </div>
+    <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
+      <span class="checkout-wrapper">
+        <q-btn
+          color="primary"
+          label="Checkout"
+          :loading="saveReciptLoader"
+          @click="handleCheckout"
+        />
+      </span>
+    </div>
   </div>
 </template>
 
@@ -111,6 +121,8 @@ import {
   GET_MEMBERS_REQUEST,
   SET_CART_UPDATED_ITEMS_MUT,
   GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT,
+  SAVE_RECEIPT_REQUEST,
+  SET_EMPTY_CART_MUT,
 } from "@/action/actionTypes";
 import { defineComponent, onBeforeMount, computed, ref } from "vue";
 import { useStore } from "vuex";
@@ -127,6 +139,7 @@ export default defineComponent({
     const $q = useQuasar();
     const $store = useStore();
     const $router = useRouter();
+    const saveReciptLoader = ref(false);
 
     let memberInput = ref("");
     let selected = ref([]);
@@ -171,6 +184,47 @@ export default defineComponent({
     const getCartItemsTotalPriceGetter = computed(() => {
       return $store.getters[GET_CART_ITEMS_TOTAL_PRICE_GETT];
     });
+
+    const handleCheckout = () => {
+      if (!cartData.value?.length) {
+        toastMessage("Your Cart is empty", false);
+      } else if (!memberInput?.value?.memberId) {
+        toastMessage("Select a member for the programs", false);
+      } else if (cartData.value?.length > 1) {
+        toastMessage("Only single program can be selected at a time!", false);
+      } else {
+        saveReciptLoader.value = true;
+        const cartItem = {
+          ...cartData.value[0],
+        };
+        const { progId, progDesc } = cartItem;
+        const payload = {
+          progId,
+          programDesc: progDesc,
+          payModeId: 0,
+          amount: Number(getCartItemsTotalPriceGetter.value),
+        };
+        console.log({ payload });
+        $store.dispatch(SAVE_RECEIPT_REQUEST, {
+          payload,
+          responseCallback: (status, res) => {
+            saveReciptLoader.value = false;
+            console.log(status, { res });
+            $store.commit(SET_EMPTY_CART_MUT, null);
+
+            if (status) {
+              console.log({ res });
+              toastMessage(res.message, true);
+              $router.push("/");
+            } else {
+              toastMessage("Something went wrong!", false);
+              $router.push("/");
+            }
+            // $q.loading.hide();
+          },
+        });
+      }
+    };
 
     const filterFn = (val, update) => {
       if (val === "") {
@@ -224,6 +278,18 @@ export default defineComponent({
       }
     };
 
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
+
+        position: "top",
+        timeout: 2000,
+      });
+    };
+
     return {
       //states
       cartColumns,
@@ -236,8 +302,10 @@ export default defineComponent({
       memberInput,
       memberColumns,
       selected,
-
+      saveReciptLoader,
       //handlers
+      handleCheckout,
+      toastMessage,
       filterFn,
       handleChangeQuantity,
       deleteItems,
@@ -260,6 +328,11 @@ export default defineComponent({
   }
   .delete-item {
   }
+}
+.checkout-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 .member-select-wrapper-row {
   margin: 20px 0px;

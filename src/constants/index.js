@@ -54,6 +54,14 @@ export const GET_PROGRAMS_URL = {
   headers: false,
 };
 
+//RECEIPT REQUESTS
+
+export const SAVE_RECEIPT_URL = {
+  url: "v1/Receipt/SaveReceipt",
+  accesstoken: true,
+  headers: false,
+};
+
 //PAGES ROUTES
 export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
 export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };

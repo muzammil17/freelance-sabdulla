@@ -5,10 +5,11 @@ import {
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
   SET_CART_UPDATED_ITEMS_MUT,
+  SET_EMPTY_CART_MUT,
 } from "@/action/actionTypes";
 // import {
 // } from "@/constants";
-import { getProgramsRequest } from "@/action";
+import { getProgramsRequest, saveReceiptRequest } from "@/action";
 
 export const programModule = {
   state: () => ({
@@ -61,6 +62,10 @@ export const programModule = {
       state.totalPrice = totalPrice;
       state.cart = cartItems;
     },
+    [SET_EMPTY_CART_MUT]: (state) => {
+      state.cart = [];
+      state.totalPrice = 0;
+    },
   },
 
   getters: {
@@ -75,5 +80,5 @@ export const programModule = {
     },
   },
 
-  actions: { getProgramsRequest },
+  actions: { getProgramsRequest, saveReceiptRequest },
 };

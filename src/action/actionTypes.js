@@ -41,6 +41,7 @@ export const SET_AREAS_MUT = "SET_AREAS_MUT";
 export const SET_ALL_PROGRAMS_MUT = "SET_ALL_PROGRAMS_MUT";
 export const SET_ADD_CART_ITEM_MUT = "SET_ADD_CART_ITEM_MUT";
 export const SET_CART_UPDATED_ITEMS_MUT = "SET_CART_UPDATED_ITEMS_MUT";
+export const SET_EMPTY_CART_MUT = "SET_EMPTY_CART_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 
@@ -59,3 +60,7 @@ export const GET_AREAS_REQUEST = "getAreasRequest";
 
 //program actions
 export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
+
+//receipt actions
+
+export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";

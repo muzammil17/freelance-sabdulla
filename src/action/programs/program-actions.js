@@ -1,5 +1,5 @@
-import { GET_PROGRAMS_URL } from "@/constants";
-import { getCall } from "@/services/services";
+import { GET_PROGRAMS_URL, SAVE_RECEIPT_URL } from "@/constants";
+import { getCall, postCall } from "@/services/services";
 import { SET_ALL_PROGRAMS_MUT } from "../actionTypes";
 
 export const getProgramsRequest = async (
@@ -21,6 +21,30 @@ export const getProgramsRequest = async (
 
     if (result.data.success) {
       context.commit(SET_ALL_PROGRAMS_MUT, result.data?.data);
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+export const saveReceiptRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      SAVE_RECEIPT_URL,
+      payload,
+      "",
+      "",
+      SAVE_RECEIPT_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);
