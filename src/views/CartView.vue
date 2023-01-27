@@ -1,8 +1,8 @@
 <template>
   <div class="row justify-center q-col-gutter-md">
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
-      <div class="row q-col-gutter-sm member-select-wrapper-row items-start">
-        <div class="col-lg-8 col-xl-8 col-md-8 col-sm-8 col-xs-12">
+      <div class="row member-select-wrapper-row items-start">
+        <!-- <div class="col-lg-8 col-xl-8 col-md-8 col-sm-8 col-xs-12">
           <q-select
             outlined
             label="Select Member"
@@ -20,7 +20,18 @@
               </q-item>
             </template>
           </q-select>
+        </div> -->
+        <div
+          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
+          style="display: flex; justify-content: flex-end; margin-bottom: 15px"
+        >
+          <q-btn
+            color="primary"
+            label="Select Member"
+            @click="openMemberListModal = true"
+          />
         </div>
+
         <div
           class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
           v-if="memberInput?.memberId"
@@ -74,7 +85,7 @@
             />
           </span>
         </template>
-        <template v-slot:body-cell-quantity="props">
+        <!-- <template v-slot:body-cell-quantity="props">
           <q-td :props="props">
             <q-input
               type="number"
@@ -86,7 +97,7 @@
               outlined
             />
           </q-td>
-        </template>
+        </template> -->
         <template v-slot:bottom>
           <q-tr class="row justify-between totalpricerow">
             <q-td class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-6">
@@ -112,6 +123,75 @@
       </span>
     </div>
   </div>
+
+  <!--////////////////////////// ////////////////// Modal//////////////////////////////////// -->
+
+  <q-dialog v-model="openMemberListModal" class="dialog-wrapper">
+    <q-card-section
+      style="max-width: 1500px; width: 1000px; min-height: 200px"
+      class="bg-white q-pt-none member-list-modal-wrapper"
+    >
+      <div class="row justify-center q-col-gutter-lg">
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+          <span class="modal-header-wrapper">
+            <div class="text-h5">Select Member</div>
+            <q-btn
+              dense
+              round
+              flat
+              color="primary"
+              icon="ion-close-circle"
+              @click="openMemberListModal = false"
+            />
+          </span>
+        </div>
+
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+          <q-table
+            title="Members"
+            dense
+            :pagination="initialPaginationModal"
+            class="table-header-wrapper"
+            :rows="membersRows"
+            :filter="search"
+            :columns="memberModalColumns"
+            row-key="fullName"
+          >
+            <template v-slot:top-right>
+              <q-input
+                borderless
+                dense
+                debounce="300"
+                v-model="search"
+                placeholder="Search"
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
+            <template v-slot:body-cell-actions="props">
+              <q-td :props="props">
+                <q-btn
+                  dense
+                  round
+                  flat
+                  class="edit-memberbtn"
+                  @click="
+                    memberInput = props.row;
+                    openMemberListModal = false;
+                  "
+                  icon="ion-add-circle"
+                />
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+      </div>
+    </q-card-section>
+  </q-dialog>
+
+  <!--////////////////////////// ////////////////// Modal//////////////////////////////////// -->
 </template>
 
 <script>
@@ -121,12 +201,14 @@ import {
   GET_MEMBERS_REQUEST,
   SET_CART_UPDATED_ITEMS_MUT,
   GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT,
+  GET_PAY_MODES_REQUEST,
   SAVE_RECEIPT_REQUEST,
   SET_EMPTY_CART_MUT,
+  REGISTER_TO_PROGRAM_REQUEST,
 } from "@/action/actionTypes";
-import { defineComponent, onBeforeMount, computed, ref } from "vue";
+import { defineComponent, onBeforeMount, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
-import { cartColumns, memberColumns } from "@/constants";
+import { cartColumns, memberColumns, memberModalColumns } from "@/constants";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 
@@ -138,6 +220,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const $store = useStore();
+    const openMemberListModal = ref(false);
     const $router = useRouter();
     const saveReciptLoader = ref(false);
 
@@ -146,6 +229,43 @@ export default defineComponent({
 
     let cartData = ref(null);
     let memberOptions = ref(null);
+
+    const getOptionsMembersGetter = computed(() => {
+      return $store.getters[GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT];
+    });
+
+    ////////////////modal state and handlers
+    let search = ref("");
+
+    const initialPaginationModal = {
+      sortBy: "desc",
+      descending: false,
+      rowsPerPage: 5,
+      // rowsNumber: xx if getting data from a server
+    };
+
+    const membersRows = ref([]);
+
+    watch(getOptionsMembersGetter, (currentVal) => {
+      let memberListData = JSON.parse(
+        JSON.stringify(Object.values(currentVal))
+      );
+      console.log("currentVal", memberListData);
+      if (memberListData.length) {
+        let rowsTemp = [];
+        for (const item of memberListData) {
+          console.log({ item });
+          rowsTemp.push({
+            ...item,
+            membershipTypeDesc: item?.membershipTypeDesc || "-",
+            fullName: `${item?.firstName} ${item?.lastName}`,
+          });
+        }
+        membersRows.value = rowsTemp;
+      }
+    });
+
+    ////////////////modal state and handlers
 
     const initialPagination = {
       sortBy: "desc",
@@ -163,6 +283,10 @@ export default defineComponent({
         $q.loading.show({
           delay: 400, // ms
         });
+        $store.dispatch(GET_PAY_MODES_REQUEST, {
+          payload: { activeOnly: true },
+          responseCallback: () => {},
+        });
         $store.dispatch(GET_MEMBERS_REQUEST, {
           payload: null,
           responseCallback: () => {
@@ -171,10 +295,6 @@ export default defineComponent({
         });
       }
       cartData.value = clone;
-    });
-
-    const getOptionsMembersGetter = computed(() => {
-      return $store.getters[GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT];
     });
 
     const getCartItemsGetter = computed(() => {
@@ -190,37 +310,51 @@ export default defineComponent({
         toastMessage("Your Cart is empty", false);
       } else if (!memberInput?.value?.memberId) {
         toastMessage("Select a member for the programs", false);
-      } else if (cartData.value?.length > 1) {
-        toastMessage("Only single program can be selected at a time!", false);
-      } else {
+      }
+      // else if (cartData.value?.length > 1) {
+      //   toastMessage("Only single program can be selected at a time!", false);
+      // }
+      else {
         saveReciptLoader.value = true;
-        const cartItem = {
-          ...cartData.value[0],
-        };
-        const { progId, progDesc } = cartItem;
+
+        const cartItemsList = [];
+        for (const item of cartData.value) {
+          const { standardPrice, progId } = item;
+          cartItemsList.push({
+            memberId: memberInput.value.memberId,
+            programId: progId,
+            standardPrice,
+          });
+        }
         const payload = {
-          progId,
-          programDesc: progDesc,
-          payModeId: 0,
+          payModeId: 1,
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
-        console.log({ payload });
-        $store.dispatch(SAVE_RECEIPT_REQUEST, {
-          payload,
-          responseCallback: (status, res) => {
-            saveReciptLoader.value = false;
-            console.log(status, { res });
-            $store.commit(SET_EMPTY_CART_MUT, null);
 
+        $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
+          payload: cartItemsList,
+          responseCallback: (status, res) => {
             if (status) {
-              console.log({ res });
               toastMessage(res.message, true);
-              $router.push("/");
-            } else {
-              toastMessage("Something went wrong!", false);
-              $router.push("/");
+
+              $store.dispatch(SAVE_RECEIPT_REQUEST, {
+                payload,
+                responseCallback: (status, res) => {
+                  saveReciptLoader.value = false;
+                  console.log(status, { res });
+                  $store.commit(SET_EMPTY_CART_MUT, null);
+
+                  if (status) {
+                    console.log({ res });
+                    toastMessage(res.message, true);
+                    $router.push("/");
+                  } else {
+                    toastMessage("Something went wrong!", false);
+                    $router.push("/");
+                  }
+                },
+              });
             }
-            // $q.loading.hide();
           },
         });
       }
@@ -292,6 +426,9 @@ export default defineComponent({
 
     return {
       //states
+      search,
+      initialPaginationModal,
+      membersRows,
       cartColumns,
       getCartItemsGetter,
       initialPagination,
@@ -302,7 +439,9 @@ export default defineComponent({
       memberInput,
       memberColumns,
       selected,
+      openMemberListModal,
       saveReciptLoader,
+      memberModalColumns,
       //handlers
       handleCheckout,
       toastMessage,
@@ -317,6 +456,17 @@ export default defineComponent({
 .quantity-input {
   // height: 20px;
   width: 100px;
+}
+.dialog-wrapper {
+  .member-list-modal-wrapper {
+    width: max-content;
+    border-radius: 15px;
+    padding: 15px;
+    .modal-header-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
 }
 .cart-table-header {
   width: 100%;

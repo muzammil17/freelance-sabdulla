@@ -60,7 +60,8 @@ export const GET_AREAS_REQUEST = "getAreasRequest";
 
 //program actions
 export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
+export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
 
 //receipt actions
-
+export const GET_PAY_MODES_REQUEST = "getPayModesRequest";
 export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";

@@ -1,4 +1,9 @@
-import { GET_PROGRAMS_URL, SAVE_RECEIPT_URL } from "@/constants";
+import {
+  GET_PAYMODE__URL,
+  GET_PROGRAMS_URL,
+  REGISTER_PROGRAM_URL,
+  SAVE_RECEIPT_URL,
+} from "@/constants";
 import { getCall, postCall } from "@/services/services";
 import { SET_ALL_PROGRAMS_MUT } from "../actionTypes";
 
@@ -31,6 +36,33 @@ export const getProgramsRequest = async (
     console.log("error", error);
   }
 };
+export const getPayModesRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  const { activeOnly } = payload;
+  try {
+    let query = `activeOnly=${activeOnly}`;
+
+    const result = await getCall(
+      GET_PAYMODE__URL,
+      "",
+      query,
+      GET_PAYMODE__URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 export const saveReceiptRequest = async (
   context,
   { payload, responseCallback }
@@ -42,6 +74,31 @@ export const saveReceiptRequest = async (
       "",
       "",
       SAVE_RECEIPT_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const registerProgramRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      REGISTER_PROGRAM_URL,
+      payload,
+      "",
+      "",
+      REGISTER_PROGRAM_URL.headers ? {} : null
     );
 
     if (result.data.success) {

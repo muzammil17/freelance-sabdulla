@@ -10,9 +10,13 @@ import { getCitiesRequest, getAreasRequest } from "./areas/areas";
 import {
   getProgramsRequest,
   saveReceiptRequest,
+  registerProgramRequest,
+  getPayModesRequest,
 } from "./programs/program-actions";
 
 export {
+  getPayModesRequest,
+  registerProgramRequest,
   saveReceiptRequest,
   getProgramsRequest,
   getAreasRequest,

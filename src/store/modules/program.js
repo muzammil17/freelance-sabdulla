@@ -9,7 +9,12 @@ import {
 } from "@/action/actionTypes";
 // import {
 // } from "@/constants";
-import { getProgramsRequest, saveReceiptRequest } from "@/action";
+import {
+  getProgramsRequest,
+  saveReceiptRequest,
+  registerProgramRequest,
+  getPayModesRequest,
+} from "@/action";
 
 export const programModule = {
   state: () => ({
@@ -80,5 +85,10 @@ export const programModule = {
     },
   },
 
-  actions: { getProgramsRequest, saveReceiptRequest },
+  actions: {
+    getProgramsRequest,
+    saveReceiptRequest,
+    registerProgramRequest,
+    getPayModesRequest,
+  },
 };

@@ -53,6 +53,17 @@ export const GET_PROGRAMS_URL = {
   accesstoken: true,
   headers: false,
 };
+export const GET_PAYMODE__URL = {
+  url: "v1/Receipt/GetPayModes",
+  accesstoken: true,
+  headers: false,
+};
+
+export const REGISTER_PROGRAM_URL = {
+  url: "v1/Member/RegisterPrograms",
+  accesstoken: true,
+  headers: false,
+};
 
 //RECEIPT REQUESTS
 
@@ -128,6 +139,31 @@ export const LOGOUT_UNAUTH = () => {
   // store.commit(LOGOUT_SUCCESS);
   // router.replace(LOGIN_VIEW_URL);
 };
+
+export const memberModalColumns = [
+  {
+    name: "fullName",
+    label: "Full Name",
+    align: "left",
+    field: "fullName",
+    sortable: true,
+  },
+  {
+    name: "cnic",
+    align: "center",
+    label: "CNIC",
+    field: "cnic",
+    sortable: true,
+  },
+  {
+    name: "phoneMobile",
+    align: "center",
+    label: "Mobile number",
+    field: "phoneMobile",
+    sortable: true,
+  },
+  { name: "actions", label: "Actions", field: "", align: "center" },
+];
 
 export const memberColumns = [
   {
