@@ -2,34 +2,42 @@
   <div class="row justify-center q-col-gutter-md">
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
       <div class="row member-select-wrapper-row items-start">
-        <!-- <div class="col-lg-8 col-xl-8 col-md-8 col-sm-8 col-xs-12">
-          <q-select
-            outlined
-            label="Select Member"
-            v-model="memberInput"
-            use-input
-            behavior="menu"
-            input-debounce="0"
-            :options="memberOptions"
-            @filter="filterFn"
-            hint="* Select Member"
-          >
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
-        </div> -->
-        <div
-          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
-          style="display: flex; justify-content: flex-end; margin-bottom: 15px"
-        >
-          <q-btn
-            color="primary"
-            label="Select Member"
-            @click="openMemberListModal = true"
-          />
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+          <!-- style="display: flex; justify-content: flex-end; margin-bottom: 15px" -->
+          <div class="row justify-between items-center q-col-gutter-md">
+            <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
+              <q-select
+                outlined
+                label="Payment Method"
+                v-model="paymentInput"
+                behavior="menu"
+                :options="getPayModesGetter"
+                hint="* Select Payment Method"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+            <div
+              class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
+              style="
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 15px;
+              "
+            >
+              <q-btn
+                color="primary"
+                label="Select Member"
+                @click="openMemberListModal = true"
+              />
+            </div>
+          </div>
         </div>
 
         <div
@@ -70,11 +78,11 @@
         class="table-header-wrapper"
         :rows="cartData"
         :columns="cartColumns"
-        selection="multiple"
         row-key="progDetailDesc"
         v-model:selected="selected"
       >
-        <template v-slot:top>
+        <!-- selection="multiple" -->
+        <!-- <template v-slot:top>
           <span class="cart-table-header">
             <h6>Cart Items</h6>
             <q-btn
@@ -84,20 +92,20 @@
               class="delete-item"
             />
           </span>
-        </template>
-        <!-- <template v-slot:body-cell-quantity="props">
+        </template> -->
+        <template v-slot:body-cell-select="props">
           <q-td :props="props">
-            <q-input
-              type="number"
-              v-model="props.row.quantity"
+            <q-btn
               dense
-              @update:model-value="
-                (e) => handleChangeQuantity(e, props.row, props.rowIndex)
-              "
-              outlined
+              round
+              flat
+              class="edit-memberbtn"
+              color="primary"
+              @click="deleteCartItems(props.row)"
+              icon="ion-close-circle"
             />
           </q-td>
-        </template> -->
+        </template>
         <template v-slot:bottom>
           <q-tr class="row justify-between totalpricerow">
             <q-td class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-6">
@@ -205,6 +213,7 @@ import {
   SAVE_RECEIPT_REQUEST,
   SET_EMPTY_CART_MUT,
   REGISTER_TO_PROGRAM_REQUEST,
+  GET_PAYMODES_GETT,
 } from "@/action/actionTypes";
 import { defineComponent, onBeforeMount, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
@@ -225,6 +234,8 @@ export default defineComponent({
     const saveReciptLoader = ref(false);
 
     let memberInput = ref("");
+    let paymentInput = ref("");
+
     let selected = ref([]);
 
     let cartData = ref(null);
@@ -271,7 +282,6 @@ export default defineComponent({
       sortBy: "desc",
       descending: false,
       rowsPerPage: 100,
-      // rowsNumber: xx if getting data from a server
     };
 
     onBeforeMount(() => {
@@ -310,6 +320,8 @@ export default defineComponent({
         toastMessage("Your Cart is empty", false);
       } else if (!memberInput?.value?.memberId) {
         toastMessage("Select a member for the programs", false);
+      } else if (!paymentInput.value) {
+        toastMessage("Select a Payment method", false);
       }
       // else if (cartData.value?.length > 1) {
       //   toastMessage("Only single program can be selected at a time!", false);
@@ -318,19 +330,25 @@ export default defineComponent({
         saveReciptLoader.value = true;
 
         const cartItemsList = [];
+        const { memberId, lastName, firstName } = memberInput.value;
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
-            memberId: memberInput.value.memberId,
+            memberId: memberId,
             programId: progId,
             standardPrice,
           });
         }
+
+        const { payModeId, payModeDesc } = paymentInput.value;
         const payload = {
-          payModeId: 1,
+          payModeId,
+          payModeDesc,
+          memberId,
+          memberFullName: `${firstName} ${lastName}`,
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
-
+        console.log({ payload });
         $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
           payload: cartItemsList,
           responseCallback: (status, res) => {
@@ -412,6 +430,20 @@ export default defineComponent({
       }
     };
 
+    const deleteCartItems = (item) => {
+      let clone = cartData.value.slice(0);
+
+      let selectedCartItems = [item]?.map((dt) => dt?.progId);
+      if (selectedCartItems?.length) {
+        let filterDeletedItems = clone.filter(
+          (dt) => !selectedCartItems.includes(dt?.progId)
+        );
+        console.log({ filterDeletedItems }, { selectedCartItems }, { clone });
+        cartData.value = filterDeletedItems;
+        $store.commit(SET_CART_UPDATED_ITEMS_MUT, filterDeletedItems);
+      }
+    };
+
     const toastMessage = (message, bool) => {
       $q.notify({
         color: bool ? "positive" : "negative",
@@ -424,8 +456,13 @@ export default defineComponent({
       });
     };
 
+    const getPayModesGetter = computed(() => {
+      return $store.getters[GET_PAYMODES_GETT];
+    });
+
     return {
       //states
+      paymentInput,
       search,
       initialPaginationModal,
       membersRows,
@@ -442,12 +479,14 @@ export default defineComponent({
       openMemberListModal,
       saveReciptLoader,
       memberModalColumns,
+      getPayModesGetter,
       //handlers
       handleCheckout,
       toastMessage,
       filterFn,
       handleChangeQuantity,
       deleteItems,
+      deleteCartItems,
     };
   },
 });

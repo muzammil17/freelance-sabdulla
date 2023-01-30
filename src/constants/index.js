@@ -212,10 +212,18 @@ export const memberColumns = [
 
 export const cartColumns = [
   {
-    name: "progDetailDesc",
+    name: "select",
+    label: "",
+    align: "left",
+    field: "select",
+    sortable: true,
+  },
+
+  {
+    name: "progDesc",
     label: "Program Detail",
     align: "left",
-    field: "progDetailDesc",
+    field: "progDesc",
     sortable: true,
   },
   {

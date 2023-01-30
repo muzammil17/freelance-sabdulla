@@ -2,10 +2,12 @@ import {
   GET_ALL_PROGRAMS_GETT,
   GET_CART_ITEMS_GETT,
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
+  GET_PAYMODES_GETT,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
   SET_CART_UPDATED_ITEMS_MUT,
   SET_EMPTY_CART_MUT,
+  SET_PAYMENT_MODES_MUT,
 } from "@/action/actionTypes";
 // import {
 // } from "@/constants";
@@ -21,6 +23,7 @@ export const programModule = {
     programs: [],
     cart: [],
     totalPrice: 0,
+    paymentModes: [],
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
@@ -71,6 +74,9 @@ export const programModule = {
       state.cart = [];
       state.totalPrice = 0;
     },
+    [SET_PAYMENT_MODES_MUT]: (state, payload) => {
+      state.paymentModes = payload;
+    },
   },
 
   getters: {
@@ -82,6 +88,20 @@ export const programModule = {
     },
     [GET_CART_ITEMS_TOTAL_PRICE_GETT]: (state) => {
       return state.totalPrice;
+    },
+    [GET_PAYMODES_GETT]: (state) => {
+      let clonePaymodes = state.paymentModes.slice(0);
+      let options = [];
+      if (clonePaymodes?.length) {
+        for (const item of clonePaymodes) {
+          options.push({
+            ...item,
+            label: item?.payModeDesc,
+            value: item?.payModeId,
+          });
+        }
+      }
+      return options;
     },
   },
 

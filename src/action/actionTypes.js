@@ -23,6 +23,7 @@ export const GET_ALL_PROGRAMS_GETT = "GET_ALL_PROGRAMS_GETT";
 export const GET_CART_ITEMS_GETT = "GET_CART_ITEMS_GETT";
 export const GET_CART_ITEMS_TOTAL_PRICE_GETT =
   "GET_CART_ITEMS_TOTAL_PRICE_GETT";
+export const GET_PAYMODES_GETT = "GET_PAYMODES_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -42,6 +43,7 @@ export const SET_ALL_PROGRAMS_MUT = "SET_ALL_PROGRAMS_MUT";
 export const SET_ADD_CART_ITEM_MUT = "SET_ADD_CART_ITEM_MUT";
 export const SET_CART_UPDATED_ITEMS_MUT = "SET_CART_UPDATED_ITEMS_MUT";
 export const SET_EMPTY_CART_MUT = "SET_EMPTY_CART_MUT";
+export const SET_PAYMENT_MODES_MUT = "SET_PAYMENT_MODES_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 

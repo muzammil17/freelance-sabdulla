@@ -100,7 +100,10 @@ export default defineComponent({
     };
     const handleAddtoCart = (item) => {
       $store.commit(SET_ADD_CART_ITEM_MUT, item);
-      toastMessage(`${item.progDetailDesc} added to cart`, true);
+      toastMessage(
+        `${item.progDetailDesc || item.progDesc} added to cart`,
+        true
+      );
       $router.push(VIEW_CART_LIST_URL.url);
     };
 

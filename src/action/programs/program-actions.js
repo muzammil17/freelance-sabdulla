@@ -5,7 +5,7 @@ import {
   SAVE_RECEIPT_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
-import { SET_ALL_PROGRAMS_MUT } from "../actionTypes";
+import { SET_ALL_PROGRAMS_MUT, SET_PAYMENT_MODES_MUT } from "../actionTypes";
 
 export const getProgramsRequest = async (
   context,
@@ -43,6 +43,7 @@ export const getPayModesRequest = async (
   const { activeOnly } = payload;
   try {
     let query = `activeOnly=${activeOnly}`;
+    console.log({ query });
 
     const result = await getCall(
       GET_PAYMODE__URL,
@@ -52,6 +53,9 @@ export const getPayModesRequest = async (
     );
 
     if (result.data.success) {
+      console.log({ result });
+      context.commit(SET_PAYMENT_MODES_MUT, result.data?.data);
+
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);
