@@ -12,9 +12,11 @@ import {
   saveReceiptRequest,
   registerProgramRequest,
   getPayModesRequest,
+  getBanksRequest,
 } from "./programs/program-actions";
 
 export {
+  getBanksRequest,
   getPayModesRequest,
   registerProgramRequest,
   saveReceiptRequest,

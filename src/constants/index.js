@@ -59,6 +59,12 @@ export const GET_PAYMODE__URL = {
   headers: false,
 };
 
+export const GET_BANKS_URL = {
+  url: "v1/Bank/GetBanks",
+  accesstoken: true,
+  headers: false,
+};
+
 export const REGISTER_PROGRAM_URL = {
   url: "v1/Member/RegisterPrograms",
   accesstoken: true,
@@ -134,6 +140,8 @@ export const checkCNIC = (value) => {
     return false;
   }
 };
+
+export const IS_PAYMENT_METHOD_CHEQUE = "Cheque";
 
 export const LOGOUT_UNAUTH = () => {
   // store.commit(LOGOUT_SUCCESS);

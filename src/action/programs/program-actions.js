@@ -1,11 +1,16 @@
 import {
+  GET_BANKS_URL,
   GET_PAYMODE__URL,
   GET_PROGRAMS_URL,
   REGISTER_PROGRAM_URL,
   SAVE_RECEIPT_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
-import { SET_ALL_PROGRAMS_MUT, SET_PAYMENT_MODES_MUT } from "../actionTypes";
+import {
+  SET_ALL_PROGRAMS_MUT,
+  SET_CART_BANKS_MUT,
+  SET_PAYMENT_MODES_MUT,
+} from "../actionTypes";
 
 export const getProgramsRequest = async (
   context,
@@ -36,6 +41,7 @@ export const getProgramsRequest = async (
     console.log("error", error);
   }
 };
+
 export const getPayModesRequest = async (
   context,
   { payload, responseCallback }
@@ -55,6 +61,37 @@ export const getPayModesRequest = async (
     if (result.data.success) {
       console.log({ result });
       context.commit(SET_PAYMENT_MODES_MUT, result.data?.data);
+
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getBanksRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  const { activeOnly } = payload;
+  try {
+    let query = `activeOnly=${activeOnly ? activeOnly : false}&isOwnBank=false`;
+    console.log({ query });
+
+    const result = await getCall(
+      GET_BANKS_URL,
+      "",
+      query,
+      GET_BANKS_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      console.log({ result });
+      context.commit(SET_CART_BANKS_MUT, result.data?.data);
 
       responseCallback(true, result.data);
     } else {

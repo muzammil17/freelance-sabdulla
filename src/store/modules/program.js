@@ -1,10 +1,13 @@
 import {
   GET_ALL_PROGRAMS_GETT,
+  GET_BANKS_FOR_RECEIPTS_GETT,
   GET_CART_ITEMS_GETT,
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
+  GET_COLLECTION_TYPE_GETT,
   GET_PAYMODES_GETT,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
+  SET_CART_BANKS_MUT,
   SET_CART_UPDATED_ITEMS_MUT,
   SET_EMPTY_CART_MUT,
   SET_PAYMENT_MODES_MUT,
@@ -16,6 +19,7 @@ import {
   saveReceiptRequest,
   registerProgramRequest,
   getPayModesRequest,
+  getBanksRequest,
 } from "@/action";
 
 export const programModule = {
@@ -24,6 +28,12 @@ export const programModule = {
     cart: [],
     totalPrice: 0,
     paymentModes: [],
+    collection_types: [
+      { value: 1, label: "Fee" },
+      { value: 2, label: "Donation" },
+    ],
+
+    banksForCart: [],
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
@@ -77,18 +87,43 @@ export const programModule = {
     [SET_PAYMENT_MODES_MUT]: (state, payload) => {
       state.paymentModes = payload;
     },
+
+    [SET_CART_BANKS_MUT]: (state, payload) => {
+      let clonePayload = [];
+      if (payload?.length) {
+        for (const item of payload) {
+          clonePayload.push({
+            ...item,
+            value: item?.bankId,
+            label: item?.bankName,
+          });
+        }
+      }
+      state.banksForCart = clonePayload;
+    },
   },
 
   getters: {
+    [GET_BANKS_FOR_RECEIPTS_GETT]: (state) => {
+      return state.banksForCart;
+    },
+
     [GET_ALL_PROGRAMS_GETT]: (state) => {
       return state.programs;
     },
+
     [GET_CART_ITEMS_GETT]: (state) => {
       return state.cart;
     },
+
     [GET_CART_ITEMS_TOTAL_PRICE_GETT]: (state) => {
       return state.totalPrice;
     },
+
+    [GET_COLLECTION_TYPE_GETT]: (state) => {
+      return state.collection_types;
+    },
+
     [GET_PAYMODES_GETT]: (state) => {
       let clonePaymodes = state.paymentModes.slice(0);
       let options = [];
@@ -110,5 +145,6 @@ export const programModule = {
     saveReceiptRequest,
     registerProgramRequest,
     getPayModesRequest,
+    getBanksRequest,
   },
 };

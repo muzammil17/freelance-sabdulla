@@ -24,6 +24,8 @@ export const GET_CART_ITEMS_GETT = "GET_CART_ITEMS_GETT";
 export const GET_CART_ITEMS_TOTAL_PRICE_GETT =
   "GET_CART_ITEMS_TOTAL_PRICE_GETT";
 export const GET_PAYMODES_GETT = "GET_PAYMODES_GETT";
+export const GET_COLLECTION_TYPE_GETT = "GET_COLLECTION_TYPE_GETT";
+export const GET_BANKS_FOR_RECEIPTS_GETT = "GET_BANKS_FOR_RECEIPTS_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -44,6 +46,7 @@ export const SET_ADD_CART_ITEM_MUT = "SET_ADD_CART_ITEM_MUT";
 export const SET_CART_UPDATED_ITEMS_MUT = "SET_CART_UPDATED_ITEMS_MUT";
 export const SET_EMPTY_CART_MUT = "SET_EMPTY_CART_MUT";
 export const SET_PAYMENT_MODES_MUT = "SET_PAYMENT_MODES_MUT";
+export const SET_CART_BANKS_MUT = "SET_CART_BANKS_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 
@@ -63,6 +66,8 @@ export const GET_AREAS_REQUEST = "getAreasRequest";
 //program actions
 export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
 export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
+//banks actions
+export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
 
 //receipt actions
 export const GET_PAY_MODES_REQUEST = "getPayModesRequest";

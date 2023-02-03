@@ -4,7 +4,21 @@
       <div class="row member-select-wrapper-row items-start">
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
           <!-- style="display: flex; justify-content: flex-end; margin-bottom: 15px" -->
-          <div class="row justify-between items-center q-col-gutter-md">
+          <div class="row justify-start items-center q-col-gutter-md">
+            <div
+              style="
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 15px;
+              "
+              class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
+            >
+              <q-btn
+                color="primary"
+                label="Select Member"
+                @click="openMemberListModal = true"
+              />
+            </div>
             <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
               <q-select
                 outlined
@@ -23,18 +37,56 @@
                 </template>
               </q-select>
             </div>
+            <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
+              <q-select
+                outlined
+                label="Collection type"
+                v-model="collectionInput"
+                behavior="menu"
+                :options="getCollectionTypeGetter"
+                hint="* Select Collection Type"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
-              style="
-                display: flex;
-                justify-content: flex-end;
-                margin-bottom: 15px;
-              "
+              v-if="paymentInput.label === IS_PAYMENT_METHOD_CHEQUE"
             >
-              <q-btn
-                color="primary"
-                label="Select Member"
-                @click="openMemberListModal = true"
+              <q-select
+                outlined
+                label="Select Bank"
+                v-model="selectBankInput"
+                behavior="menu"
+                :options="getBanksForReceiptsTypeGetter"
+                hint="* Select Bank for Cheque"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+            <div
+              class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
+              v-if="paymentInput.label === IS_PAYMENT_METHOD_CHEQUE"
+            >
+              <q-input
+                outlined
+                label="Cheque number"
+                type="number"
+                v-model="chequeInput"
+                hint="* Cheque number"
               />
             </div>
           </div>
@@ -214,12 +266,21 @@ import {
   SET_EMPTY_CART_MUT,
   REGISTER_TO_PROGRAM_REQUEST,
   GET_PAYMODES_GETT,
+  GET_COLLECTION_TYPE_GETT,
+  GET_BANKS_FOR_RECEIPT_REQUEST,
+  GET_BANKS_FOR_RECEIPTS_GETT,
 } from "@/action/actionTypes";
 import { defineComponent, onBeforeMount, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
-import { cartColumns, memberColumns, memberModalColumns } from "@/constants";
+import {
+  cartColumns,
+  memberColumns,
+  memberModalColumns,
+  IS_PAYMENT_METHOD_CHEQUE,
+} from "@/constants";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import moment from "moment";
 
 export default defineComponent({
   name: "CartView",
@@ -235,6 +296,9 @@ export default defineComponent({
 
     let memberInput = ref("");
     let paymentInput = ref("");
+    let collectionInput = ref("");
+    let chequeInput = ref("");
+    let selectBankInput = ref("");
 
     let selected = ref([]);
 
@@ -252,7 +316,6 @@ export default defineComponent({
       sortBy: "desc",
       descending: false,
       rowsPerPage: 5,
-      // rowsNumber: xx if getting data from a server
     };
 
     const membersRows = ref([]);
@@ -303,12 +366,27 @@ export default defineComponent({
             $q.loading.hide();
           },
         });
+
+        $store.dispatch(GET_BANKS_FOR_RECEIPT_REQUEST, {
+          payload: { activeOnly: true },
+          responseCallback: () => {
+            $q.loading.hide();
+          },
+        });
       }
       cartData.value = clone;
     });
 
     const getCartItemsGetter = computed(() => {
       return $store.getters[GET_CART_ITEMS_GETT];
+    });
+
+    const getCollectionTypeGetter = computed(() => {
+      return $store.getters[GET_COLLECTION_TYPE_GETT];
+    });
+
+    const getBanksForReceiptsTypeGetter = computed(() => {
+      return $store.getters[GET_BANKS_FOR_RECEIPTS_GETT];
     });
 
     const getCartItemsTotalPriceGetter = computed(() => {
@@ -322,11 +400,19 @@ export default defineComponent({
         toastMessage("Select a member for the programs", false);
       } else if (!paymentInput.value) {
         toastMessage("Select a Payment method", false);
-      }
-      // else if (cartData.value?.length > 1) {
-      //   toastMessage("Only single program can be selected at a time!", false);
-      // }
-      else {
+      } else if (!collectionInput.value) {
+        toastMessage("Select a Collection type", false);
+      } else if (
+        paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE &&
+        !selectBankInput.value
+      ) {
+        toastMessage("Select a bank for cheque", false);
+      } else if (
+        paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE &&
+        !chequeInput.value
+      ) {
+        toastMessage("Cheque number is required", false);
+      } else {
         saveReciptLoader.value = true;
 
         const cartItemsList = [];
@@ -341,10 +427,22 @@ export default defineComponent({
         }
 
         const { payModeId, payModeDesc } = paymentInput.value;
+        const { value } = collectionInput.value;
+
         const payload = {
           payModeId,
           payModeDesc,
           memberId,
+          receiptDate: moment().toISOString(),
+          colTypeId: value,
+          ...(paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE
+            ? {
+                chqBankId: selectBankInput.value?.value,
+                cheBankName: selectBankInput.value?.label,
+                chequeNo: String(chequeInput?.value),
+                chequeDate: moment().toISOString(),
+              }
+            : {}),
           memberFullName: `${firstName} ${lastName}`,
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
@@ -462,6 +560,7 @@ export default defineComponent({
 
     return {
       //states
+      IS_PAYMENT_METHOD_CHEQUE,
       paymentInput,
       search,
       initialPaginationModal,
@@ -479,7 +578,12 @@ export default defineComponent({
       openMemberListModal,
       saveReciptLoader,
       memberModalColumns,
+      getBanksForReceiptsTypeGetter,
       getPayModesGetter,
+      getCollectionTypeGetter,
+      collectionInput,
+      selectBankInput,
+      chequeInput,
       //handlers
       handleCheckout,
       toastMessage,
