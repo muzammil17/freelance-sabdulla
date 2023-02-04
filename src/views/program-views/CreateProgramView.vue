@@ -10,10 +10,10 @@
               label="Parent Program *"
               hint="ex: Select a Parent Program"
               lazy-rules
-              v-model="formState.parentProgram"
+              v-model="formState.parentProgId"
               :clearable="true"
               behavior="menu"
-              :options="parentProgramsOptions"
+              :options="getProgramsOptionsListGetter"
               class="input-field"
               @update:model-value="handleChange"
               @clear="handleClear"
@@ -54,18 +54,21 @@
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <q-toggle
-              :disable="formState.parentProgram ? false : true"
+              :disable="formState.parentProgId ? false : true"
               label="Is Detail?"
               color="primary"
               v-model="formState.isDetail"
             />
           </div>
 
-          <!-- :class="
-              !formState.isDetail
-                ? 'hidden'
-                : 'col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12'
-            " -->
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <q-toggle
+              :label="formState.progActive ? 'Active' : 'In Active'"
+              color="primary"
+              v-model="formState.progActive"
+            />
+          </div>
+
           <div
             :class="
               !formState.isDetail
@@ -98,9 +101,11 @@
                 : 'col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12'
             "
           >
+            <!-- type="number" -->
             <q-input
               v-model="formState.standardPrice"
               outlined
+              type="number"
               label="Standard Price *"
               hint="ex: Program Price"
               lazy-rules
@@ -108,8 +113,9 @@
               :rules="[
                 (val) =>
                   !formState.isDetail ||
-                  (formState.isDetail && val) ||
+                  (formState.isDetail && val && val.length > 0) ||
                   'Price is required',
+                (val) => (!isNaN(val) && val > 0) || 'Price is Invalid',
               ]"
             />
           </div>
@@ -130,7 +136,13 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import {
+  GET_PROGRAMS_REQUEST,
+  GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
+} from "@/action/actionTypes";
+import { useQuasar } from "quasar";
+import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "CreateProgramView",
@@ -138,17 +150,56 @@ export default defineComponent({
   components: {},
 
   setup() {
+    const $q = useQuasar();
+    const $store = useStore();
+
     let formState = ref({
       isDetail: false,
       progDesc: null,
       progDetailDesc: "",
       standardPrice: null,
-      parentProgram: null,
+      parentProgId: null,
       billCycle: null,
+      progActive: true,
     });
 
-    const handleCreateProgram = (values) => {
-      console.log({ values });
+    onBeforeMount(() => {
+      $q.loading.show({
+        delay: 400, // ms
+      });
+      console.log("onbeforemounted");
+
+      $store.dispatch(GET_PROGRAMS_REQUEST, {
+        payload: { activeOnly: true, parentProgId: null },
+        responseCallback: () => {
+          $q.loading.hide();
+        },
+      });
+    });
+
+    const getProgramsOptionsListGetter = computed(() => {
+      return $store.getters[GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION];
+    });
+
+    const handleCreateProgram = () => {
+      const {
+        // billCycle,
+        isDetail,
+        parentProgId,
+        progActive,
+        progDesc,
+        progDetailDesc,
+        standardPrice,
+      } = formState.value;
+      const payload = {
+        ...(parentProgId?.value ? { parentProgId: parentProgId?.value } : {}),
+        isDetail,
+        progActive,
+        progDesc,
+        progDetailDesc,
+        ...(isDetail ? { standardPrice } : {}),
+      };
+      console.log({ payload });
     };
 
     const handleClear = () => {
@@ -175,7 +226,7 @@ export default defineComponent({
         { value: 4, label: "Bill cycle 4" },
       ],
       formState,
-
+      getProgramsOptionsListGetter,
       //handlers
       handleClear,
       handleChange,

@@ -13,9 +13,11 @@ import {
   registerProgramRequest,
   getPayModesRequest,
   getBanksRequest,
+  saveProgramRequest,
 } from "./programs/program-actions";
 
 export {
+  saveProgramRequest,
   getBanksRequest,
   getPayModesRequest,
   registerProgramRequest,

@@ -5,6 +5,7 @@ import {
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
   GET_COLLECTION_TYPE_GETT,
   GET_PAYMODES_GETT,
+  GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
   SET_CART_BANKS_MUT,
@@ -20,6 +21,7 @@ import {
   registerProgramRequest,
   getPayModesRequest,
   getBanksRequest,
+  saveProgramRequest,
 } from "@/action";
 
 export const programModule = {
@@ -116,6 +118,17 @@ export const programModule = {
       return state.programs;
     },
 
+    [GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION]: (state) => {
+      let cloneProgs = state.programs?.slice(0);
+      let options = [];
+      if (cloneProgs.length) {
+        for (const item of cloneProgs) {
+          options.push({ ...item, value: item?.progId, label: item?.progDesc });
+        }
+        return options;
+      }
+    },
+
     [GET_CART_ITEMS_GETT]: (state) => {
       return state.cart;
     },
@@ -150,5 +163,6 @@ export const programModule = {
     registerProgramRequest,
     getPayModesRequest,
     getBanksRequest,
+    saveProgramRequest,
   },
 };

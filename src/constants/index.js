@@ -71,6 +71,12 @@ export const REGISTER_PROGRAM_URL = {
   headers: false,
 };
 
+export const CREATE_PROGRAM_URL = {
+  url: "v1/Programs/SaveProgram",
+  accesstoken: true,
+  headers: false,
+};
+
 //RECEIPT REQUESTS
 
 export const SAVE_RECEIPT_URL = {

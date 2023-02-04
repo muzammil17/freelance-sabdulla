@@ -27,6 +27,9 @@ export const GET_PAYMODES_GETT = "GET_PAYMODES_GETT";
 export const GET_COLLECTION_TYPE_GETT = "GET_COLLECTION_TYPE_GETT";
 export const GET_BANKS_FOR_RECEIPTS_GETT = "GET_BANKS_FOR_RECEIPTS_GETT";
 
+export const GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION =
+  "GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION";
+
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
@@ -66,6 +69,8 @@ export const GET_AREAS_REQUEST = "getAreasRequest";
 //program actions
 export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
 export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
+export const SAVE_PROGRAM_REQUEST = "saveProgramRequest";
+
 //banks actions
 export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
 

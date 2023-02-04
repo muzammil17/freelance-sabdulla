@@ -1,4 +1,5 @@
 import {
+  CREATE_PROGRAM_URL,
   GET_BANKS_URL,
   GET_PAYMODE__URL,
   GET_PROGRAMS_URL,
@@ -115,6 +116,37 @@ export const saveReceiptRequest = async (
       "",
       "",
       SAVE_RECEIPT_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const saveProgramRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  let isExistingQuery = "";
+  if (payload?.existing) {
+    isExistingQuery = `existing=${payload?.existing}`;
+  } else {
+    isExistingQuery = `existing=${false}`;
+  }
+  try {
+    const result = await postCall(
+      CREATE_PROGRAM_URL,
+      payload,
+      "",
+      isExistingQuery,
+      CREATE_PROGRAM_URL.headers ? {} : null
     );
 
     if (result.data.success) {
