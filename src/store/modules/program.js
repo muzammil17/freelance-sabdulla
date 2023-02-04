@@ -39,6 +39,7 @@ export const programModule = {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
       state.programs = payload;
     },
+
     [SET_CART_UPDATED_ITEMS_MUT]: (state, payload) => {
       let totalPrice = 0;
       for (const item of payload) {
@@ -47,6 +48,7 @@ export const programModule = {
       state.totalPrice = totalPrice;
       state.cart = payload;
     },
+
     [SET_ADD_CART_ITEM_MUT]: (state, payload) => {
       let cartItems = JSON.parse(JSON.stringify(state.cart));
       const ifItem = cartItems?.findIndex(
@@ -80,10 +82,12 @@ export const programModule = {
       state.totalPrice = totalPrice;
       state.cart = cartItems;
     },
+
     [SET_EMPTY_CART_MUT]: (state) => {
       state.cart = [];
       state.totalPrice = 0;
     },
+
     [SET_PAYMENT_MODES_MUT]: (state, payload) => {
       state.paymentModes = payload;
     },

@@ -3,7 +3,6 @@
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
       <div class="row member-select-wrapper-row items-start">
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
-          <!-- style="display: flex; justify-content: flex-end; margin-bottom: 15px" -->
           <div class="row justify-start items-center q-col-gutter-md">
             <div
               style="
@@ -58,7 +57,7 @@
 
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
-              v-if="paymentInput.label === IS_PAYMENT_METHOD_CHEQUE"
+              v-if="!paymentInput.defaultRealized"
             >
               <q-select
                 outlined
@@ -79,7 +78,7 @@
             </div>
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
-              v-if="paymentInput.label === IS_PAYMENT_METHOD_CHEQUE"
+              v-if="!paymentInput.defaultRealized"
             >
               <q-input
                 outlined
@@ -403,14 +402,11 @@ export default defineComponent({
       } else if (!collectionInput.value) {
         toastMessage("Select a Collection type", false);
       } else if (
-        paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE &&
+        !paymentInput.value.defaultRealized &&
         !selectBankInput.value
       ) {
         toastMessage("Select a bank for cheque", false);
-      } else if (
-        paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE &&
-        !chequeInput.value
-      ) {
+      } else if (!paymentInput.value.defaultRealized && !chequeInput.value) {
         toastMessage("Cheque number is required", false);
       } else {
         saveReciptLoader.value = true;
@@ -435,7 +431,7 @@ export default defineComponent({
           memberId,
           receiptDate: moment().toISOString(),
           colTypeId: value,
-          ...(paymentInput.value.label === IS_PAYMENT_METHOD_CHEQUE
+          ...(!paymentInput.value.defaultRealized
             ? {
                 chqBankId: selectBankInput.value?.value,
                 cheBankName: selectBankInput.value?.label,

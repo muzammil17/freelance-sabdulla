@@ -79,7 +79,7 @@ export const SAVE_RECEIPT_URL = {
   headers: false,
 };
 
-//PAGES ROUTES
+/////////////////////////////////////PAGES ROUTES////////////////////////////////////////////////
 export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
 export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
 export const MEMBER_VIEW_URL = {
@@ -111,6 +111,18 @@ export const VIEW_CART_LIST_URL = {
   title: "Cart",
   url: "/cart",
 };
+
+export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
+  title: "All Programs",
+  url: "/all-programs",
+};
+
+export const VIEW_CREATE_PROGRAM_URL = {
+  title: "Create Program",
+  url: "/create-program",
+};
+
+//////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 
 export const checkPhoneLandline = (value) => {
   let regex = /^[0-9]{3}-[0-9]{8}$/gm;

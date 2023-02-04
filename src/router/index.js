@@ -7,6 +7,8 @@ import MemberDetailView from "@/views/MemberDetail.vue";
 import DashboardEmpty from "@/views/DashboardEmpty.vue";
 import ProgramsView from "@/views/program-views/ProgramsView.vue";
 import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
+import AllProgramView from "@/views/program-views/AllProgramView.vue";
+import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
 
 import CartView from "@/views/CartView.vue";
 import { store } from "@/store/store";
@@ -17,7 +19,9 @@ import {
   EDIT_MEMBER_URL,
   LOGIN_VIEW_URL,
   MEMBER_VIEW_URL,
+  VIEW_ALL_PROGRAMS_DISPLAY_URL,
   VIEW_CART_LIST_URL,
+  VIEW_CREATE_PROGRAM_URL,
   VIEW_MEMBERS_LIST_URL,
   VIEW_MEMBER_DETAIL_URL,
   VIEW_PROGRAMS_URL,
@@ -40,6 +44,7 @@ const routes = [
       }
     },
   },
+
   {
     path: LOGIN_VIEW_URL.url,
     name: LOGIN_VIEW_URL.title,
@@ -51,6 +56,7 @@ const routes = [
       }
     },
   },
+
   {
     path: VIEW_PROGRAMS_URL.url,
     name: VIEW_PROGRAMS_URL.title,
@@ -62,6 +68,7 @@ const routes = [
       }
     },
   },
+
   {
     path: VIEW_PROGRAM_Detail_URL.url,
     name: VIEW_PROGRAM_Detail_URL.title,
@@ -73,6 +80,7 @@ const routes = [
       }
     },
   },
+
   {
     path: DASHBOARD_VIEW_URL.url,
     name: DASHBOARD_VIEW_URL.title,
@@ -84,6 +92,7 @@ const routes = [
       }
     },
   },
+
   {
     path: VIEW_CART_LIST_URL.url,
     name: VIEW_CART_LIST_URL.title,
@@ -95,6 +104,31 @@ const routes = [
       }
     },
   },
+
+  {
+    path: VIEW_ALL_PROGRAMS_DISPLAY_URL.url,
+    name: VIEW_ALL_PROGRAMS_DISPLAY_URL.title,
+    component: AllProgramView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+
+  {
+    path: VIEW_CREATE_PROGRAM_URL.url,
+    name: VIEW_CREATE_PROGRAM_URL.title,
+    component: CreateProgramView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+
   {
     path: VIEW_MEMBERS_LIST_URL.url,
     name: VIEW_MEMBERS_LIST_URL.title,
@@ -106,6 +140,7 @@ const routes = [
       }
     },
   },
+
   {
     path: VIEW_MEMBER_DETAIL_URL.url,
     name: VIEW_MEMBER_DETAIL_URL.title,
@@ -117,6 +152,7 @@ const routes = [
       }
     },
   },
+
   {
     path: MEMBER_VIEW_URL.url,
     name: MEMBER_VIEW_URL.title,
@@ -128,6 +164,7 @@ const routes = [
       }
     },
   },
+
   {
     path: EDIT_MEMBER_URL.url,
     name: EDIT_MEMBER_URL.title,
