@@ -192,7 +192,12 @@ export default defineComponent({
         standardPrice,
       } = formState.value;
       const payload = {
-        ...(parentProgId?.value ? { parentProgId: parentProgId?.value } : {}),
+        ...(parentProgId?.value
+          ? {
+              parentProgId: parentProgId?.value,
+              programLevel: parentProgId?.programLevel,
+            }
+          : {}),
         isDetail,
         progActive,
         progDesc,
