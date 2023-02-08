@@ -7,7 +7,7 @@
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <q-select
               outlined
-              label="Parent Program *"
+              label="Parent Program"
               hint="ex: Select a Parent Program"
               lazy-rules
               v-model="formState.parentProgId"
@@ -115,13 +115,17 @@
                   !formState.isDetail ||
                   (formState.isDetail && val && val.length > 0) ||
                   'Price is required',
-                (val) => (!isNaN(val) && val > 0) || 'Price is Invalid',
+                (val) =>
+                  !formState.isDetail ||
+                  (formState.isDetail && !isNaN(val) && val > 0) ||
+                  'Price is Invalid',
               ]"
             />
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="submit-btn-wrapper">
               <q-btn
+                :loading="createProgLoader"
                 class="submit-btn"
                 label="Create Program"
                 type="submit"
@@ -139,6 +143,7 @@
 import {
   GET_PROGRAMS_REQUEST,
   GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
+  SAVE_PROGRAM_REQUEST,
 } from "@/action/actionTypes";
 import { useQuasar } from "quasar";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
@@ -152,7 +157,16 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const $store = useStore();
-
+    const createProgLoader = ref(false);
+    const initialFormState = {
+      isDetail: false,
+      progDesc: null,
+      progDetailDesc: "",
+      standardPrice: null,
+      parentProgId: null,
+      billCycle: null,
+      progActive: true,
+    };
     let formState = ref({
       isDetail: false,
       progDesc: null,
@@ -182,6 +196,7 @@ export default defineComponent({
     });
 
     const handleCreateProgram = () => {
+      createProgLoader.value = true;
       const {
         // billCycle,
         isDetail,
@@ -191,9 +206,11 @@ export default defineComponent({
         progDetailDesc,
         standardPrice,
       } = formState.value;
+      console.log({ parentProgId });
       const payload = {
         ...(parentProgId?.value
           ? {
+              parentProgDesc: parentProgId.progDesc,
               parentProgId: parentProgId?.value,
               programLevel: parentProgId?.programLevel,
             }
@@ -202,8 +219,24 @@ export default defineComponent({
         progActive,
         progDesc,
         progDetailDesc,
-        ...(isDetail ? { standardPrice } : {}),
+        ...(isDetail ? { standardPrice: Number(standardPrice) } : {}),
       };
+
+      $store.dispatch(SAVE_PROGRAM_REQUEST, {
+        payload,
+        responseCallback: (status, res) => {
+          console.log({ status }, { res });
+          createProgLoader.value = false;
+          if (status) {
+            formState.value.parentProgId = null;
+            formState.value.isDetail = false;
+
+            toastMessage("Program has been Created", true);
+          } else {
+            toastMessage("Something went wrong", false);
+          }
+        },
+      });
       console.log({ payload });
     };
 
@@ -216,8 +249,22 @@ export default defineComponent({
       }
     };
 
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
+
+        position: "top",
+        timeout: 2000,
+      });
+    };
+
     return {
       //states
+      initialFormState,
+      createProgLoader,
       parentProgramsOptions: [
         { value: 1, label: "Program 1" },
         { value: 2, label: "Program 2" },
@@ -233,6 +280,7 @@ export default defineComponent({
       formState,
       getProgramsOptionsListGetter,
       //handlers
+      toastMessage,
       handleClear,
       handleChange,
       handleCreateProgram,
