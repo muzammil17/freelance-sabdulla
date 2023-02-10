@@ -1,6 +1,8 @@
 import {
   CREATE_PROGRAM_URL,
+  GET_ALL_PROGRAMS_URL,
   GET_BANKS_URL,
+  GET_BILL_CYCLES_URL,
   GET_PAYMODE__URL,
   GET_PROGRAMS_URL,
   REGISTER_PROGRAM_URL,
@@ -9,8 +11,11 @@ import {
 import { getCall, postCall } from "@/services/services";
 import {
   SET_ALL_PROGRAMS_MUT,
+  SET_BILLING_CYCLES_MUT,
   SET_CART_BANKS_MUT,
   SET_PAYMENT_MODES_MUT,
+  SET_PROGRAMS_MUT,
+  SET_PROGRAMS_TREE_MUT,
 } from "../actionTypes";
 
 export const getProgramsRequest = async (
@@ -62,6 +67,62 @@ export const getPayModesRequest = async (
     if (result.data.success) {
       console.log({ result });
       context.commit(SET_PAYMENT_MODES_MUT, result.data?.data);
+
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getBillCyclesRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    let query = `activeOnly=${payload?.activeOnly || false}`;
+
+    const result = await getCall(
+      GET_BILL_CYCLES_URL,
+      "",
+      query,
+      GET_BILL_CYCLES_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      console.log({ result });
+      context.commit(SET_BILLING_CYCLES_MUT, result.data?.data);
+
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getAllProgramsRequest = async (context, { responseCallback }) => {
+  try {
+    let query = "";
+    // `activeOnly=${payload?.activeOnly || false}`;
+
+    const result = await getCall(
+      GET_ALL_PROGRAMS_URL,
+      "",
+      query,
+      GET_ALL_PROGRAMS_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      context.commit(SET_PROGRAMS_MUT, result.data?.data);
+      context.commit(SET_PROGRAMS_TREE_MUT, result.data?.data);
 
       responseCallback(true, result.data);
     } else {

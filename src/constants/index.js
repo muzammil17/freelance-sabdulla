@@ -77,6 +77,18 @@ export const CREATE_PROGRAM_URL = {
   headers: false,
 };
 
+export const GET_ALL_PROGRAMS_URL = {
+  url: "v1/Programs/GetProgramList",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_BILL_CYCLES_URL = {
+  url: "v1/Billing/GetBillingCycles",
+  accesstoken: true,
+  headers: false,
+};
+
 //RECEIPT REQUESTS
 
 export const SAVE_RECEIPT_URL = {
@@ -235,6 +247,29 @@ export const memberColumns = [
   },
   { name: "actions", label: "Actions", field: "", align: "center" },
 ];
+
+export function list_to_tree(list) {
+  var map = {},
+    node,
+    roots = [],
+    i;
+
+  for (i = 0; i < list.length; i += 1) {
+    map[list[i].progId] = i; // initialize the map
+    list[i].children = []; // initialize the children
+  }
+
+  for (i = 0; i < list.length; i += 1) {
+    node = list[i];
+    if (node?.parentProgId !== null) {
+      // if you have dangling branches check that map[node.parentId] exists
+      list[map[node.parentProgId]].children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+  return roots;
+}
 
 export const cartColumns = [
   {

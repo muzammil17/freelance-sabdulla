@@ -83,7 +83,7 @@
               lazy-rules
               behavior="menu"
               class="input-field"
-              :options="billCycleOptions"
+              :options="getBillCyclesGetter"
               v-model="formState.billCycle"
               :rules="[
                 (val) =>
@@ -144,6 +144,8 @@ import {
   GET_PROGRAMS_REQUEST,
   GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
   SAVE_PROGRAM_REQUEST,
+  GET_BILLING_CYCLES_REQUEST,
+  GET_BILLING_CYCLES_GETT,
 } from "@/action/actionTypes";
 import { useQuasar } from "quasar";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
@@ -185,6 +187,11 @@ export default defineComponent({
 
       $store.dispatch(GET_PROGRAMS_REQUEST, {
         payload: { activeOnly: true, parentProgId: null },
+        responseCallback: () => {},
+      });
+
+      $store.dispatch(GET_BILLING_CYCLES_REQUEST, {
+        payload: { activeOnly: true },
         responseCallback: () => {
           $q.loading.hide();
         },
@@ -198,7 +205,7 @@ export default defineComponent({
     const handleCreateProgram = () => {
       createProgLoader.value = true;
       const {
-        // billCycle,
+        billCycle,
         isDetail,
         parentProgId,
         progActive,
@@ -219,7 +226,13 @@ export default defineComponent({
         progActive,
         progDesc,
         progDetailDesc,
-        ...(isDetail ? { standardPrice: Number(standardPrice) } : {}),
+        ...(isDetail
+          ? {
+              standardPrice: Number(standardPrice),
+              billCycle: billCycle?.value,
+              billCycleId: billCycle.label,
+            }
+          : {}),
       };
 
       $store.dispatch(SAVE_PROGRAM_REQUEST, {
@@ -261,22 +274,15 @@ export default defineComponent({
       });
     };
 
+    const getBillCyclesGetter = computed(() => {
+      return $store.getters[GET_BILLING_CYCLES_GETT];
+    });
+
     return {
       //states
+      getBillCyclesGetter,
       initialFormState,
       createProgLoader,
-      parentProgramsOptions: [
-        { value: 1, label: "Program 1" },
-        { value: 2, label: "Program 2" },
-        { value: 3, label: "Program 3" },
-        { value: 4, label: "Program 4" },
-      ],
-      billCycleOptions: [
-        { value: 1, label: "Bill cycle 1" },
-        { value: 2, label: "Bill cycle 2" },
-        { value: 3, label: "Bill cycle 3" },
-        { value: 4, label: "Bill cycle 4" },
-      ],
       formState,
       getProgramsOptionsListGetter,
       //handlers

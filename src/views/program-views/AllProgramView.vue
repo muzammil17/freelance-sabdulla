@@ -1,19 +1,43 @@
 <template>
-  <div class="row justify-center">
+  <div class="row q-col-gutter-lg">
+    <div
+      class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11 q-py-md"
+      style="display: flex; justify-content: flex-end"
+    >
+      <q-btn
+        :disable="selected ? false : true"
+        size="sm"
+        color="primary"
+        :label="`Update ${
+          getAllProgramsGetter?.find((dt) => dt?.progId == selected)
+            ?.progDesc || ''
+        } Program`"
+      />
+    </div>
+
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
-      <!-- <h5 class="title">WELCOME TO ADMIN DASHBOARD</h5> -->
+      <h5 class="title">Program Tree</h5>
+
       <q-tree
-        :nodes="simple"
+        :default-expand-all="true"
+        :nodes="getProgramTreeGetter"
+        node-key="value"
         accordion
-        node-key="label"
-        v-model:expanded="expanded"
+        v-model:selected="selected"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { useQuasar } from "quasar";
+import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { useStore } from "vuex";
+import {
+  GET_ALL_PROGRAMS_REQUEST,
+  GET_PROGRAMS_TREE_GETT,
+  GET_PROGRAMS_GETT,
+} from "@/action/actionTypes";
 
 export default defineComponent({
   name: "AllProgramView",
@@ -21,13 +45,52 @@ export default defineComponent({
   components: {},
 
   setup() {
+    const $q = useQuasar();
+    const $store = useStore();
+    // const selectedProg = ref(null);
+
+    const selected = ref(null);
+
+    onBeforeMount(() => {
+      $q.loading.show({
+        delay: 400, // ms
+      });
+      console.log("onbeforemounted");
+
+      $store.dispatch(GET_ALL_PROGRAMS_REQUEST, {
+        payload: { activeOnly: true, parentProgId: null },
+        responseCallback: () => {
+          $q.loading.hide();
+        },
+      });
+    });
+
+    const getProgramTreeGetter = computed(() => {
+      return $store.getters[GET_PROGRAMS_TREE_GETT];
+    });
+
+    const getAllProgramsGetter = computed(() => {
+      return $store.getters[GET_PROGRAMS_GETT];
+    });
+
+    // GET_PROGRAMS_TREE_GETT
+
+    const selectedProg = (node, filter) => {
+      const filt = filter.toLowerCase();
+      return node.label && node.label.toLowerCase().indexOf(filt) > -1;
+    };
+    const filterMethod = (val) => {
+      console.log({ val });
+    };
     return {
       //states
-      expanded: ref([
-        "Satisfied customers (with avatar)",
-        "Good food (with icon)",
-      ]),
+      getAllProgramsGetter,
+      selectedProg,
+      filterMethod,
+      getProgramTreeGetter,
+      selected,
 
+      expanded: ref([]),
       simple: [
         {
           label: "Satisfied customers (with avatar)",
@@ -72,6 +135,7 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 .title {
+  margin: 0px;
   text-align: center;
 }
 </style>

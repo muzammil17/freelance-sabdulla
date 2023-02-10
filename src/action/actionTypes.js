@@ -20,15 +20,17 @@ export const GET_AREAS_GETT = "GET_AREAS_GETT";
 
 //program GETTERS
 export const GET_ALL_PROGRAMS_GETT = "GET_ALL_PROGRAMS_GETT";
+export const GET_PROGRAMS_GETT = "GET_PROGRAMS_GETT";
 export const GET_CART_ITEMS_GETT = "GET_CART_ITEMS_GETT";
 export const GET_CART_ITEMS_TOTAL_PRICE_GETT =
   "GET_CART_ITEMS_TOTAL_PRICE_GETT";
 export const GET_PAYMODES_GETT = "GET_PAYMODES_GETT";
 export const GET_COLLECTION_TYPE_GETT = "GET_COLLECTION_TYPE_GETT";
 export const GET_BANKS_FOR_RECEIPTS_GETT = "GET_BANKS_FOR_RECEIPTS_GETT";
-
 export const GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION =
   "GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION";
+export const GET_BILLING_CYCLES_GETT = "GET_BILLING_CYCLES_GETT";
+export const GET_PROGRAMS_TREE_GETT = "GET_PROGRAMS_TREE_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -50,6 +52,9 @@ export const SET_CART_UPDATED_ITEMS_MUT = "SET_CART_UPDATED_ITEMS_MUT";
 export const SET_EMPTY_CART_MUT = "SET_EMPTY_CART_MUT";
 export const SET_PAYMENT_MODES_MUT = "SET_PAYMENT_MODES_MUT";
 export const SET_CART_BANKS_MUT = "SET_CART_BANKS_MUT";
+export const SET_BILLING_CYCLES_MUT = "SET_BILLING_CYCLES_MUT";
+export const SET_PROGRAMS_MUT = "SET_PROGRAMS_MUT";
+export const SET_PROGRAMS_TREE_MUT = "SET_PROGRAMS_TREE_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 
@@ -70,6 +75,7 @@ export const GET_AREAS_REQUEST = "getAreasRequest";
 export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
 export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
 export const SAVE_PROGRAM_REQUEST = "saveProgramRequest";
+export const GET_ALL_PROGRAMS_REQUEST = "getAllProgramsRequest";
 
 //banks actions
 export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
@@ -77,3 +83,6 @@ export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
 //receipt actions
 export const GET_PAY_MODES_REQUEST = "getPayModesRequest";
 export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";
+
+//billing actions
+export const GET_BILLING_CYCLES_REQUEST = "getBillCyclesRequest";

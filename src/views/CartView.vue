@@ -55,9 +55,28 @@
               </q-select>
             </div>
 
+            <!-- <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
+              <q-select
+                outlined
+                label="Bill cycle type"
+                v-model="collectionInput"
+                behavior="menu"
+                :options="getBillCyclesOpionGetter"
+                hint="* Select Billcycle"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div> -->
+
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
-              v-if="!paymentInput.defaultRealized"
+              v-if="paymentInput && !paymentInput.defaultRealized"
             >
               <q-select
                 outlined
@@ -78,7 +97,7 @@
             </div>
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
-              v-if="!paymentInput.defaultRealized"
+              v-if="paymentInput && !paymentInput.defaultRealized"
             >
               <q-input
                 outlined
@@ -268,6 +287,8 @@ import {
   GET_COLLECTION_TYPE_GETT,
   GET_BANKS_FOR_RECEIPT_REQUEST,
   GET_BANKS_FOR_RECEIPTS_GETT,
+  GET_BILLING_CYCLES_REQUEST,
+  GET_BILLING_CYCLES_GETT,
 } from "@/action/actionTypes";
 import { defineComponent, onBeforeMount, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
@@ -361,12 +382,14 @@ export default defineComponent({
         });
         $store.dispatch(GET_MEMBERS_REQUEST, {
           payload: null,
-          responseCallback: () => {
-            $q.loading.hide();
-          },
+          responseCallback: () => {},
         });
 
         $store.dispatch(GET_BANKS_FOR_RECEIPT_REQUEST, {
+          payload: { activeOnly: true },
+          responseCallback: () => {},
+        });
+        $store.dispatch(GET_BILLING_CYCLES_REQUEST, {
           payload: { activeOnly: true },
           responseCallback: () => {
             $q.loading.hide();
@@ -382,6 +405,10 @@ export default defineComponent({
 
     const getCollectionTypeGetter = computed(() => {
       return $store.getters[GET_COLLECTION_TYPE_GETT];
+    });
+
+    const getBillCyclesOpionGetter = computed(() => {
+      return $store.getters[GET_BILLING_CYCLES_GETT];
     });
 
     const getBanksForReceiptsTypeGetter = computed(() => {
@@ -413,6 +440,7 @@ export default defineComponent({
 
         const cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
+        console.log(cartData.value);
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
@@ -556,6 +584,7 @@ export default defineComponent({
 
     return {
       //states
+      getBillCyclesOpionGetter,
       IS_PAYMENT_METHOD_CHEQUE,
       paymentInput,
       search,

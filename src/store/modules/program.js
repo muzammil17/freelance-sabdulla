@@ -1,20 +1,25 @@
 import {
   GET_ALL_PROGRAMS_GETT,
   GET_BANKS_FOR_RECEIPTS_GETT,
+  GET_BILLING_CYCLES_GETT,
   GET_CART_ITEMS_GETT,
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
   GET_COLLECTION_TYPE_GETT,
   GET_PAYMODES_GETT,
+  GET_PROGRAMS_GETT,
   GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
+  GET_PROGRAMS_TREE_GETT,
   SET_ADD_CART_ITEM_MUT,
   SET_ALL_PROGRAMS_MUT,
+  SET_BILLING_CYCLES_MUT,
   SET_CART_BANKS_MUT,
   SET_CART_UPDATED_ITEMS_MUT,
   SET_EMPTY_CART_MUT,
   SET_PAYMENT_MODES_MUT,
+  SET_PROGRAMS_MUT,
+  SET_PROGRAMS_TREE_MUT,
 } from "@/action/actionTypes";
-// import {
-// } from "@/constants";
+
 import {
   getProgramsRequest,
   saveReceiptRequest,
@@ -22,11 +27,17 @@ import {
   getPayModesRequest,
   getBanksRequest,
   saveProgramRequest,
+  getBillCyclesRequest,
+  getAllProgramsRequest,
 } from "@/action";
+import { list_to_tree } from "@/constants";
 
 export const programModule = {
   state: () => ({
     programs: [],
+    allPrograms: [],
+    allProgramsTree: [],
+
     cart: [],
     totalPrice: 0,
     paymentModes: [],
@@ -34,12 +45,36 @@ export const programModule = {
       { value: 1, label: "Fee" },
       { value: 2, label: "Donation" },
     ],
-
+    billingCyclesOptions: [],
     banksForCart: [],
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
       state.programs = payload;
+    },
+
+    [SET_PROGRAMS_MUT]: (state, payload) => {
+      console.log({ payload });
+      state.allPrograms = payload;
+    },
+    [SET_PROGRAMS_TREE_MUT]: (state, payload) => {
+      if (payload?.length) {
+        let payloadRes = [];
+
+        for (const item of payload) {
+          payloadRes.push({
+            ...item,
+            label: item?.progDesc,
+            value: item?.progId,
+          });
+        }
+
+        const tree = list_to_tree(payloadRes);
+
+        state.allProgramsTree = tree;
+      } else {
+        state.allProgramsTree = [];
+      }
     },
 
     [SET_CART_UPDATED_ITEMS_MUT]: (state, payload) => {
@@ -94,6 +129,20 @@ export const programModule = {
       state.paymentModes = payload;
     },
 
+    [SET_BILLING_CYCLES_MUT]: (state, payload) => {
+      let bills = [];
+      if (payload?.length) {
+        for (const item of payload) {
+          bills.push({
+            ...item,
+            value: item?.billCycleId,
+            label: item?.billCycle,
+          });
+        }
+      }
+      state.billingCyclesOptions = bills;
+    },
+
     [SET_CART_BANKS_MUT]: (state, payload) => {
       let clonePayload = [];
       if (payload?.length) {
@@ -110,12 +159,24 @@ export const programModule = {
   },
 
   getters: {
+    [GET_BILLING_CYCLES_GETT]: (state) => {
+      return state.billingCyclesOptions;
+    },
+
+    [GET_PROGRAMS_GETT]: (state) => {
+      return state.allPrograms;
+    },
+
     [GET_BANKS_FOR_RECEIPTS_GETT]: (state) => {
       return state.banksForCart;
     },
 
     [GET_ALL_PROGRAMS_GETT]: (state) => {
       return state.programs;
+    },
+
+    [GET_PROGRAMS_TREE_GETT]: (state) => {
+      return state.allProgramsTree;
     },
 
     [GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION]: (state) => {
@@ -158,6 +219,8 @@ export const programModule = {
   },
 
   actions: {
+    getAllProgramsRequest,
+    getBillCyclesRequest,
     getProgramsRequest,
     saveReceiptRequest,
     registerProgramRequest,

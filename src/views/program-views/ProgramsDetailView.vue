@@ -50,7 +50,7 @@ import {
   GET_PROGRAMS_REQUEST,
   SET_ADD_CART_ITEM_MUT,
 } from "@/action/actionTypes";
-import { VIEW_CART_LIST_URL, VIEW_PROGRAM_Detail_URL } from "@/constants";
+import { VIEW_PROGRAM_Detail_URL } from "@/constants";
 import { useQuasar } from "quasar";
 import { defineComponent, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -104,7 +104,7 @@ export default defineComponent({
         `${item.progDetailDesc || item.progDesc} added to cart`,
         true
       );
-      $router.push(VIEW_CART_LIST_URL.url);
+      // $router.push(VIEW_CART_LIST_URL.url);
     };
 
     const toastMessage = (message, bool) => {
