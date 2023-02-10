@@ -55,7 +55,13 @@ export const programModule = {
 
     [SET_PROGRAMS_MUT]: (state, payload) => {
       console.log({ payload });
-      state.allPrograms = payload;
+      let arr = [];
+      if (payload?.length) {
+        for (const item of payload) {
+          arr.push({ ...item, label: item?.progDesc, value: item?.progId });
+        }
+      }
+      state.allPrograms = arr;
     },
     [SET_PROGRAMS_TREE_MUT]: (state, payload) => {
       if (payload?.length) {

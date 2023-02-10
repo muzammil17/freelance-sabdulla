@@ -204,7 +204,7 @@ export const saveProgramRequest = async (
   try {
     const result = await postCall(
       CREATE_PROGRAM_URL,
-      payload,
+      payload?.payloadData,
       "",
       isExistingQuery,
       CREATE_PROGRAM_URL.headers ? {} : null

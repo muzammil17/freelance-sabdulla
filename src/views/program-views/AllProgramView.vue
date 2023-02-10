@@ -12,6 +12,7 @@
           getAllProgramsGetter?.find((dt) => dt?.progId == selected)
             ?.progDesc || ''
         } Program`"
+        @click="handleRoute(selected)"
       />
     </div>
 
@@ -38,6 +39,8 @@ import {
   GET_PROGRAMS_TREE_GETT,
   GET_PROGRAMS_GETT,
 } from "@/action/actionTypes";
+import { useRouter } from "vue-router";
+import { VIEW_UPDATE_PROGRAM_URL } from "@/constants";
 
 export default defineComponent({
   name: "AllProgramView",
@@ -47,6 +50,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const $store = useStore();
+    const $router = useRouter();
     // const selectedProg = ref(null);
 
     const selected = ref(null);
@@ -82,8 +86,14 @@ export default defineComponent({
     const filterMethod = (val) => {
       console.log({ val });
     };
+
+    const handleRoute = (id) => {
+      $router.push(VIEW_UPDATE_PROGRAM_URL.url.replace(":progId", id));
+    };
+
     return {
       //states
+      handleRoute,
       getAllProgramsGetter,
       selectedProg,
       filterMethod,

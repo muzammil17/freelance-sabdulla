@@ -26,6 +26,7 @@ import {
   VIEW_MEMBER_DETAIL_URL,
   VIEW_PROGRAMS_URL,
   VIEW_PROGRAM_Detail_URL,
+  VIEW_UPDATE_PROGRAM_URL,
 } from "@/constants";
 
 const IsAuthenticated = computed(() => {
@@ -117,6 +118,17 @@ const routes = [
     },
   },
 
+  {
+    path: VIEW_UPDATE_PROGRAM_URL.url,
+    name: VIEW_UPDATE_PROGRAM_URL.title,
+    component: CreateProgramView,
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
   {
     path: VIEW_CREATE_PROGRAM_URL.url,
     name: VIEW_CREATE_PROGRAM_URL.title,

@@ -13,14 +13,17 @@
               v-model="formState.parentProgId"
               :clearable="true"
               behavior="menu"
-              :options="getProgramsOptionsListGetter"
+              :options="
+                params?.progId
+                  ? getAllProgramsGetter.filter(
+                      (dt) => dt?.progId != params?.progId
+                    )
+                  : getAllProgramsGetter
+              "
               class="input-field"
               @update:model-value="handleChange"
               @clear="handleClear"
-              :rules="[
-                (val) => !val || val,
-                // (val) => !val || 'Parent Program is required',
-              ]"
+              :rules="[(val) => !val || val]"
             />
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
@@ -127,7 +130,7 @@
               <q-btn
                 :loading="createProgLoader"
                 class="submit-btn"
-                label="Create Program"
+                :label="params?.progId ? 'Update Program' : 'Create Program'"
                 type="submit"
                 color="primary"
               />
@@ -141,14 +144,16 @@
 
 <script>
 import {
-  GET_PROGRAMS_REQUEST,
   GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION,
   SAVE_PROGRAM_REQUEST,
   GET_BILLING_CYCLES_REQUEST,
   GET_BILLING_CYCLES_GETT,
+  GET_ALL_PROGRAMS_REQUEST,
+  GET_PROGRAMS_GETT,
 } from "@/action/actionTypes";
 import { useQuasar } from "quasar";
-import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { defineComponent, ref, onBeforeMount, computed, watch } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -159,7 +164,11 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const $store = useStore();
+    const $router = useRouter();
+    const params = $router.currentRoute.value.params;
+
     const createProgLoader = ref(false);
+
     const initialFormState = {
       isDetail: false,
       progDesc: null,
@@ -185,7 +194,7 @@ export default defineComponent({
       });
       console.log("onbeforemounted");
 
-      $store.dispatch(GET_PROGRAMS_REQUEST, {
+      $store.dispatch(GET_ALL_PROGRAMS_REQUEST, {
         payload: { activeOnly: true, parentProgId: null },
         responseCallback: () => {},
       });
@@ -202,6 +211,37 @@ export default defineComponent({
       return $store.getters[GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION];
     });
 
+    const getAllProgramsGetter = computed(() => {
+      return $store.getters[GET_PROGRAMS_GETT];
+    });
+
+    watch(getAllProgramsGetter, (currentVal) => {
+      if (params?.progId) {
+        const currentProg = getAllProgramsGetter.value?.find(
+          (dt) => dt?.progId == params?.progId
+        );
+
+        const getParentProg = getAllProgramsGetter.value?.find(
+          (dt) => dt?.progId == currentProg?.parentProgId
+        );
+        formState.value.parentProgId = currentProg?.parentProgId
+          ? {
+              label: getParentProg?.progDesc || getParentProg?.progDetailDesc,
+              value: getParentProg?.value,
+            }
+          : null;
+        formState.value.progDesc = currentProg.progDesc;
+        formState.value.progDetailDesc = currentProg.progDetailDesc;
+        formState.value.isDetail = currentProg.isDetail;
+        formState.value.progActive = currentProg.progActive;
+        formState.value.billCycle = currentProg?.billCycle || null;
+        formState.value.billCycle = currentProg?.billCycle || null;
+        formState.value.standardPrice = currentProg?.standardPrice || null;
+
+        console.log({ currentVal });
+      }
+    });
+
     const handleCreateProgram = () => {
       createProgLoader.value = true;
       const {
@@ -215,6 +255,7 @@ export default defineComponent({
       } = formState.value;
       console.log({ parentProgId });
       const payload = {
+        ...(params?.progId ? { progId: Number(params?.progId) } : {}),
         ...(parentProgId?.value
           ? {
               parentProgDesc: parentProgId.progDesc,
@@ -236,15 +277,25 @@ export default defineComponent({
       };
 
       $store.dispatch(SAVE_PROGRAM_REQUEST, {
-        payload,
+        payload: {
+          payloadData: payload,
+          existing: params?.progId ? true : false,
+        },
         responseCallback: (status, res) => {
           console.log({ status }, { res });
           createProgLoader.value = false;
           if (status) {
-            formState.value.parentProgId = null;
-            formState.value.isDetail = false;
+            if (!params?.progId) {
+              formState.value.parentProgId = null;
+              formState.value.isDetail = false;
+            }
 
-            toastMessage("Program has been Created", true);
+            toastMessage(
+              params?.progId
+                ? "Program has been Updated"
+                : "Program has been Created",
+              true
+            );
           } else {
             toastMessage("Something went wrong", false);
           }
@@ -280,6 +331,8 @@ export default defineComponent({
 
     return {
       //states
+      params,
+      getAllProgramsGetter,
       getBillCyclesGetter,
       initialFormState,
       createProgLoader,

@@ -140,6 +140,11 @@ export const VIEW_CREATE_PROGRAM_URL = {
   url: "/create-program",
 };
 
+export const VIEW_UPDATE_PROGRAM_URL = {
+  title: "Update Program",
+  url: "/update-program/:progId",
+};
+
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 
 export const checkPhoneLandline = (value) => {
