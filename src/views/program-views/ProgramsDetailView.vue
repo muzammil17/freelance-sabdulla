@@ -1,7 +1,24 @@
 <template>
   <div class="row justify-center">
+    <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11 q-mb-sm">
+      <q-btn
+        flat
+        round
+        icon="ion-arrow-back"
+        size="lg"
+        color="primary"
+        @click="$router.back()"
+      />
+    </div>
+
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
       <div class="row justify-center q-col-gutter-sm">
+        <div
+          class="col-lg-4 col-xl-4 col-md-6 col-sm-11 col-xs-11"
+          v-if="!allProgramsGetters?.length"
+        >
+          <h4 class="text-primary">No programs to show</h4>
+        </div>
         <div
           class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12"
           v-for="(item, index) in allProgramsGetters"
@@ -52,7 +69,7 @@ import {
 } from "@/action/actionTypes";
 import { VIEW_PROGRAM_Detail_URL } from "@/constants";
 import { useQuasar } from "quasar";
-import { defineComponent, computed, onMounted, watch } from "vue";
+import { defineComponent, computed, onBeforeMount, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -66,8 +83,9 @@ export default defineComponent({
     const $store = useStore();
     const $router = useRouter();
     const progId = $router.currentRoute;
-
-    onMounted(() => {
+    // const state = $router.currentRoute.value;
+    // console.log({ state });
+    onBeforeMount(() => {
       $q.loading.show({
         delay: 400, // ms
       });
@@ -95,9 +113,11 @@ export default defineComponent({
     const allProgramsGetters = computed(() => {
       return $store.getters[GET_ALL_PROGRAMS_GETT];
     });
+
     const handleRoute = (id) => {
       $router.push(VIEW_PROGRAM_Detail_URL.url.replace(":id", id));
     };
+
     const handleAddtoCart = (item) => {
       $store.commit(SET_ADD_CART_ITEM_MUT, item);
       toastMessage(
@@ -121,6 +141,7 @@ export default defineComponent({
 
     return {
       //states
+      $router,
       allProgramsGetters,
       //handlers
       handleRoute,

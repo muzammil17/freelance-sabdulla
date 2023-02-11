@@ -34,11 +34,12 @@ export const getProgramsRequest = async (
       query,
       GET_PROGRAMS_URL.headers ? {} : null
     );
-
     if (result.data.success) {
       context.commit(SET_ALL_PROGRAMS_MUT, result.data?.data);
       responseCallback(true, result.data);
     } else {
+      context.commit(SET_ALL_PROGRAMS_MUT, []);
+
       responseCallback(false, result.data);
     }
 

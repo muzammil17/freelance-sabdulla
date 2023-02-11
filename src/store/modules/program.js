@@ -50,6 +50,7 @@ export const programModule = {
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
+      console.log({ payload });
       state.programs = payload;
     },
 
