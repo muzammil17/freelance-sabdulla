@@ -13,93 +13,93 @@
     <div class="col-lg-11 col-xl-11 col-md-11 col-sm-10 col-xs-11">
       <div class="row justify-start q-col-gutter-sm">
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Membership title</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Membership title</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.title }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">First Name</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">First Name</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.firstName }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Last Name</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Last Name</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.lastName }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Reference</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Reference</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.referencId }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Membership type</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Membership type</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.membershipTypeDesc }}
           </p>
         </div>
 
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Date of Birth</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Date of Birth</h6>
+          <p class="text-body2">
             {{ moment(getMemberDetailGetter?.dob).format("LL") }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Gender</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Gender</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.gender }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Email</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Email</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.email }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">CNIC</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">CNIC</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.cnic }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Phone Landline</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Phone Landline</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.phoneLandline }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Phone Mobile</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Phone Mobile</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.phoneMobile }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Address No1</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Address No1</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.address1 }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Address No2</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Address No2</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.address2 }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">City</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">City</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.cityName }}
           </p>
         </div>
         <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
-          <h6 class="text-primary q-my-xs">Area</h6>
-          <p class="text-subtitle1">
+          <h6 class="text-subtitle1 text-primary q-my-xs">Area</h6>
+          <p class="text-body2">
             {{ getMemberDetailGetter?.areaName }}
           </p>
         </div>
