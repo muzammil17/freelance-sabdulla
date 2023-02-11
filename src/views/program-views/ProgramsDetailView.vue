@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-    <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11 q-mb-sm">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-mb-sm">
       <q-btn
         flat
         round

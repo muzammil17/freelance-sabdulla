@@ -13,6 +13,9 @@ export const GET_MEMBER_TYPES = "GET_MEMBER_TYPES";
 export const GET_MEMBERS_LIST_GETT = "GET_MEMBERS_LIST_GETT";
 export const GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT =
   "GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT";
+export const GET_MEMBERS_DETAIL_GETT = "GET_MEMBERS_DETAIL_GETT";
+export const GET_MEMBER_PROGRAMS_GETT = "GET_MEMBER_PROGRAMS_GETT";
+export const GET_MEMBER_PAYMENTS_GETT = "GET_MEMBER_PAYMENTS_GETT";
 
 //area gettters
 export const GET_CITIES_GETT = "GET_CITIES_GETT";
@@ -40,6 +43,9 @@ export const SET_USER_PRIVATE_MENU = "SET_USER_PRIVATE_MENU";
 //member MUTATIONS
 export const SET_MEMBER_TYPES = "SET_MEMBER_TYPES";
 export const SET_MEMBERS_LIST_MUT = "SET_MEMBERS_LIST_MUT";
+export const SET_MEMBERS_DETAIL_MUT = "SET_MEMBERS_DETAIL_MUT";
+export const SET_MEMBER_PROGRAMS_MUT = "SET_MEMBER_PROGRAMS_MUT";
+export const SET_MEMBER_PAYMENTS_MUT = "SET_MEMBER_PAYMENTS_MUT";
 
 //area mutations
 export const SET_CITIES_MUT = "SET_CITIES_MUT";
@@ -61,11 +67,12 @@ export const SET_PROGRAMS_TREE_MUT = "SET_PROGRAMS_TREE_MUT";
 export const LOGIN_ACTION_REQUEST = "loginRequest";
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
   "getUserAllowedMenusRequest";
-
 export const GET_MEMBER_TYPES_REQUEST = "getMemberTypesRequest";
 export const SAVE_MEMBER_REQUEST = "saveMemberRequest";
 export const GET_MEMBERS_REQUEST = "getMembersRequest";
 export const GET_MEMBER_DETAIL_REQUEST = "getMemberDetailRequest";
+export const GET_MEMBER_PROGRAMS_REQUEST = "getMemberProgramsRequest";
+export const GET_MEMBER_PAYMENTS_REQUEST = "getMemberPaymentsRequest";
 
 //areas actions
 export const GET_CITIES_REQUEST = "getCitiesRequest";

@@ -1,314 +1,153 @@
 <template>
   <div class="row justify-center">
-    <div class="col-lg-6 col-xl-6 col-md-8 col-sm-8 col-xs-10">
-      <h5 class="title">Member Detail</h5>
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-mb-sm">
+      <q-btn
+        flat
+        round
+        icon="ion-arrow-back"
+        size="lg"
+        color="primary"
+        @click="$router.back()"
+      />
     </div>
-    <div class="col-lg-10 col-xl-10 col-md-11 col-sm-10 col-xs-11">
-      <q-form @submit="onSubmit">
-        <div class="row justify-center q-col-gutter-sm">
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              v-model="formState.title"
-              label="Membership title *"
-              hint="ex: Zakat"
-              lazy-rules
-              class="input-field"
-              :rules="[
-                (val) => (val && val.length > 0) || 'title is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
-              ]"
-            >
-            </q-input>
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              outlined
-              type="text"
-              class="input-field"
-              v-model="formState.referencId"
-              label="Reference"
-              lazy-rules
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-select
-              label="Membership type *"
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              aria-modal="false"
-              behavior="menu"
-              v-model="formState.membershipTypeId"
-              :options="memberShipTypesOptions"
-              :rules="[(val) => val || 'MemberShip type is required']"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              v-model="formState.firstName"
-              label="First Name *"
-              hint="ex: John"
-              lazy-rules
-              class="input-field"
-              :rules="[
-                (val) => (val && val.length > 0) || 'First Name is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
-              ]"
-            >
-            </q-input>
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              v-model="formState.lastName"
-              label="Last Name *"
-              hint="ex: Doe"
-              lazy-rules
-              class="input-field"
-              :rules="[
-                (val) => (val && val.length > 0) || 'Last Name is required',
-                (val) => (val && val.length <= 50) || 'Limit exceeded',
-              ]"
-            >
-            </q-input>
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              v-model="formState.dob"
-              mask="date"
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              label="Date of birth"
-              hint="ex: 2000/12/30"
-              lazy-rules
-              class="input-field"
-              :rules="[
-                (val) =>
-                  !val ||
-                  moment(val).isBefore(moment().format(`YYYY/MM/DD`), `day`) ||
-                  'DOB is invalid',
-              ]"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date
-                      v-model="formState.dob"
-                      :options="
-                        (val) =>
-                          moment(val).isBefore(
-                            moment().format(`YYYY/MM/DD`),
-                            `day`
-                          )
-                      "
-                    >
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Close"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-option-group
-              inline
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              name="gender"
-              :options="genderOptions"
-              type="radio"
-              v-model="formState.gender"
-              :rules="[(val) => val || 'Gender is required']"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              type="email"
-              class="input-field"
-              v-model="formState.email"
-              label="Email"
-              lazy-rules
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              type="tel"
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              class="input-field"
-              v-model="formState.cnic"
-              hint="ex: 42101-7429960-1"
-              label="CNIC *"
-              lazy-rules
-              :rules="[(val) => (val && checkCNIC(val)) || 'Invalid CNIC']"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              type="tel"
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              class="input-field"
-              v-model="formState.phoneLandline"
-              hint="ex: 021-34569692"
-              label="Phone Landline"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  !val || checkPhoneLandline(val) || 'Invalid Landline number',
-              ]"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              type="tel"
-              class="input-field"
-              hint="ex: 0333-0972217"
-              v-model="formState.phoneMobile"
-              label="Mobile Number"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  !val || checkPhoneMobile(val) || 'Invalid Mobile number',
-              ]"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              outlined
-              type="text"
-              class="input-field"
-              v-model="formState.address1"
-              label="Address 1 *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val?.length) || 'Address 1 is required',
-              ]"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              type="text"
-              class="input-field"
-              v-model="formState.address2"
-              label="Address 2"
-              lazy-rules
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              type="text"
-              class="input-field"
-              v-model="formState.cityId"
-              label="City type *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'City type is required',
-              ]"
-            />
-          </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
-              outlined
-              type="text"
-              :disable="
-                VIEW_MEMBER_DETAIL_URL.title === pageName ? true : false
-              "
-              class="input-field"
-              v-model="formState.areaId"
-              label="Area type *"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.length > 0) || 'Area type is required',
-              ]"
-            />
-          </div>
+    <div class="col-lg-11 col-xl-11 col-md-11 col-sm-10 col-xs-11">
+      <div class="row justify-start q-col-gutter-sm">
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Membership title</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.title }}
+          </p>
         </div>
-      </q-form>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">First Name</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.firstName }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Last Name</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.lastName }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Reference</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.referencId }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Membership type</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.membershipTypeDesc }}
+          </p>
+        </div>
+
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Date of Birth</h6>
+          <p class="text-subtitle1">
+            {{ moment(getMemberDetailGetter?.dob).format("LL") }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Gender</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.gender }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Email</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.email }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">CNIC</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.cnic }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Phone Landline</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.phoneLandline }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Phone Mobile</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.phoneMobile }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Address No1</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.address1 }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Address No2</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.address2 }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">City</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.cityName }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-primary q-my-xs">Area</h6>
+          <p class="text-subtitle1">
+            {{ getMemberDetailGetter?.areaName }}
+          </p>
+        </div>
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+          <q-table
+            title="Member Programs"
+            dense
+            title-class="text-primary"
+            table-header-class="text-primary"
+            class="table-header-wrapper"
+            row-key="name"
+            :columns="memberProgramsColumns"
+            :rows="getMemberProgramsGetter"
+          />
+        </div>
+        <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+          <q-table
+            title="Member Payments"
+            dense
+            title-class="text-primary"
+            table-header-class="text-primary"
+            class="table-header-wrapper"
+            row-key="name"
+            :columns="memberPaymentsColumns"
+            :rows="getMemberPaymentsGetter"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  onBeforeMount,
-  ref,
-  watch,
-} from "vue";
+import { computed, defineComponent, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import {
-  IS_AUTHENTICATED,
-  GET_USER_DETAIL_GETTER,
-  GET_MEMBER_TYPES_REQUEST,
-  GET_MEMBER_TYPES,
-  SAVE_MEMBER_REQUEST,
-  GET_MEMBERS_LIST_GETT,
   GET_MEMBER_DETAIL_REQUEST,
+  GET_MEMBER_PROGRAMS_REQUEST,
+  GET_MEMBER_PAYMENTS_REQUEST,
+  GET_MEMBERS_DETAIL_GETT,
+  GET_MEMBER_PROGRAMS_GETT,
+  GET_MEMBER_PAYMENTS_GETT,
 } from "@/action/actionTypes";
-import {
-  checkPhoneMobile,
-  checkPhoneLandline,
-  checkCNIC,
-  VIEW_MEMBER_DETAIL_URL,
-} from "@/constants/index";
+import { memberProgramsColumns, memberPaymentsColumns } from "@/constants";
+
 import moment from "moment";
-import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "MemberView",
@@ -316,174 +155,68 @@ export default defineComponent({
   components: {},
 
   setup() {
-    const initialState = ref({
-      title: "",
-      firstName: "",
-      lastName: "",
-      dob: "",
-      gender: "male",
-      cnic: "",
-      email: "",
-      phoneLandline: "",
-      phoneMobile: "",
-      address1: "",
-      address2: "",
-      cityId: "",
-      areaId: "",
-      area: "",
-      referencId: "",
-      membershipTypeId: null,
-    });
-    const formState = ref({ ...initialState.value });
-    const editpageName = "Edit Membership";
-    const memberDetailpageName = "MemberDetail";
-
     const $store = useStore();
     const $router = useRouter();
     const memberId = $router.currentRoute.value.params;
-    const pageName = $router.currentRoute.value.name;
-
     const $q = useQuasar();
 
-    let memberShipTypesOptions = ref(null);
-    let loader = ref(false);
-
     onBeforeMount(() => {
-      console.log("onbeforemounted");
-      $store.dispatch(GET_MEMBER_TYPES_REQUEST, {
-        payload: true,
-        responseCallback: () => {},
+      $q.loading.show({
+        delay: 400, // ms
       });
       console.log({ memberId });
       $store.dispatch(GET_MEMBER_DETAIL_REQUEST, {
         payload: { memberId: memberId?.memberId },
-        responseCallback: () => {},
-      });
-    });
-
-    onMounted(() => {
-      console.log("currentRoute", $router.currentRoute.value);
-      if (pageName === VIEW_MEMBER_DETAIL_URL.title) {
-        console.log("getMemberListGetter", getMemberListGetter.value);
-        if (!getMemberListGetter?.value) {
-          $router.back();
-        } else {
-          let memberList = JSON.parse(
-            JSON.stringify(Object.values(getMemberListGetter?.value))
-          );
-          let editMemberObj = memberList?.find(
-            (dt) => dt?.memberId == memberId?.memberId
-          );
-          if (editMemberObj) {
-            console.log({ editMemberObj });
-
-            let setMember = { ...editMemberObj };
-            setMember.membershipTypeId = {
-              label: editMemberObj?.membershipTypeDesc,
-              value: editMemberObj?.membershipTypeId,
-            };
-            setMember.cityId = editMemberObj?.cityName;
-            (setMember.areaId = editMemberObj?.areaName),
-              (setMember.gender = editMemberObj.gender.toLowerCase());
-            formState.value = setMember;
-          }
-        }
-      }
-    });
-
-    const getMemberTypesGetter = computed(() => {
-      return $store.getters[GET_MEMBER_TYPES];
-    });
-
-    const getMemberListGetter = computed(() => {
-      return $store.getters[GET_MEMBERS_LIST_GETT];
-    });
-
-    watch(getMemberTypesGetter, (currentVal) => {
-      let options = currentVal?.map((item) => {
-        return {
-          value: item?.membershipTypeId,
-          label: item?.membershipTypeDesc,
-        };
-      });
-      memberShipTypesOptions.value = options;
-    });
-
-    const isLoggedIn = computed(() => {
-      return $store.getters[IS_AUTHENTICATED];
-    });
-
-    const getUserGetter = computed(() => {
-      return $store.getters[GET_USER_DETAIL_GETTER];
-    });
-
-    console.log("isLoggedIn", isLoggedIn);
-    const onSubmit = () => {
-      loader.value = true;
-      let payloadObj = {
-        ...formState.value,
-        dob: formState.value.dob.replaceAll("/", "-"),
-        membershipTypeId: formState.value.membershipTypeId.value,
-        membershipTypeDesc: formState.value.membershipTypeId.label,
-        cityId: 1,
-        areaId: 1,
-      };
-      Object.keys(payloadObj).forEach((key) => {
-        if (!payloadObj[key]) {
-          delete payloadObj[key];
-        }
-      });
-      $store.dispatch(SAVE_MEMBER_REQUEST, {
-        payload: payloadObj,
-        responseCallback: (status, res) => {
-          Object.assign(formState.value, {
-            ...initialState,
-          });
-          console.log({ res });
-          loader.value = false;
-          if (status) {
-            toastMessage("Form submitted successfully", status);
-          } else {
-            toastMessage("Something went wrong", status);
+        responseCallback: (status) => {
+          if (!status) {
+            $q.loading.hide();
           }
         },
       });
-      console.log("values", formState, getUserGetter.value);
-    };
 
-    const toastMessage = (message, bool) => {
-      $q.notify({
-        color: bool ? "positive" : "negative",
-        textColor: "#fff",
-        message,
-        icon: "announcement",
-
-        position: "top",
-        timeout: 2000,
+      $store.dispatch(GET_MEMBER_PROGRAMS_REQUEST, {
+        payload: { memberId: memberId?.memberId },
+        responseCallback: (status) => {
+          if (!status) {
+            $q.loading.hide();
+          }
+        },
       });
-    };
+      $store.dispatch(GET_MEMBER_PAYMENTS_REQUEST, {
+        payload: { memberId: memberId?.memberId },
+        responseCallback: () => {
+          $q.loading.hide();
+        },
+      });
+    });
+
+    // const isLoggedIn = computed(() => {
+    //   return $store.getters[IS_AUTHENTICATED];
+    // });
+
+    const getMemberDetailGetter = computed(() => {
+      return $store.getters[GET_MEMBERS_DETAIL_GETT];
+    });
+
+    const getMemberProgramsGetter = computed(() => {
+      return $store.getters[GET_MEMBER_PROGRAMS_GETT];
+    });
+
+    const getMemberPaymentsGetter = computed(() => {
+      return $store.getters[GET_MEMBER_PAYMENTS_GETT];
+    });
 
     return {
       //states
-      formState,
-      getUserGetter,
+      $q,
+      memberPaymentsColumns,
+      getMemberDetailGetter,
       moment,
-      memberShipTypesOptions,
-      genderOptions: [
-        { label: "Male", value: "male" },
-        { label: "Female", value: "female" },
-      ],
-      loader,
-      getMemberListGetter,
+      getMemberProgramsGetter,
+      getMemberPaymentsGetter,
+      memberProgramsColumns,
+
       //handlers
-      pageName,
-      editpageName,
-      memberDetailpageName,
-      VIEW_MEMBER_DETAIL_URL,
-      onSubmit,
-      checkPhoneMobile,
-      checkPhoneLandline,
-      checkCNIC,
     };
   },
 });

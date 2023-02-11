@@ -35,6 +35,18 @@ export const GET_MEMBER_DETAIL_URL = {
   headers: false,
 };
 
+export const GET_MEMBER_PROGRAMS_URL = {
+  url: "v1/Member/GetMemberPrograms",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_MEMBER_PAYMENTS_URL = {
+  url: "v1/Member/GetMemberPayments",
+  accesstoken: true,
+  headers: false,
+};
+
 //areas requests
 export const GET_AREA_URL = {
   url: "v1/Area/GetAreas",
@@ -306,6 +318,98 @@ export const cartColumns = [
     label: "Price",
     align: "right",
     field: "standardPrice",
+    sortable: true,
+  },
+];
+
+//member columns
+export const memberProgramsColumns = [
+  {
+    name: "programDesc",
+    label: "Program Detail",
+    align: "left",
+    field: "programDesc",
+    sortable: true,
+  },
+  {
+    name: "billingStart",
+    label: "Billing Start",
+    align: "left",
+    field: "billingStart",
+    sortable: true,
+  },
+  {
+    name: "billingEnd",
+    label: "Billing End",
+    align: "left",
+    field: "billingEnd",
+    sortable: true,
+  },
+  {
+    name: "status",
+    label: "Status",
+    align: "left",
+    field: "status",
+    sortable: true,
+  },
+  {
+    name: "standardPrice",
+    label: "Price",
+    align: "left",
+    field: "standardPrice",
+    sortable: true,
+  },
+];
+export const memberPaymentsColumns = [
+  {
+    name: "payModeDesc",
+    label: "Payment Method",
+    align: "left",
+    field: "payModeDesc",
+    sortable: true,
+  },
+
+  {
+    name: "cheBankName",
+    label: "Cheque bank name",
+    align: "left",
+    field: "cheBankName",
+    sortable: true,
+  },
+  {
+    name: "chequeNo",
+    label: "Cheque No",
+    align: "left",
+    field: "chequeNo",
+    sortable: true,
+  },
+  {
+    name: "chequeDate",
+    label: "Cheque date",
+    align: "left",
+    field: "chequeDate",
+    sortable: true,
+  },
+  {
+    name: "receiptDate",
+    label: "Receipt date",
+    align: "left",
+    field: "receiptDate",
+    sortable: true,
+  },
+
+  {
+    name: "isCancelled",
+    label: "Is Cancelled",
+    align: "left",
+    field: "isCancelled",
+    sortable: true,
+  },
+  {
+    name: "cancelleddBy",
+    label: "Cancelled By",
+    align: "left",
+    field: "cancelleddBy",
     sortable: true,
   },
 ];
