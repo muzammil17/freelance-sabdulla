@@ -116,7 +116,7 @@
               :rules="[
                 (val) =>
                   !formState.isDetail ||
-                  (formState.isDetail && val && val.length > 0) ||
+                  (formState.isDetail && val && val > 0) ||
                   'Price is required',
                 (val) =>
                   !formState.isDetail ||

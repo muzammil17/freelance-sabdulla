@@ -71,6 +71,7 @@ export const programModule = {
         for (const item of payload) {
           payloadRes.push({
             ...item,
+            // icon: "ion-information-circle-outline",
             label: item?.progDesc,
             value: item?.progId,
           });
@@ -99,15 +100,15 @@ export const programModule = {
         (dt) => dt?.progId === payload?.progId
       );
       if (ifItem >= 0) {
-        let quantity = cartItems[ifItem]?.quantity + 1;
-        let unitPrice = quantity * cartItems[ifItem]?.standardPrice;
-        console.log("ifItem", quantity, cartItems[ifItem]?.quantity);
-        cartItems.splice(ifItem, 1, {
-          ...cartItems[ifItem],
-          quantity,
-          unitPrice,
-        });
-        console.log({ cartItems });
+        // let quantity = cartItems[ifItem]?.quantity + 1;
+        // let unitPrice = quantity * cartItems[ifItem]?.standardPrice;
+        // console.log("ifItem", quantity, cartItems[ifItem]?.quantity);
+        // cartItems.splice(ifItem, 1, {
+        //   ...cartItems[ifItem],
+        //   quantity,
+        //   unitPrice,
+        // });
+        // console.log({ cartItems });
       } else {
         console.log("ifItem", cartItems[ifItem]?.quantity);
         let quantity = 1;

@@ -197,6 +197,13 @@ export const LOGOUT_UNAUTH = () => {
 
 export const memberModalColumns = [
   {
+    name: "title",
+    label: "Title",
+    align: "left",
+    field: "title",
+    sortable: true,
+  },
+  {
     name: "fullName",
     label: "Full Name",
     align: "left",

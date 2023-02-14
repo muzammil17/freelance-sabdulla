@@ -107,11 +107,46 @@
                 hint="* Cheque number"
               />
             </div>
+            <div
+              class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
+              v-if="paymentInput && !paymentInput.defaultRealized"
+            >
+              <q-input
+                outlined
+                v-model="chequeDateInput"
+                mask="date"
+                label="Cheque Date"
+                hint="ex: 2000/12/30"
+                lazy-rules
+                class="input-field"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date v-model="chequeDateInput">
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
           </div>
         </div>
 
         <div
-          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12"
+          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-md"
           v-if="memberInput?.memberId"
         >
           <q-table
@@ -318,6 +353,8 @@ export default defineComponent({
     let paymentInput = ref("");
     let collectionInput = ref("");
     let chequeInput = ref("");
+    let chequeDateInput = ref("");
+
     let selectBankInput = ref("");
 
     let selected = ref([]);
@@ -451,20 +488,21 @@ export default defineComponent({
         }
 
         const { payModeId, payModeDesc } = paymentInput.value;
-        const { value } = collectionInput.value;
-
+        const { value, label } = collectionInput.value;
+        console.log({ chequeDateInput });
         const payload = {
           payModeId,
           payModeDesc,
           memberId,
           receiptDate: moment().toISOString(),
           colTypeId: value,
+          colTypeDesc: label,
           ...(!paymentInput.value.defaultRealized
             ? {
                 chqBankId: selectBankInput.value?.value,
                 cheBankName: selectBankInput.value?.label,
                 chequeNo: String(chequeInput?.value),
-                chequeDate: moment().toISOString(),
+                chequeDate: moment(chequeDateInput.value).toISOString(),
               }
             : {}),
           memberFullName: `${firstName} ${lastName}`,
@@ -584,6 +622,7 @@ export default defineComponent({
 
     return {
       //states
+      chequeDateInput,
       getBillCyclesOpionGetter,
       IS_PAYMENT_METHOD_CHEQUE,
       paymentInput,
