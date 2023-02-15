@@ -18,6 +18,35 @@
                 @click="openMemberListModal = true"
               />
             </div>
+
+            <div
+              class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-md"
+              v-if="memberInput?.memberId"
+            >
+              <q-table
+                title="Member Detail"
+                dense
+                hide-pagination
+                :pagination="initialPagination"
+                class="table-header-wrapper"
+                :rows="[memberInput]"
+                :columns="memberColumns"
+                row-key="name"
+              >
+                <template v-slot:body-cell-actions="props">
+                  <!-- @click="memberInfo(props)" -->
+                  <q-td :props="props">
+                    <q-btn
+                      dense
+                      round
+                      flat
+                      class="edit-memberbtn"
+                      icon="info"
+                    ></q-btn>
+                  </q-td>
+                </template>
+              </q-table>
+            </div>
             <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
               <q-select
                 outlined
@@ -54,25 +83,6 @@
                 </template>
               </q-select>
             </div>
-
-            <!-- <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
-              <q-select
-                outlined
-                label="Bill cycle type"
-                v-model="collectionInput"
-                behavior="menu"
-                :options="getBillCyclesOpionGetter"
-                hint="* Select Billcycle"
-              >
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No results
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-            </div> -->
 
             <div
               class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12"
@@ -143,35 +153,6 @@
               </q-input>
             </div>
           </div>
-        </div>
-
-        <div
-          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-md"
-          v-if="memberInput?.memberId"
-        >
-          <q-table
-            title="Member Detail"
-            dense
-            hide-pagination
-            :pagination="initialPagination"
-            class="table-header-wrapper"
-            :rows="[memberInput]"
-            :columns="memberColumns"
-            row-key="name"
-          >
-            <template v-slot:body-cell-actions="props">
-              <!-- @click="memberInfo(props)" -->
-              <q-td :props="props">
-                <q-btn
-                  dense
-                  round
-                  flat
-                  class="edit-memberbtn"
-                  icon="info"
-                ></q-btn>
-              </q-td>
-            </template>
-          </q-table>
         </div>
       </div>
     </div>

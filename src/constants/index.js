@@ -40,6 +40,11 @@ export const GET_MEMBER_PROGRAMS_URL = {
   accesstoken: true,
   headers: false,
 };
+export const GET_MEMBER_TITLE_URL = {
+  url: "v1/Member/GetTitles",
+  accesstoken: true,
+  headers: false,
+};
 
 export const GET_MEMBER_PAYMENTS_URL = {
   url: "v1/Member/GetMemberPayments",

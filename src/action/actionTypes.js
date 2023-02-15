@@ -73,6 +73,7 @@ export const GET_MEMBERS_REQUEST = "getMembersRequest";
 export const GET_MEMBER_DETAIL_REQUEST = "getMemberDetailRequest";
 export const GET_MEMBER_PROGRAMS_REQUEST = "getMemberProgramsRequest";
 export const GET_MEMBER_PAYMENTS_REQUEST = "getMemberPaymentsRequest";
+export const GET_MEMBER_TITLES_REQUEST = "getMemberTitleRequest";
 
 //areas actions
 export const GET_CITIES_REQUEST = "getCitiesRequest";

@@ -270,8 +270,8 @@ export default defineComponent({
         ...(isDetail
           ? {
               standardPrice: Number(standardPrice),
-              billCycle: billCycle?.value,
-              billCycleId: billCycle.label,
+              billCycle: billCycle?.label,
+              billCycleId: billCycle.value,
             }
           : {}),
       };

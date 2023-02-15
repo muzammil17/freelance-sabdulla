@@ -13,16 +13,15 @@
       <q-form @submit="onSubmit">
         <div class="row justify-center q-col-gutter-sm">
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-            <q-input
+            <q-select
+              label="Membership Title *"
               outlined
+              aria-modal="false"
+              behavior="menu"
               v-model="formState.title"
-              label="Membership title *"
-              hint="ex: Zakat"
-              lazy-rules
-              class="input-field"
-              :rules="[(val) => (val && val.length > 0) || 'title is required']"
-            >
-            </q-input>
+              :options="titlesOptions"
+              :rules="[(val) => val || 'title is required']"
+            />
           </div>
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
@@ -276,6 +275,7 @@ import {
   GET_AREAS_REQUEST,
   GET_AREAS_GETT,
   GET_MEMBER_DETAIL_REQUEST,
+  GET_MEMBER_TITLES_REQUEST,
 } from "@/action/actionTypes";
 import {
   checkPhoneMobile,
@@ -313,6 +313,7 @@ export default defineComponent({
 
     let citiesOptions = ref(null);
     let areasOptions = ref(null);
+    let titlesOptions = ref(null);
 
     const formState = ref({ ...initialState.value });
 
@@ -355,6 +356,23 @@ export default defineComponent({
           }
         },
       });
+
+      $store.dispatch(GET_MEMBER_TITLES_REQUEST, {
+        payload: true,
+        responseCallback: (status, res) => {
+          console.log({ res }, { status });
+          if (status) {
+            let options = [];
+            console.log("res", res);
+            if (res?.data?.length) {
+              for (const item of res?.data) {
+                options.push({ label: item, value: item });
+              }
+            }
+            titlesOptions.value = options;
+          }
+        },
+      });
     });
 
     onMounted(() => {
@@ -385,6 +403,10 @@ export default defineComponent({
             setMember.areaId = {
               value: editMemberObj.areaId,
               label: editMemberObj?.areaName,
+            };
+            setMember.title = {
+              value: editMemberObj.title,
+              label: editMemberObj?.title,
             };
             setMember.gender = editMemberObj.gender.toLowerCase();
             formState.value = setMember;
@@ -484,6 +506,7 @@ export default defineComponent({
       loader.value = true;
       let payloadObj = {
         ...formState.value,
+        title: formState.value.title.value,
         ...(EDIT_MEMBER_URL.title === pageName
           ? { memberId: Number(memberId) }
           : {}),
@@ -515,7 +538,7 @@ export default defineComponent({
           loader.value = false;
           if (status) {
             if (EDIT_MEMBER_URL.title !== pageName) {
-              formState.value = { ...initialState.value };
+              // formState.value = { ...initialState.value };
             }
             toastMessage(
               `Form ${
@@ -545,6 +568,7 @@ export default defineComponent({
     return {
       //states
       formState,
+      titlesOptions,
       getUserGetter,
       moment,
       memberShipTypesOptions,

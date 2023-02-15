@@ -1,17 +1,5 @@
 <template>
   <div class="row">
-    <!-- <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11"> -->
-    <!-- :disable="selected ? false : true" -->
-    <!-- <q-btn
-        size="sm"
-        color="primary"
-        :label="`Update ${
-          getAllProgramsGetter?.find((dt) => dt?.progId == selected)
-            ?.progDesc || ''
-        } Program`"
-        @click="handleRoute(selected)"
-      /> -->
-    <!-- </div> -->
     <div
       class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-px-lg q-my-lg"
     >
@@ -304,8 +292,8 @@ export default defineComponent({
         formState.value.progDetailDesc = currentProg.progDetailDesc;
         formState.value.isDetail = currentProg.isDetail;
         formState.value.progActive = currentProg.progActive;
-        formState.value.billCycle = currentProg?.billCycle || null;
-        formState.value.billCycle = currentProg?.billCycle || null;
+        // formState.value.billCycle = currentProg?.billCycle || null;
+        // formState.value.billCycle = currentProg?.billCycle || null;
         formState.value.standardPrice = currentProg?.standardPrice || null;
       }
     });
@@ -366,8 +354,8 @@ export default defineComponent({
         ...(isDetail
           ? {
               standardPrice: Number(standardPrice),
-              billCycle: billCycle?.value,
-              billCycleId: billCycle.label,
+              billCycle: billCycle?.label,
+              billCycleId: billCycle.value,
             }
           : {}),
       };

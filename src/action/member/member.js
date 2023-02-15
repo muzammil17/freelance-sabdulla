@@ -10,10 +10,32 @@ import {
   GET_MEMBER_DETAIL_URL,
   GET_MEMBER_PAYMENTS_URL,
   GET_MEMBER_PROGRAMS_URL,
+  GET_MEMBER_TITLE_URL,
   GET_MEMBER_TYPES_URL,
   SAVE_MEMBER_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
+
+export const getMemberTitleRequest = async (context, { responseCallback }) => {
+  try {
+    const result = await getCall(
+      GET_MEMBER_TITLE_URL,
+      ``,
+      "",
+      GET_MEMBER_TITLE_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
 export const getMemberTypesRequest = async (
   context,

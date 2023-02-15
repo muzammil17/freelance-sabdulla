@@ -19,6 +19,7 @@ import {
   getMemberDetailRequest,
   getMemberProgramsRequest,
   getMemberPaymentsRequest,
+  getMemberTitleRequest,
 } from "@/action";
 import moment from "moment";
 
@@ -111,6 +112,7 @@ export const memberModule = {
   },
 
   actions: {
+    getMemberTitleRequest,
     getMemberTypesRequest,
     saveMemberRequest,
     getMembersRequest,
