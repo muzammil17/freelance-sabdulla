@@ -62,8 +62,12 @@ export const memberModule = {
             ...item,
             cheBankName: item?.cheBankName || "-",
             chequeNo: item?.chequeNo || "-",
-            receiptDate: moment(item?.receiptDate).format("ll"),
-            chequeDate: moment(item?.chequeDate).format("ll"),
+            receiptDate: item?.receiptDate
+              ? moment(item?.receiptDate).format("ll")
+              : "-",
+            chequeDate: item?.chequeDate
+              ? moment(item?.chequeDate).format("ll")
+              : "-",
             isCancelled: item?.isCancelled ? "Yes" : "No",
           });
         }
