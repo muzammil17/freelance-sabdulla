@@ -366,7 +366,7 @@ export const memberProgramsColumns = [
   },
   {
     name: "standardPrice",
-    label: "Price",
+    label: "Price (Rs.)",
     align: "left",
     field: "standardPrice",
     sortable: true,
@@ -418,10 +418,10 @@ export const memberPaymentsColumns = [
     sortable: true,
   },
   {
-    name: "cancelleddBy",
-    label: "Cancelled By",
+    name: "amount",
+    label: "Amount (Rs.)",
     align: "left",
-    field: "cancelleddBy",
+    field: "amount",
     sortable: true,
   },
 ];

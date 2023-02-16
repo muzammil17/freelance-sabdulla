@@ -60,6 +60,8 @@ export const memberModule = {
         for (const item of state?.memberPayments) {
           memberPaymts.push({
             ...item,
+            cheBankName: item?.cheBankName || "-",
+            chequeNo: item?.chequeNo || "-",
             receiptDate: moment(item?.receiptDate).format("ll"),
             chequeDate: moment(item?.chequeDate).format("ll"),
             isCancelled: item?.isCancelled ? "Yes" : "No",

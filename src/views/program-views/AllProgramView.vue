@@ -292,8 +292,14 @@ export default defineComponent({
         formState.value.progDetailDesc = currentProg.progDetailDesc;
         formState.value.isDetail = currentProg.isDetail;
         formState.value.progActive = currentProg.progActive;
-        // formState.value.billCycle = currentProg?.billCycle || null;
-        // formState.value.billCycle = currentProg?.billCycle || null;
+        if (currentProg?.billCycleId) {
+          formState.value.billCycle = {
+            label: currentProg?.billCycleDesc,
+            value: currentProg?.billCycleId,
+          };
+        } else {
+          formState.value.billCycle = null;
+        }
         formState.value.standardPrice = currentProg?.standardPrice || null;
       }
     });
@@ -354,7 +360,8 @@ export default defineComponent({
         ...(isDetail
           ? {
               standardPrice: Number(standardPrice),
-              billCycle: billCycle?.label,
+
+              billCycleDesc: billCycle?.label,
               billCycleId: billCycle.value,
             }
           : {}),
