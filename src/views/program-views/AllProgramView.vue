@@ -332,6 +332,15 @@ export default defineComponent({
       console.log({ e });
     };
 
+    const handleClear = () => {
+      formState.value.isDetail = false;
+    };
+    const handleChange = (val) => {
+      if (val) {
+        formState.value.isDetail = true;
+      }
+    };
+
     const handleCreateProgram = () => {
       createProgLoader.value = true;
       const {
@@ -413,6 +422,8 @@ export default defineComponent({
       getBillCyclesGetter,
       createProgLoader,
       //handlers
+      handleClear,
+      handleChange,
       toastMessage,
       handleCreateProgram,
       selectedProg,
