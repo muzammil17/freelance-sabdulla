@@ -9,9 +9,9 @@
         }}
       </h5>
     </div>
-    <div class="col-lg-10 col-xl-10 col-md-11 col-sm-10 col-xs-11">
+    <div class="col-lg-10 col-xl-10 col-md-11 col-sm-10 col-xs-11 q-mb-lg">
       <q-form @submit="onSubmit">
-        <div class="row justify-center q-col-gutter-sm">
+        <div class="row justify-start q-col-gutter-sm">
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-select
               label="Membership Title *"
@@ -232,6 +232,48 @@
               :rules="[(val) => val || 'Area zone  is required']"
             />
           </div>
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <h5 class="text-h6 text-left q-mb-none">Emergency Contact</h5>
+          </div>
+
+          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+            <q-input
+              outlined
+              type="text"
+              class="input-field"
+              v-model="formState.emergencyContactName"
+              label="Name"
+              lazy-rules
+            />
+          </div>
+          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+            <q-input
+              outlined
+              type="tel"
+              class="input-field"
+              mask="####-#######"
+              hint="ex: 0333-0972217"
+              v-model="formState.emergencyNumber"
+              label="Emergency Mobile Number *"
+              lazy-rules
+              :rules="[
+                (val) =>
+                  !val ||
+                  (val && checkPhoneMobile(val)) ||
+                  'Invalid Mobile number',
+              ]"
+            />
+          </div>
+          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+            <q-input
+              outlined
+              type="text"
+              class="input-field"
+              v-model="formState.relation"
+              label="Relation"
+              lazy-rules
+            />
+          </div>
 
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="submit-btn-wrapper">
@@ -295,6 +337,9 @@ export default defineComponent({
   setup() {
     const initialState = ref({
       title: "",
+      relation: "",
+      emergencyContactName: "",
+      emergencyNumber: "",
       firstName: "",
       lastName: "",
       dob: "",
