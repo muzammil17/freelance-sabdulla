@@ -1,18 +1,27 @@
 {
-  "name": "sadbulla-project",
-  "version": "0.1.0",
+  "name": "ribat",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "deploy":"yarn build && firebase deploy",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-regular-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@quasar/extras": "^1.0.0",
+    "axios": "^1.2.2",
     "core-js": "^3.8.3",
+    "moment": "^2.29.4",
     "quasar": "^2.0.0",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.2",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
