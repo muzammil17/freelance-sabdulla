@@ -1,5 +1,16 @@
 <template>
   <div class="row">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="row justify-end">
+        <div class="q-px-lg q-mt-md">
+          <q-btn
+            label="Add new program"
+            color="primary"
+            @click="$router.push(VIEW_CREATE_PROGRAM_URL.url)"
+          />
+        </div>
+      </div>
+    </div>
     <div
       class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-px-lg q-my-lg"
     >
@@ -209,7 +220,7 @@ import {
   SAVE_PROGRAM_REQUEST,
 } from "@/action/actionTypes";
 // import { useRouter } from "vue-router";
-// import { VIEW_UPDATE_PROGRAM_URL } from "@/constants";
+import { VIEW_CREATE_PROGRAM_URL } from "@/constants";
 
 export default defineComponent({
   name: "AllProgramView",
@@ -421,6 +432,7 @@ export default defineComponent({
       expanded,
       getBillCyclesGetter,
       createProgLoader,
+      VIEW_CREATE_PROGRAM_URL,
       //handlers
       handleClear,
       handleChange,
