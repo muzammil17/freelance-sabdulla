@@ -330,7 +330,7 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
-  name: "MemberView",
+  name: "EditMemberView",
 
   components: {},
 

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
 import MemberView from "../views/MemberView.vue";
+import EditMemberView from "../views/EditMemberView.vue";
 import MemberListView from "../views/MemberListView.vue";
 import MemberDetailView from "@/views/MemberDetail.vue";
 import DashboardEmpty from "@/views/DashboardEmpty.vue";
@@ -180,7 +181,7 @@ const routes = [
   {
     path: EDIT_MEMBER_URL.url,
     name: EDIT_MEMBER_URL.title,
-    component: MemberView,
+    component: EditMemberView,
 
     beforeEnter: (to, from, next) => {
       if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);

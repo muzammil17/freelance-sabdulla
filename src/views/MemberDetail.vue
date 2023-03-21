@@ -103,6 +103,32 @@
             {{ getMemberDetailGetter?.areaName }}
           </p>
         </div>
+
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-subtitle1 text-primary q-my-xs">
+            Emergency Contact Name
+          </h6>
+          <p class="text-body2">
+            {{ getMemberDetailGetter?.emergencyContactName }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-subtitle1 text-primary q-my-xs">
+            Emergency Contact Number
+          </h6>
+          <p class="text-body2">
+            {{ getMemberDetailGetter?.emergencyContactNo }}
+          </p>
+        </div>
+        <div class="col-lg-4 col-xl-4 col-md-6 col-sm-6 col-xs-12">
+          <h6 class="text-subtitle1 text-primary q-my-xs">
+            Emergency Contact Relation
+          </h6>
+          <p class="text-body2">
+            {{ getMemberDetailGetter?.emergencyContactRelation }}
+          </p>
+        </div>
+
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
           <q-table
             title="Member Programs"
