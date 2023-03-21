@@ -149,12 +149,12 @@ export const VIEW_CART_LIST_URL = {
 
 export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
   title: "All Programs",
-  url: "/all-programs",
+  url: "/create-program",
 };
 
 export const VIEW_CREATE_PROGRAM_URL = {
   title: "Create Program",
-  url: "/create-program",
+  url: "/new-program",
 };
 
 export const VIEW_UPDATE_PROGRAM_URL = {
