@@ -366,7 +366,6 @@ export default defineComponent({
     const $router = useRouter();
     const pageName = $router.currentRoute.value.name;
     const memberId = $router.currentRoute.value.params.memberId;
-    console.log({ pageName, memberId });
     const $q = useQuasar();
 
     let memberShipTypesOptions = ref(null);
