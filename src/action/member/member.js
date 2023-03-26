@@ -12,7 +12,9 @@ import {
   GET_MEMBER_PROGRAMS_URL,
   GET_MEMBER_TITLE_URL,
   GET_MEMBER_TYPES_URL,
+  GET_VISITORS_URL,
   SAVE_MEMBER_URL,
+  VISITOR_LOGIN_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
 
@@ -195,6 +197,65 @@ export const getMemberPaymentsRequest = async (
 
     if (result.data.success) {
       context.commit(SET_MEMBER_PAYMENTS_MUT, result.data.data);
+
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+//visitors requests
+
+export const visitorLoginRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  console.log("payload", payload);
+  try {
+    const result = await postCall(
+      VISITOR_LOGIN_URL,
+      payload.data,
+      "",
+      ``,
+      VISITOR_LOGIN_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      console.log("result", result.data.data);
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getVisitorsRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  const query = `showAll=${
+    Object.keys(payload).includes("showAll") ? payload?.showAll : false
+  }`;
+  console.log("payload", payload);
+  try {
+    const result = await getCall(
+      GET_VISITORS_URL,
+      ``,
+      query,
+      GET_VISITORS_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      // context.commit(SET_VISITORS_MUT, result.data.data);
 
       responseCallback(true, result.data);
     } else {

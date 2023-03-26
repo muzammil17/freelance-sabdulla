@@ -114,6 +114,20 @@ export const SAVE_RECEIPT_URL = {
   headers: false,
 };
 
+//VISITORS REQUESTS
+
+export const VISITOR_LOGIN_URL = {
+  url: "v1/Visitor/VisitorLogIn",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_VISITORS_URL = {
+  url: "v1/Visitor/GetVisitors",
+  accesstoken: true,
+  headers: false,
+};
+
 /////////////////////////////////////PAGES ROUTES////////////////////////////////////////////////
 export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
 export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
@@ -160,6 +174,15 @@ export const VIEW_CREATE_PROGRAM_URL = {
 export const VIEW_UPDATE_PROGRAM_URL = {
   title: "Update Program",
   url: "/update-program/:progId",
+};
+
+export const CREATE_ENTRY_VISITOR_URL = {
+  title: "Add Visitors Entry",
+  url: "/entry-visitor",
+};
+export const ALL_VISITOR_URL = {
+  title: "Visitors",
+  url: "/visitors",
 };
 
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
@@ -422,6 +445,90 @@ export const memberPaymentsColumns = [
     label: "Amount (Rs.)",
     align: "left",
     field: "amount",
+    sortable: true,
+  },
+];
+
+//visitor columns
+export const allVisitorColumns = [
+  {
+    name: "visitorName",
+    label: "Visitor's Name",
+    align: "left",
+    field: "visitorName",
+    sortable: true,
+  },
+  {
+    name: "contactNo",
+    label: "Contact",
+    align: "left",
+    field: "contactNo",
+    sortable: true,
+  },
+  {
+    name: "visitorCNIC",
+    label: "CNIC",
+    align: "left",
+    field: "visitorCNIC",
+    sortable: true,
+  },
+  {
+    name: "purposeOfVisit",
+    label: "Purpose to visit",
+    align: "left",
+    field: "purposeOfVisit",
+    sortable: true,
+  },
+
+  {
+    name: "deptToVisit",
+    label: "Dept to visit",
+    align: "left",
+    field: "deptToVisit",
+    sortable: true,
+  },
+  {
+    name: "personToVisit",
+    label: "Person to visit",
+    align: "left",
+    field: "personToVisit",
+    sortable: true,
+  },
+  {
+    name: "rfCardNo",
+    label: "RFID",
+    align: "left",
+    field: "rfCardNo",
+    sortable: true,
+  },
+
+  {
+    name: "identityReceived",
+    label: "Identity Received",
+    align: "left",
+    field: "identityReceived",
+    sortable: true,
+  },
+
+  {
+    name: "identityReturned",
+    label: "Identity Returned",
+    align: "left",
+    field: "identityReturned",
+    sortable: true,
+  },
+  {
+    name: "rfCardReturned",
+    label: "RFID card Returned",
+    align: "left",
+    field: "rfCardReturned",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
     sortable: true,
   },
 ];

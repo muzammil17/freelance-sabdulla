@@ -5,11 +5,14 @@ import {
   GET_MEMBER_PAYMENTS_GETT,
   GET_MEMBER_PROGRAMS_GETT,
   GET_MEMBER_TYPES,
+  GET_VISITORS_GETT,
+  GET_VISITORS_TABLE_ROWS_GETT,
   SET_MEMBERS_DETAIL_MUT,
   SET_MEMBERS_LIST_MUT,
   SET_MEMBER_PAYMENTS_MUT,
   SET_MEMBER_PROGRAMS_MUT,
   SET_MEMBER_TYPES,
+  SET_VISITORS_MUT,
 } from "@/action/actionTypes";
 
 import {
@@ -20,6 +23,8 @@ import {
   getMemberProgramsRequest,
   getMemberPaymentsRequest,
   getMemberTitleRequest,
+  visitorLoginRequest,
+  getVisitorsRequest,
 } from "@/action";
 import moment from "moment";
 
@@ -30,6 +35,21 @@ export const memberModule = {
     memberDetail: null,
     memberProgs: null,
     memberPayments: null,
+    visitors: [
+      {
+        visitorName: "zEESHAN",
+        contactNo: "0222-2222222",
+        visitorCNIC: "33333-3333333-3",
+        purposeOfVisit: "NONE",
+        deptToVisit: "string",
+        personToVisit: "string",
+        rfCardNo: "strng",
+        identityReceived: true,
+        identityReturned: true,
+        rfCardReturned: true,
+        rfNotRetReason: "strin",
+      },
+    ],
   }),
   mutations: {
     [SET_MEMBER_TYPES]: (state, payload) => {
@@ -51,9 +71,32 @@ export const memberModule = {
     [SET_MEMBER_PAYMENTS_MUT]: (state, payload) => {
       state.memberPayments = payload;
     },
+
+    [SET_VISITORS_MUT]: (state, payload) => {
+      state.visitors = payload;
+    },
   },
 
   getters: {
+    [GET_VISITORS_GETT]: (state) => {
+      return state.visitors;
+    },
+
+    [GET_VISITORS_TABLE_ROWS_GETT]: (state) => {
+      let rows = [];
+      if (state?.visitors?.length) {
+        for (const item of state?.visitors) {
+          rows.push({
+            ...item,
+            identityReceived: item?.identityReceived ? "Yes" : "No",
+            identityReturned: item?.identityReturned ? "Yes" : "No",
+            rfCardReturned: item?.rfCardReturned ? "Yes" : "No",
+          });
+        }
+      }
+      return rows;
+    },
+
     [GET_MEMBER_PAYMENTS_GETT]: (state) => {
       let memberPaymts = [];
       if (state?.memberPayments?.length) {
@@ -118,6 +161,8 @@ export const memberModule = {
   },
 
   actions: {
+    getVisitorsRequest,
+    visitorLoginRequest,
     getMemberTitleRequest,
     getMemberTypesRequest,
     saveMemberRequest,

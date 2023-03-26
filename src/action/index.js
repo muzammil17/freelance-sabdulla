@@ -8,6 +8,8 @@ import {
   getMemberProgramsRequest,
   getMemberPaymentsRequest,
   getMemberTitleRequest,
+  visitorLoginRequest,
+  getVisitorsRequest,
 } from "./member/member";
 import { getCitiesRequest, getAreasRequest } from "./areas/areas";
 import {
@@ -22,6 +24,8 @@ import {
 } from "./programs/program-actions";
 
 export {
+  getVisitorsRequest,
+  visitorLoginRequest,
   getMemberTitleRequest,
   getMemberPaymentsRequest,
   getMemberProgramsRequest,

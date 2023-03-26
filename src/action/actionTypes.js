@@ -16,6 +16,8 @@ export const GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT =
 export const GET_MEMBERS_DETAIL_GETT = "GET_MEMBERS_DETAIL_GETT";
 export const GET_MEMBER_PROGRAMS_GETT = "GET_MEMBER_PROGRAMS_GETT";
 export const GET_MEMBER_PAYMENTS_GETT = "GET_MEMBER_PAYMENTS_GETT";
+export const GET_VISITORS_GETT = "GET_VISITORS_GETT";
+export const GET_VISITORS_TABLE_ROWS_GETT = "GET_VISITORS_TABLE_ROWS_GETT";
 
 //area gettters
 export const GET_CITIES_GETT = "GET_CITIES_GETT";
@@ -46,6 +48,7 @@ export const SET_MEMBERS_LIST_MUT = "SET_MEMBERS_LIST_MUT";
 export const SET_MEMBERS_DETAIL_MUT = "SET_MEMBERS_DETAIL_MUT";
 export const SET_MEMBER_PROGRAMS_MUT = "SET_MEMBER_PROGRAMS_MUT";
 export const SET_MEMBER_PAYMENTS_MUT = "SET_MEMBER_PAYMENTS_MUT";
+export const SET_VISITORS_MUT = "SET_VISITORS_MUT";
 
 //area mutations
 export const SET_CITIES_MUT = "SET_CITIES_MUT";
@@ -74,6 +77,9 @@ export const GET_MEMBER_DETAIL_REQUEST = "getMemberDetailRequest";
 export const GET_MEMBER_PROGRAMS_REQUEST = "getMemberProgramsRequest";
 export const GET_MEMBER_PAYMENTS_REQUEST = "getMemberPaymentsRequest";
 export const GET_MEMBER_TITLES_REQUEST = "getMemberTitleRequest";
+
+export const VISITOR_LOGIN_REQUEST = "visitorLoginRequest";
+export const GET_VISITORS_REQUEST = "getVisitorsRequest";
 
 //areas actions
 export const GET_CITIES_REQUEST = "getCitiesRequest";

@@ -10,12 +10,16 @@ import ProgramsView from "@/views/program-views/ProgramsView.vue";
 import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
 import AllProgramView from "@/views/program-views/AllProgramView.vue";
 import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
+import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
+import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
 
 import CartView from "@/views/CartView.vue";
 import { store } from "@/store/store";
 import { computed } from "vue";
 import { IS_AUTHENTICATED } from "@/action/actionTypes";
 import {
+  ALL_VISITOR_URL,
+  CREATE_ENTRY_VISITOR_URL,
   DASHBOARD_VIEW_URL,
   EDIT_MEMBER_URL,
   LOGIN_VIEW_URL,
@@ -182,6 +186,30 @@ const routes = [
     path: EDIT_MEMBER_URL.url,
     name: EDIT_MEMBER_URL.title,
     component: EditMemberView,
+
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: ALL_VISITOR_URL.url,
+    name: ALL_VISITOR_URL.title,
+    component: AllVisitors,
+
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+  {
+    path: CREATE_ENTRY_VISITOR_URL.url,
+    name: CREATE_ENTRY_VISITOR_URL.title,
+    component: AddVisitor,
 
     beforeEnter: (to, from, next) => {
       if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
