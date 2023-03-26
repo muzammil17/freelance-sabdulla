@@ -25,6 +25,7 @@ import {
   getMemberTitleRequest,
   visitorLoginRequest,
   getVisitorsRequest,
+  logoutVisitorRequest,
 } from "@/action";
 import moment from "moment";
 
@@ -37,6 +38,7 @@ export const memberModule = {
     memberPayments: null,
     visitors: [
       {
+        visitorLogId: 1,
         visitorName: "zEESHAN",
         contactNo: "0222-2222222",
         visitorCNIC: "33333-3333333-3",
@@ -45,7 +47,7 @@ export const memberModule = {
         personToVisit: "string",
         rfCardNo: "strng",
         identityReceived: true,
-        identityReturned: true,
+        identityReturned: false,
         rfCardReturned: true,
         rfNotRetReason: "strin",
       },
@@ -161,6 +163,7 @@ export const memberModule = {
   },
 
   actions: {
+    logoutVisitorRequest,
     getVisitorsRequest,
     visitorLoginRequest,
     getMemberTitleRequest,

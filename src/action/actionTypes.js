@@ -80,6 +80,7 @@ export const GET_MEMBER_TITLES_REQUEST = "getMemberTitleRequest";
 
 export const VISITOR_LOGIN_REQUEST = "visitorLoginRequest";
 export const GET_VISITORS_REQUEST = "getVisitorsRequest";
+export const LOGOUT_VISITOR_REQUEST = "logoutVisitorRequest";
 
 //areas actions
 export const GET_CITIES_REQUEST = "getCitiesRequest";

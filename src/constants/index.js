@@ -128,6 +128,12 @@ export const GET_VISITORS_URL = {
   headers: false,
 };
 
+export const LOGOUT_VISITOR_URL = {
+  url: "v1/Visitor/VisitorLogOut",
+  accesstoken: true,
+  headers: false,
+};
+
 /////////////////////////////////////PAGES ROUTES////////////////////////////////////////////////
 export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
 export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
@@ -186,6 +192,11 @@ export const ALL_VISITOR_URL = {
 };
 
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
+export const pagination = {
+  sortBy: "desc",
+  descending: false,
+  rowsPerPage: 5,
+};
 
 export const checkPhoneLandline = (value) => {
   let regex = /^[0-9]{3}-[0-9]{8}$/gm;
@@ -472,6 +483,68 @@ export const allVisitorColumns = [
     field: "visitorCNIC",
     sortable: true,
   },
+
+  {
+    name: "rfCardNo",
+    label: "RFID",
+    align: "left",
+    field: "rfCardNo",
+    sortable: true,
+  },
+
+  {
+    name: "identityReceived",
+    label: "Identity Received",
+    align: "left",
+    field: "identityReceived",
+    sortable: true,
+  },
+
+  {
+    name: "identityReturned",
+    label: "Identity Returned",
+    align: "left",
+    field: "identityReturned",
+    sortable: true,
+  },
+  {
+    name: "rfCardReturned",
+    label: "RFID card Returned",
+    align: "left",
+    field: "rfCardReturned",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
+];
+
+export const visitorDetailColumns = [
+  {
+    name: "visitorName",
+    label: "Visitor's Name",
+    align: "left",
+    field: "visitorName",
+    sortable: true,
+  },
+  {
+    name: "contactNo",
+    label: "Contact",
+    align: "left",
+    field: "contactNo",
+    sortable: true,
+  },
+  {
+    name: "visitorCNIC",
+    label: "CNIC",
+    align: "left",
+    field: "visitorCNIC",
+    sortable: true,
+  },
   {
     name: "purposeOfVisit",
     label: "Purpose to visit",
@@ -522,13 +595,6 @@ export const allVisitorColumns = [
     label: "RFID card Returned",
     align: "left",
     field: "rfCardReturned",
-    sortable: true,
-  },
-  {
-    name: "actions",
-    label: "Action",
-    align: "left",
-    field: "actions",
     sortable: true,
   },
 ];

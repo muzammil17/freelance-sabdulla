@@ -13,6 +13,7 @@ import {
   GET_MEMBER_TITLE_URL,
   GET_MEMBER_TYPES_URL,
   GET_VISITORS_URL,
+  LOGOUT_VISITOR_URL,
   SAVE_MEMBER_URL,
   VISITOR_LOGIN_URL,
 } from "@/constants";
@@ -257,6 +258,33 @@ export const getVisitorsRequest = async (
     if (result.data.success) {
       // context.commit(SET_VISITORS_MUT, result.data.data);
 
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const logoutVisitorRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  console.log("payload", payload);
+  try {
+    const result = await postCall(
+      LOGOUT_VISITOR_URL,
+      payload.data,
+      "",
+      ``,
+      LOGOUT_VISITOR_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      console.log("result", result.data.data);
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);

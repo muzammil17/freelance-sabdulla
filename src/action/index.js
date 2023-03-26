@@ -10,6 +10,7 @@ import {
   getMemberTitleRequest,
   visitorLoginRequest,
   getVisitorsRequest,
+  logoutVisitorRequest,
 } from "./member/member";
 import { getCitiesRequest, getAreasRequest } from "./areas/areas";
 import {
@@ -24,6 +25,7 @@ import {
 } from "./programs/program-actions";
 
 export {
+  logoutVisitorRequest,
   getVisitorsRequest,
   visitorLoginRequest,
   getMemberTitleRequest,
