@@ -86,7 +86,7 @@
               ]"
             />
           </div>
-          <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <q-checkbox
               dense
               v-model="formState.identityReceived"
@@ -119,6 +119,7 @@ import { useStore } from "vuex";
 import moment from "moment";
 import { VISITOR_LOGIN_REQUEST } from "@/action/actionTypes";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "AllVisitorsView",
 
@@ -127,7 +128,7 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $q = useQuasar();
-
+    const $router = useRouter();
     let btnLoader = ref(false);
 
     const initialFormState = {
@@ -156,8 +157,13 @@ export default defineComponent({
         },
         responseCallback: (status, res) => {
           console.log({ status, res });
-          toastMessage("New Visitor added", true);
+          if (status) {
+            toastMessage("New Visitor added", true);
+          } else {
+            toastMessage("Something went wrong", false);
+          }
           btnLoader.value = false;
+          $router.back();
         },
       });
     };
@@ -178,6 +184,7 @@ export default defineComponent({
       //states
       formState,
       btnLoader,
+      $router,
       //handlers
       toastMessage,
       handleSubmitVisitor,

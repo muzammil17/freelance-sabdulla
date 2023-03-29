@@ -3,7 +3,11 @@
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
       <div class="row justify-end">
         <div>
-          <q-btn color="primary" label="Add Visitor" />
+          <q-btn
+            color="primary"
+            label="Add Visitor"
+            @click="handleRoute(CREATE_ENTRY_VISITOR_URL.url)"
+          />
         </div>
       </div>
     </div>
@@ -20,6 +24,7 @@
 
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
       <q-table
+        :loading="tableLoader"
         title="Visitors"
         dense
         :pagination="pagination"
@@ -123,7 +128,7 @@
             flat
             color="primary"
             icon="ion-close-circle"
-            @click="handleCloseVisitorDetail"
+            @click="handleCloseVisitorLogout()"
           />
         </div>
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -137,6 +142,7 @@
                   class="input-field"
                   label="Reason for not returning RFID card"
                   lazy-rules
+                  :rules="[handleRulesNotyetReason]"
                 />
               </div>
 
@@ -170,14 +176,7 @@
                   :value="formState.rfCardReturned"
                   borderless
                   dense
-                  :rules="[
-                    (val) =>
-                      !formState?.identityReturned ||
-                      (formState?.identityReturned &&
-                        formState.rfCardReturned) ||
-                      (formState?.rfNotRetReason && formState.rfCardReturned) ||
-                      'This field is must be checked',
-                  ]"
+                  :rules="[handleRulesRFIDCheckBox]"
                 >
                   <template v-slot:control>
                     <q-checkbox
@@ -212,14 +211,19 @@ import {
   GET_VISITORS_TABLE_ROWS_GETT,
   GET_VISITORS_GETT,
   LOGOUT_VISITOR_REQUEST,
+  UPDATE_VISITORS_MUT,
 } from "@/action/actionTypes";
-import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { defineComponent, ref, onBeforeMount, computed, watch } from "vue";
 import { useStore } from "vuex";
 import {
   allVisitorColumns,
   visitorDetailColumns,
   pagination,
+  CREATE_ENTRY_VISITOR_URL,
 } from "@/constants";
+import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
+
 export default defineComponent({
   name: "AllVisitorsView",
 
@@ -227,7 +231,11 @@ export default defineComponent({
 
   setup() {
     const $store = useStore();
-    let filterBy = ref(null);
+    const $router = useRouter();
+    const tableLoader = ref(false);
+    const $q = useQuasar();
+
+    let filterBy = ref({ label: "All Visitors", value: true });
     let search = ref(null);
     let logoutVisitor = ref(null);
 
@@ -243,19 +251,41 @@ export default defineComponent({
     let openLogoutVisitor = ref({ bool: false, visitorId: null });
 
     onBeforeMount(() => {
+      tableLoader.value = true;
       $store.dispatch(GET_VISITORS_REQUEST, {
-        payload: {},
+        payload: { showAll: filterBy.value.value },
         responseCallback: (status, res) => {
           console.log({ status, res });
+          tableLoader.value = false;
+        },
+      });
+    });
+
+    watch(filterBy, (filterNewVal) => {
+      tableLoader.value = true;
+      $store.dispatch(GET_VISITORS_REQUEST, {
+        payload: { showAll: filterNewVal.value },
+        responseCallback: (status, res) => {
+          console.log({ status, res });
+          tableLoader.value = false;
         },
       });
     });
 
     const onSubmit = (val) => {
+      let payload = {
+        ...logoutVisitor.value,
+        ...formState.value,
+      };
       console.log({ val, logoutVisitor: logoutVisitor.value });
       $store.dispatch(LOGOUT_VISITOR_REQUEST, {
-        payload: { data: { ...logoutVisitor.value, ...formState.value } },
+        payload: { data: { ...payload } },
         responseCallback: (status, res) => {
+          if (status) {
+            toastMessage("Visitor logout Successfully", true);
+            $store.dispatch(UPDATE_VISITORS_MUT, { ...payload });
+            handleCloseVisitorLogout();
+          }
           console.log({ status, res });
         },
       });
@@ -297,9 +327,50 @@ export default defineComponent({
       return $store.getters[GET_VISITORS_GETT];
     });
 
+    const handleRoute = (url) => {
+      $router.push(url);
+    };
+
+    const handleRulesNotyetReason = (val) => {
+      if (!formState.value.rfCardReturned && !val?.length) {
+        return "Give a reason for not submiting RFID";
+      } else if (formState.value.rfCardReturned && val?.length) {
+        return "Reason Not Needed";
+      } else {
+        return true;
+      }
+    };
+
+    const handleRulesRFIDCheckBox = (val) => {
+      console.log({ val });
+      if (formState.value.rfNotRetReason && formState.value.rfCardReturned) {
+        return "Please uncheck this if RFID is not submitted";
+      } else if (
+        !formState.value.rfNotRetReason &&
+        !formState.value.rfCardReturned
+      ) {
+        return "Give a reason for not submitting RFID";
+      } else {
+        return true;
+      }
+    };
+
+    const toastMessage = (message, bool) => {
+      $q.notify({
+        color: bool ? "positive" : "negative",
+        textColor: "#fff",
+        message,
+        icon: "announcement",
+
+        position: "top",
+        timeout: 2000,
+      });
+    };
+
     return {
       //states
-
+      tableLoader,
+      CREATE_ENTRY_VISITOR_URL,
       logoutVisitor,
       formState,
       getVisitorsGetter,
@@ -308,14 +379,18 @@ export default defineComponent({
       openDetailVisitor,
       search,
       filterOptions: [
-        { label: "Active Visitors", value: "activeVisitors" },
-        { label: "All Visitors", value: "allVisitors" },
+        { label: "Active Visitors", value: false },
+        { label: "All Visitors", value: true },
       ],
       getVisitorsRowsGetter,
       filterBy,
       allVisitorColumns,
       visitorDetailColumns,
+      $router,
       //handlers
+      handleRulesNotyetReason,
+      handleRulesRFIDCheckBox,
+      handleRoute,
       onSubmit,
       handleClickAction,
       handleCloseVisitorLogout,

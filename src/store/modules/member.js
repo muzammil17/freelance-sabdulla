@@ -13,6 +13,7 @@ import {
   SET_MEMBER_PROGRAMS_MUT,
   SET_MEMBER_TYPES,
   SET_VISITORS_MUT,
+  UPDATE_VISITORS_MUT,
 } from "@/action/actionTypes";
 
 import {
@@ -37,20 +38,20 @@ export const memberModule = {
     memberProgs: null,
     memberPayments: null,
     visitors: [
-      {
-        visitorLogId: 1,
-        visitorName: "zEESHAN",
-        contactNo: "0222-2222222",
-        visitorCNIC: "33333-3333333-3",
-        purposeOfVisit: "NONE",
-        deptToVisit: "string",
-        personToVisit: "string",
-        rfCardNo: "strng",
-        identityReceived: true,
-        identityReturned: false,
-        rfCardReturned: true,
-        rfNotRetReason: "strin",
-      },
+      // {
+      //   visitorLogId: 1,
+      //   visitorName: "zEESHAN",
+      //   contactNo: "0222-2222222",
+      //   visitorCNIC: "33333-3333333-3",
+      //   purposeOfVisit: "NONE",
+      //   deptToVisit: "string",
+      //   personToVisit: "string",
+      //   rfCardNo: "strng",
+      //   identityReceived: true,
+      //   identityReturned: false,
+      //   rfCardReturned: true,
+      //   rfNotRetReason: "strin",
+      // },
     ],
   }),
   mutations: {
@@ -75,7 +76,20 @@ export const memberModule = {
     },
 
     [SET_VISITORS_MUT]: (state, payload) => {
+      console.log({ payload });
       state.visitors = payload;
+    },
+
+    [UPDATE_VISITORS_MUT]: (state, payload) => {
+      console.log({ payload });
+      const clone = [...(state?.visitors ?? [])];
+      let findVisitor = state?.visitors?.findIndex(
+        (dt) => dt?.visitorLogId === payload?.visitorLogId
+      );
+      if (findVisitor >= 0) {
+        clone.splice(findVisitor, 1, { ...payload });
+        state.visitors = clone;
+      }
     },
   },
 

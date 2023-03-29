@@ -1,8 +1,5 @@
-// import { LOGOUT_SUCCESS } from "@/action/actionTypes";
-// import router from "@/router";
-// import { store } from "@/store/store";
-
-export const API_URL = "https://api.ribat.com.pk/";
+// export const API_URL = "https://api.ribat.com.pk/";
+export const API_URL = "http://stagingapi.ribat.com.pk/";
 
 export const LOGIN_URL = {
   url: "v1/Authenticate",
@@ -183,12 +180,12 @@ export const VIEW_UPDATE_PROGRAM_URL = {
 };
 
 export const CREATE_ENTRY_VISITOR_URL = {
-  title: "Add Visitors Entry",
+  title: "Visitor Login Entry",
   url: "/entry-visitor",
 };
 export const ALL_VISITOR_URL = {
   title: "Visitors",
-  url: "/visitors",
+  url: "/visitor_log",
 };
 
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////

@@ -4,6 +4,7 @@ import {
   SET_MEMBER_PAYMENTS_MUT,
   SET_MEMBER_PROGRAMS_MUT,
   SET_MEMBER_TYPES,
+  SET_VISITORS_MUT,
 } from "@/action/actionTypes";
 import {
   GET_MEMBERS_URL,
@@ -256,7 +257,7 @@ export const getVisitorsRequest = async (
     );
 
     if (result.data.success) {
-      // context.commit(SET_VISITORS_MUT, result.data.data);
+      context.commit(SET_VISITORS_MUT, result.data.data);
 
       responseCallback(true, result.data);
     } else {
