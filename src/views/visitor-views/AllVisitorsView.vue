@@ -134,18 +134,6 @@
         <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
           <q-form @submit="onSubmit">
             <div class="row justify-start q-col-gutter-md">
-              <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
-                <q-input
-                  outlined
-                  v-model="formState.rfNotRetReason"
-                  type="text"
-                  class="input-field"
-                  label="Reason for not returning RFID card"
-                  lazy-rules
-                  :rules="[handleRulesNotyetReason]"
-                />
-              </div>
-
               <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <q-field
                   ref="toggle"
@@ -188,6 +176,18 @@
                   </template>
                 </q-field>
               </div>
+              <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
+                <q-input
+                  outlined
+                  v-model="formState.rfNotRetReason"
+                  type="text"
+                  class="input-field"
+                  label="Reason for not returning RFID card"
+                  lazy-rules
+                  :rules="[handleRulesNotyetReason]"
+                />
+              </div>
+
               <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
                 <q-btn
                   dense
@@ -332,10 +332,11 @@ export default defineComponent({
     };
 
     const handleRulesNotyetReason = (val) => {
+      console.log({ val });
       if (!formState.value.rfCardReturned && !val?.length) {
         return "Give a reason for not submiting RFID";
       } else if (formState.value.rfCardReturned && val?.length) {
-        return "Reason Not Needed";
+        return "Reason Not Needed if RFID is returned";
       } else {
         return true;
       }
@@ -349,7 +350,7 @@ export default defineComponent({
         !formState.value.rfNotRetReason &&
         !formState.value.rfCardReturned
       ) {
-        return "Give a reason for not submitting RFID";
+        return "Give a reason below for not submitting RFID or check it";
       } else {
         return true;
       }

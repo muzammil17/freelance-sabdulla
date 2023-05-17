@@ -1,5 +1,5 @@
 // export const API_URL = "https://api.ribat.com.pk/";
-export const API_URL = "http://stagingapi.ribat.com.pk/";
+export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const LOGIN_URL = {
   url: "v1/Authenticate",
@@ -490,27 +490,28 @@ export const allVisitorColumns = [
   },
 
   {
-    name: "identityReceived",
-    label: "Identity Received",
+    name: "deptToVisit",
+    label: "Dept. to visit",
     align: "left",
-    field: "identityReceived",
+    field: "deptToVisit",
     sortable: true,
   },
 
   {
-    name: "identityReturned",
-    label: "Identity Returned",
+    name: "entryDateTime",
+    label: "Entry time",
     align: "left",
-    field: "identityReturned",
+    field: "entryDateTime",
     sortable: true,
   },
   {
-    name: "rfCardReturned",
-    label: "RFID card Returned",
+    name: "exitDateTime",
+    label: "Exit time",
     align: "left",
-    field: "rfCardReturned",
+    field: "exitDateTime",
     sortable: true,
   },
+
   {
     name: "actions",
     label: "Action",

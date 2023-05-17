@@ -107,6 +107,13 @@ export const memberModule = {
             identityReceived: item?.identityReceived ? "Yes" : "No",
             identityReturned: item?.identityReturned ? "Yes" : "No",
             rfCardReturned: item?.rfCardReturned ? "Yes" : "No",
+            entryDateTime: item?.entryDateTime
+              ? moment(item?.entryDateTime).format("lll")
+              : "-",
+            exitDateTime: item?.exitDateTime
+              ? moment(item?.exitDateTime).format("lll")
+              : "-",
+            deptToVisit: item?.deptToVisit || "-",
           });
         }
       }
