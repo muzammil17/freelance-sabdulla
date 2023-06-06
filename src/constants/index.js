@@ -1,11 +1,25 @@
+import quasarUserOptions from "@/quasar-user-options";
+
 // export const API_URL = "https://api.ribat.com.pk/";
 export const API_URL = "https://stagingapi.ribat.com.pk/";
+
+export const toastMessage = (message, bool) => {
+  quasarUserOptions.plugins.Notify.create({
+    color: bool ? "positive" : "negative",
+    textColor: "#fff",
+    message,
+    icon: "announcement",
+    position: "top",
+    timeout: 2000,
+  });
+};
 
 export const LOGIN_URL = {
   url: "v1/Authenticate",
   accesstoken: false,
   headers: false,
 };
+
 export const GET_USER_ALLOWED_MENU_URL = {
   url: "v1/UserAccount/GetUserAllowedMenus",
   accesstoken: true,

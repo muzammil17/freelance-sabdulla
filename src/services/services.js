@@ -1,9 +1,10 @@
 /* eslint-disable */
 import { GET_JWT_TOKEN, LOGOUT_SUCCESS } from "@/action/actionTypes";
-import { API_URL, LOGIN_VIEW_URL } from "@/constants";
+import { API_URL, LOGIN_VIEW_URL, toastMessage } from "@/constants";
 import router from "@/router";
 import { store } from "@/store/store";
 import axios from "axios";
+
 import { computed } from "vue";
 
 const USER_TOKEN = computed(() => {
@@ -40,6 +41,7 @@ export const getCall = async (urlObj, params = "", query = "", headers) =>
       }
       resolve(response);
     } catch (e) {
+      toastMessage("Something Went Wrong", false);
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
         router.replace(LOGIN_VIEW_URL.url);
@@ -69,6 +71,8 @@ export const deleteCall = async (urlObj, params = "", query = "", headers) =>
 
       resolve(response);
     } catch (e) {
+      toastMessage("Something Went Wrong", false);
+
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
         router.replace(LOGIN_VIEW_URL.url);
@@ -106,6 +110,8 @@ export const postCall = async (
       console.log("response", response);
       resolve(response);
     } catch (e) {
+      toastMessage("Something Went Wrong", false);
+
       console.log("err", e);
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
@@ -142,6 +148,8 @@ export const patchCall = async (
 
       resolve(response);
     } catch (e) {
+      toastMessage("Something Went Wrong", false);
+
       if (e?.response?.status === 401) {
         store.commit(LOGOUT_SUCCESS);
         router.replace(LOGIN_VIEW_URL.url);

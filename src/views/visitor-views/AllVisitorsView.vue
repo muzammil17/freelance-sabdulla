@@ -234,8 +234,8 @@ export default defineComponent({
     const $router = useRouter();
     const tableLoader = ref(false);
     const $q = useQuasar();
-
-    let filterBy = ref({ label: "All Visitors", value: true });
+    const initialFilter = { label: "All Visitors", value: true };
+    let filterBy = ref(initialFilter);
     let search = ref(null);
     let logoutVisitor = ref(null);
 
@@ -278,13 +278,18 @@ export default defineComponent({
         ...formState.value,
       };
       console.log({ val, logoutVisitor: logoutVisitor.value });
+
       $store.dispatch(LOGOUT_VISITOR_REQUEST, {
         payload: { data: { ...payload } },
         responseCallback: (status, res) => {
           if (status) {
             toastMessage("Visitor logout Successfully", true);
             $store.dispatch(UPDATE_VISITORS_MUT, { ...payload });
+            filterBy.value = initialFilter;
+            handleGetAllVisitor();
             handleCloseVisitorLogout();
+          } else {
+            toastMessage("Something Went Wrong!", false);
           }
           console.log({ status, res });
         },
@@ -367,6 +372,17 @@ export default defineComponent({
         timeout: 2000,
       });
     };
+    function handleGetAllVisitor() {
+      tableLoader.value = true;
+
+      $store.dispatch(GET_VISITORS_REQUEST, {
+        payload: { showAll: true },
+        responseCallback: (status, res) => {
+          console.log({ status, res });
+          tableLoader.value = false;
+        },
+      });
+    }
 
     return {
       //states

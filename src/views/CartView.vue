@@ -47,6 +47,7 @@
                 </template>
               </q-table>
             </div>
+
             <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
               <q-select
                 outlined
@@ -82,6 +83,47 @@
                   </q-item>
                 </template>
               </q-select>
+            </div>
+            <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
+              <q-input
+                outlined
+                v-model="billingStartDateInput"
+                mask="date"
+                label="Billing Start Date *"
+                hint="* ex: 2000/12/30"
+                lazy-rules
+                class="input-field"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="billingStartDateInput"
+                        :options="
+                          (val) =>
+                            moment(val).isSameOrAfter(
+                              moment().format(`YYYY/MM/DD`),
+                              `day`
+                            )
+                        "
+                      >
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div
@@ -335,7 +377,7 @@ export default defineComponent({
     let collectionInput = ref("");
     let chequeInput = ref("");
     let chequeDateInput = ref("");
-
+    let billingStartDateInput = ref("");
     let selectBankInput = ref("");
 
     let selected = ref([]);
@@ -446,6 +488,8 @@ export default defineComponent({
         toastMessage("Select a Payment method", false);
       } else if (!collectionInput.value) {
         toastMessage("Select a Collection type", false);
+      } else if (!billingStartDateInput.value) {
+        toastMessage("Select a Billing Start Date", false);
       } else if (
         !paymentInput.value.defaultRealized &&
         !selectBankInput.value
@@ -459,12 +503,14 @@ export default defineComponent({
         const cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
         console.log(cartData.value);
+        let billStart = moment(billingStartDateInput.value).toISOString();
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
             memberId: memberId,
             programId: progId,
             standardPrice,
+            billStart,
           });
         }
 
@@ -603,6 +649,7 @@ export default defineComponent({
 
     return {
       //states
+      moment,
       chequeDateInput,
       getBillCyclesOpionGetter,
       IS_PAYMENT_METHOD_CHEQUE,
@@ -629,6 +676,7 @@ export default defineComponent({
       collectionInput,
       selectBankInput,
       chequeInput,
+      billingStartDateInput,
       //handlers
       handleCheckout,
       toastMessage,
