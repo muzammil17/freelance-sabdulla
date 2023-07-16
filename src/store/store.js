@@ -8,7 +8,7 @@ import { areaModule } from "./modules/areas";
 import { programModule } from "./modules/program";
 
 export const vuexLocal = new VuexPersistence({
-  key: "STORAGE_KEY",
+  key: "RIBAT_ADMIN",
   storage: window.localStorage,
   reducer: (state) => ({
     user: state.user,

@@ -178,7 +178,7 @@ export default {
 
     watch($router.currentRoute, (currentRoute) => {
       const pageMetadata = {
-        title: `Ribaat ${currentRoute.name ? currentRoute.name : ""}`,
+        title: `Ribat ${currentRoute.name ? currentRoute.name : ""}`,
       };
       pageName.value = currentRoute.name;
       useMeta(pageMetadata);

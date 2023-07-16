@@ -77,28 +77,69 @@
               round
               flat
               class="edit-memberbtn"
-              @click="deleteRow(props)"
-              icon="delete"
+              @click="handleOpenRFID(props.row)"
+              icon="badge"
             ></q-btn>
           </q-td>
         </template>
-
-        <!-- <template v-slot:top-right>
-          <q-input
-            borderless
-            dense
-            debounce="300"
-            v-model="search"
-            placeholder="Search"
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </template> -->
       </q-table>
     </div>
   </div>
+
+  <!-- Assign rfid card popup  -->
+
+  <!-- visitor's detail dialog -->
+  <q-dialog v-model="openDetailMember.bool">
+    <q-card-section
+      style="max-width: 800px; width: 700px; min-height: 200px"
+      class="bg-white visitor-detail-card"
+    >
+      <q-form @submit="onSubmit">
+        <div class="row justify-between q-col-gutter-lg">
+          <div class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10">
+            <div class="text-h6">
+              Assign RFID to
+              {{
+                `${openDetailMember.data?.title} ${openDetailMember.data?.fullName}`
+              }}
+            </div>
+          </div>
+          <div class="col-lg-2 col-xl-2 col-md-2 col-sm-2 col-xs-2">
+            <div class="row justify-end">
+              <div>
+                <q-btn
+                  dense
+                  round
+                  flat
+                  color="primary"
+                  icon="ion-close-circle"
+                  @click="handleCloseRFID"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <q-input
+              outlined
+              v-model="openDetailMember.rfid"
+              type="text"
+              class="input-field"
+              label="RFID Number *"
+              lazy-rules
+            />
+            <!-- :rules="[handleRulesNotyetReason]" -->
+          </div>
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row justify-end">
+              <div>
+                <q-btn color="primary" label="Assign RFID" type="submit" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </q-form>
+    </q-card-section>
+  </q-dialog>
 </template>
 
 <script>
@@ -126,6 +167,8 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $q = useQuasar();
+    const openDetailMember = ref({ bool: false, data: null, rfid: "" });
+
     const initialPagination = {
       sortBy: "desc",
       descending: false,
@@ -197,6 +240,15 @@ export default defineComponent({
       );
     };
 
+    const handleCloseRFID = () => {
+      openDetailMember.value = { bool: false, data: null };
+    };
+
+    const handleOpenRFID = (data) => {
+      console.log({ data });
+      openDetailMember.value = { bool: true, data };
+    };
+
     return {
       //states
       search,
@@ -207,7 +259,10 @@ export default defineComponent({
       memberColumns,
       initialPagination,
       $q,
+      openDetailMember,
       //handlers
+      handleOpenRFID,
+      handleCloseRFID,
       handleRoute,
       memberInfo,
       editRow,
@@ -239,6 +294,9 @@ export default defineComponent({
     // background-color: #c36 !important;
     // color: #fff !important;
   }
+}
+.visitor-detail-card {
+  border-radius: 15px;
 }
 .search-wrapper {
   margin-bottom: 20px;

@@ -202,6 +202,11 @@ export const ALL_VISITOR_URL = {
   url: "/visitor_log",
 };
 
+export const ALL_COLLECTION_URL = {
+  title: "Collection",
+  url: "/collection",
+};
+
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 export const pagination = {
   sortBy: "desc",

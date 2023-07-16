@@ -12,12 +12,14 @@ import AllProgramView from "@/views/program-views/AllProgramView.vue";
 import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
 import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
 import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
+import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
 
 import CartView from "@/views/CartView.vue";
 import { store } from "@/store/store";
 import { computed } from "vue";
 import { IS_AUTHENTICATED } from "@/action/actionTypes";
 import {
+  ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
   CREATE_ENTRY_VISITOR_URL,
   DASHBOARD_VIEW_URL,
@@ -210,6 +212,19 @@ const routes = [
     path: CREATE_ENTRY_VISITOR_URL.url,
     name: CREATE_ENTRY_VISITOR_URL.title,
     component: AddVisitor,
+
+    beforeEnter: (to, from, next) => {
+      if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+      else {
+        next();
+      }
+    },
+  },
+
+  {
+    path: ALL_COLLECTION_URL.url,
+    name: ALL_COLLECTION_URL.title,
+    component: AllCollection,
 
     beforeEnter: (to, from, next) => {
       if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
