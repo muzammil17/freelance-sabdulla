@@ -148,6 +148,7 @@ import { useStore } from "vuex";
 import {
   GET_MEMBERS_LIST_GETT,
   GET_MEMBERS_REQUEST,
+  GET_RFID_CARDS_REQUEST,
   IS_AUTHENTICATED,
 } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
@@ -196,6 +197,11 @@ export default defineComponent({
         responseCallback: () => {
           $q.loading.hide();
         },
+      });
+
+      $store.dispatch(GET_RFID_CARDS_REQUEST, {
+        payload: null,
+        responseCallback: () => {},
       });
     });
 

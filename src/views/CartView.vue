@@ -536,30 +536,26 @@ export default defineComponent({
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
         console.log({ payload });
-        $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
-          payload: cartItemsList,
-          responseCallback: (status, res) => {
-            if (status) {
-              toastMessage(res.message, true);
-
-              $store.dispatch(SAVE_RECEIPT_REQUEST, {
-                payload,
-                responseCallback: (status, res) => {
+        $store.dispatch(SAVE_RECEIPT_REQUEST, {
+          payload,
+          responseCallback: () => {
+            $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
+              payload: cartItemsList,
+              responseCallback: (status, res) => {
+                if (status) {
+                  toastMessage(res.message, true);
                   saveReciptLoader.value = false;
                   console.log(status, { res });
                   $store.commit(SET_EMPTY_CART_MUT, null);
 
-                  if (status) {
-                    console.log({ res });
-                    toastMessage(res.message, true);
-                    $router.push("/");
-                  } else {
-                    toastMessage("Something went wrong!", false);
-                    $router.push("/");
-                  }
-                },
-              });
-            }
+                  console.log({ res });
+                  $router.push("/");
+                } else {
+                  toastMessage("Something went wrong!", false);
+                  $router.push("/");
+                }
+              },
+            });
           },
         });
       }

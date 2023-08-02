@@ -22,9 +22,13 @@ import {
   saveProgramRequest,
   getBillCyclesRequest,
   getAllProgramsRequest,
+  getReceiptsByDateRequest,
 } from "./programs/program-actions";
+import { getRfidCardsRequest } from "./rfid/rfid";
 
 export {
+  getRfidCardsRequest,
+  getReceiptsByDateRequest,
   logoutVisitorRequest,
   getVisitorsRequest,
   visitorLoginRequest,

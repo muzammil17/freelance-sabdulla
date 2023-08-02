@@ -75,6 +75,14 @@ export const GET_CITIES_URL = {
   accesstoken: true,
   headers: false,
 };
+
+//RFID REQUESTS
+export const GET_RFID_CARDS_URL = {
+  url: "v1/RFCard/GetRFCards",
+  accesstoken: true,
+  headers: false,
+};
+
 //PROGRAMS REQUESTS
 export const GET_PROGRAMS_URL = {
   url: "v1/Programs/GetPrograms",
@@ -121,6 +129,11 @@ export const GET_BILL_CYCLES_URL = {
 
 export const SAVE_RECEIPT_URL = {
   url: "v1/Receipt/SaveReceipt",
+  accesstoken: true,
+  headers: false,
+};
+export const GET_RECEIPTS_BY_DATE_URL = {
+  url: "v1/Receipt/GetReceiptsByDate",
   accesstoken: true,
   headers: false,
 };
@@ -528,6 +541,64 @@ export const allVisitorColumns = [
     label: "Exit time",
     align: "left",
     field: "exitDateTime",
+    sortable: true,
+  },
+
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
+];
+
+// reciptt columns
+
+export const allCollectionsByDateColumns = [
+  {
+    name: "createdBy",
+    label: "Created By",
+    align: "left",
+    field: "createdBy",
+    sortable: true,
+  },
+  {
+    name: "memberFullName",
+    label: "Name",
+    align: "left",
+    field: "memberFullName",
+    sortable: true,
+  },
+
+  {
+    name: "billStartDate",
+    label: "Billing Date",
+    align: "left",
+    field: "billStartDate",
+    sortable: true,
+  },
+  {
+    name: "receiptDate",
+    label: "Receipt Date",
+    align: "left",
+    field: "receiptDate",
+    sortable: true,
+  },
+
+  {
+    name: "payModeDesc",
+    label: "Payment mode",
+    align: "left",
+    field: "payModeDesc",
+    sortable: true,
+  },
+
+  {
+    name: "amount",
+    label: "Amount Rs.",
+    align: "left",
+    field: "amount",
     sortable: true,
   },
 

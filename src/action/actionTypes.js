@@ -36,6 +36,10 @@ export const GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION =
   "GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION";
 export const GET_BILLING_CYCLES_GETT = "GET_BILLING_CYCLES_GETT";
 export const GET_PROGRAMS_TREE_GETT = "GET_PROGRAMS_TREE_GETT";
+export const GET_COLLECTIONS_BY_DATE_GETT = "GET_COLLECTIONS_BY_DATE_GETT";
+
+//RFID CARD GETTERS
+export const GET_RFID_CARDS_GETT = "GET_RFID_CARDS_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
@@ -65,6 +69,10 @@ export const SET_CART_BANKS_MUT = "SET_CART_BANKS_MUT";
 export const SET_BILLING_CYCLES_MUT = "SET_BILLING_CYCLES_MUT";
 export const SET_PROGRAMS_MUT = "SET_PROGRAMS_MUT";
 export const SET_PROGRAMS_TREE_MUT = "SET_PROGRAMS_TREE_MUT";
+export const SET_COLLECTIONS_BY_DATE_MUT = "SET_COLLECTIONS_BY_DATE_MUT";
+
+//RFID MUTATIONS
+export const SET_RFID_CARD_MUT = "SET_RFID_CARD_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 
@@ -92,7 +100,7 @@ export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
 export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
 export const SAVE_PROGRAM_REQUEST = "saveProgramRequest";
 export const GET_ALL_PROGRAMS_REQUEST = "getAllProgramsRequest";
-
+export const GET_RECEIPTS_BY_DATE_REQUEST = "getReceiptsByDateRequest";
 //banks actions
 export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
 
@@ -102,3 +110,5 @@ export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";
 
 //billing actions
 export const GET_BILLING_CYCLES_REQUEST = "getBillCyclesRequest";
+//RFID ACTIONS
+export const GET_RFID_CARDS_REQUEST = "getRfidCardsRequest";

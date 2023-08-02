@@ -1,5 +1,5 @@
 <template>
-  <div class="row q-mx-md">
+  <div class="row q-mx-md q-col-gutter-sm">
     <!-- <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
       <div class="row justify-end">
         <div>
@@ -13,13 +13,68 @@
     </div> -->
 
     <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-xs-12 q-my-md">
-      <q-select
+      <q-input
         outlined
-        behavior="menu"
-        v-model="filterBy"
-        :options="filterOptions"
-        label="Filter By"
-      />
+        v-model="filterBy.fromDate"
+        mask="date"
+        label="From Date"
+        lazy-rules
+        class="input-field"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date v-model="filterBy.fromDate">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </div>
+
+    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-xs-12 q-my-md">
+      <q-input
+        outlined
+        v-model="filterBy.toDate"
+        mask="date"
+        label="To Date"
+        lazy-rules
+        class="input-field"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date v-model="filterBy.toDate">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
+      <div class="row justify-end">
+        <div>
+          <q-btn
+            color="primary"
+            label="Get Date"
+            @click="getCustomDateCollection"
+          />
+        </div>
+      </div>
     </div>
 
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
@@ -29,10 +84,10 @@
         dense
         :pagination="pagination"
         class="table-header-wrapper"
-        :rows="getVisitorsRowsGetter"
+        :rows="getCollectionsByDateRowsGetter"
         :filter="search"
-        :columns="allVisitorColumns"
-        row-key="visitorName"
+        :columns="allCollectionsByDateColumns"
+        row-key="memberName"
       >
         <template v-slot:top-right>
           <q-input
@@ -92,8 +147,8 @@
             :pagination="pagination"
             class="table-header-wrapper"
             :rows="[
-              getVisitorsRowsGetter?.find(
-                (dt) => dt?.visitorLogId === openDetailVisitor.visitorId
+              getCollectionsByDateRowsGetter?.find(
+                (dt) => dt?.receiptId === openDetailVisitor.receiptId
               ),
             ]"
             :columns="visitorDetailColumns"
@@ -107,19 +162,22 @@
 
 <script>
 import {
-  GET_VISITORS_REQUEST,
-  GET_VISITORS_TABLE_ROWS_GETT,
   GET_VISITORS_GETT,
+  GET_RECEIPTS_BY_DATE_REQUEST,
+  GET_COLLECTIONS_BY_DATE_GETT,
 } from "@/action/actionTypes";
-import { defineComponent, ref, onBeforeMount, computed, watch } from "vue";
+import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import {
   allVisitorColumns,
+  allCollectionsByDateColumns,
   visitorDetailColumns,
   pagination,
+  toastMessage,
   CREATE_ENTRY_VISITOR_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
+import moment from "moment";
 
 export default defineComponent({
   name: "AllCollectionsView",
@@ -130,7 +188,10 @@ export default defineComponent({
     const $store = useStore();
     const $router = useRouter();
     const tableLoader = ref(false);
-    const initialFilter = { label: "All Visitors", value: true };
+    const initialFilter = {
+      fromDate: moment().subtract(2, "months").format(),
+      toDate: moment().format(),
+    };
     let filterBy = ref(initialFilter);
     let search = ref(null);
     let logoutVisitor = ref(null);
@@ -148,8 +209,8 @@ export default defineComponent({
 
     onBeforeMount(() => {
       tableLoader.value = true;
-      $store.dispatch(GET_VISITORS_REQUEST, {
-        payload: { showAll: filterBy.value.value },
+      $store.dispatch(GET_RECEIPTS_BY_DATE_REQUEST, {
+        payload: {},
         responseCallback: (status, res) => {
           console.log({ status, res });
           tableLoader.value = false;
@@ -157,30 +218,49 @@ export default defineComponent({
       });
     });
 
-    watch(filterBy, (filterNewVal) => {
-      tableLoader.value = true;
-      $store.dispatch(GET_VISITORS_REQUEST, {
-        payload: { showAll: filterNewVal.value },
-        responseCallback: (status, res) => {
-          console.log({ status, res });
-          tableLoader.value = false;
-        },
-      });
-    });
+    // watch(filterBy, (filterNewVal) => {
+    //   tableLoader.value = true;
+    //   $store.dispatch(GET_VISITORS_REQUEST, {
+    //     payload: { showAll: filterNewVal.value },
+    //     responseCallback: (status, res) => {
+    //       console.log({ status, res });
+    //       tableLoader.value = false;
+    //     },
+    //   });
+    // });
 
     const handleRowClick = (prop) => {
-      handleCloseVisitorDetail(prop?.row?.visitorLogId);
+      handleCloseVisitorDetail(prop?.row?.receiptId);
     };
 
     const handleCloseVisitorDetail = (id = null) => {
       openDetailVisitor.value = {
         bool: !openDetailVisitor.value.bool,
-        visitorId: id,
+        receiptId: id,
       };
     };
+
+    const getCustomDateCollection = () => {
+      if (moment(filterBy.value.fromDate).isAfter(filterBy.value.toDate)) {
+        toastMessage("From Date must be less than to Date", false);
+      } else {
+        tableLoader.value = true;
+        $store.dispatch(GET_RECEIPTS_BY_DATE_REQUEST, {
+          payload: {
+            fromDate: moment(filterBy.value.fromDate).toISOString(),
+            toDate: moment(filterBy.value.toDate).toISOString(),
+          },
+          responseCallback: (status, res) => {
+            console.log({ status, res });
+            tableLoader.value = false;
+          },
+        });
+      }
+    };
+
     //getters
-    const getVisitorsRowsGetter = computed(() => {
-      return $store.getters[GET_VISITORS_TABLE_ROWS_GETT];
+    const getCollectionsByDateRowsGetter = computed(() => {
+      return $store.getters[GET_COLLECTIONS_BY_DATE_GETT];
     });
 
     const getVisitorsGetter = computed(() => {
@@ -206,15 +286,17 @@ export default defineComponent({
         { label: "Active Visitors", value: false },
         { label: "All Visitors", value: true },
       ],
-      getVisitorsRowsGetter,
+      getCollectionsByDateRowsGetter,
       filterBy,
       allVisitorColumns,
+      allCollectionsByDateColumns,
       visitorDetailColumns,
       $router,
       //handlers
       handleRoute,
       handleRowClick,
       handleCloseVisitorDetail,
+      getCustomDateCollection,
     };
   },
 });
