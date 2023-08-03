@@ -500,7 +500,7 @@ export default defineComponent({
       } else {
         saveReciptLoader.value = true;
 
-        const cartItemsList = [];
+        let cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
         console.log(cartData.value);
         let billStart = moment(billingStartDateInput.value).toISOString();
@@ -538,24 +538,37 @@ export default defineComponent({
         console.log({ payload });
         $store.dispatch(SAVE_RECEIPT_REQUEST, {
           payload,
-          responseCallback: () => {
-            $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
-              payload: cartItemsList,
-              responseCallback: (status, res) => {
-                if (status) {
-                  toastMessage(res.message, true);
-                  saveReciptLoader.value = false;
-                  console.log(status, { res });
-                  $store.commit(SET_EMPTY_CART_MUT, null);
+          responseCallback: (statusreceipt, responseReceipt) => {
+            console.log({ responseReceipt });
+            const receiptId = responseReceipt?.data;
+            if (statusreceipt && receiptId) {
+              cartItemsList = cartItemsList.map((item) => {
+                return {
+                  ...item,
+                  receiptId,
+                };
+              });
+              $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
+                payload: cartItemsList,
+                responseCallback: (status, res) => {
+                  if (status) {
+                    toastMessage(res.message, true);
+                    saveReciptLoader.value = false;
+                    console.log(status, { res });
+                    $store.commit(SET_EMPTY_CART_MUT, null);
 
-                  console.log({ res });
-                  $router.push("/");
-                } else {
-                  toastMessage("Something went wrong!", false);
-                  $router.push("/");
-                }
-              },
-            });
+                    console.log({ res });
+                    $router.push("/");
+                  } else {
+                    toastMessage("Something went wrong!", false);
+                    $router.push("/");
+                  }
+                },
+              });
+            } else {
+              toastMessage("Something went wrong!", false);
+              $router.push("/");
+            }
           },
         });
       }

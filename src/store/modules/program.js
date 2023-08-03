@@ -32,6 +32,7 @@ import {
   getBillCyclesRequest,
   getAllProgramsRequest,
   getReceiptsByDateRequest,
+  cancelReceiptRequest,
 } from "@/action";
 import { list_to_tree } from "@/constants";
 import moment from "moment";
@@ -185,6 +186,7 @@ export const programModule = {
             ...item,
             billStartDate: moment(item?.billStartDate).format("lll"),
             receiptDate: moment(item?.receiptDate).format("lll"),
+            isCancelled: item?.isCancelled ? "Yes" : "No",
           });
         });
       }
@@ -260,5 +262,6 @@ export const programModule = {
     getBanksRequest,
     saveProgramRequest,
     getReceiptsByDateRequest,
+    cancelReceiptRequest,
   },
 };

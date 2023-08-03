@@ -101,6 +101,8 @@ export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
 export const SAVE_PROGRAM_REQUEST = "saveProgramRequest";
 export const GET_ALL_PROGRAMS_REQUEST = "getAllProgramsRequest";
 export const GET_RECEIPTS_BY_DATE_REQUEST = "getReceiptsByDateRequest";
+export const CANCEL_RECEIPT_REQUEST = "cancelReceiptRequest";
+
 //banks actions
 export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
 

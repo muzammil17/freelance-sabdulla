@@ -23,10 +23,12 @@ import {
   getBillCyclesRequest,
   getAllProgramsRequest,
   getReceiptsByDateRequest,
+  cancelReceiptRequest,
 } from "./programs/program-actions";
 import { getRfidCardsRequest } from "./rfid/rfid";
 
 export {
+  cancelReceiptRequest,
   getRfidCardsRequest,
   getReceiptsByDateRequest,
   logoutVisitorRequest,

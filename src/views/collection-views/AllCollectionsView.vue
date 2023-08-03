@@ -113,6 +113,15 @@
               @click="handleRowClick(props)"
             />
             <q-btn dense round flat class="edit-memberbtn" icon="print" />
+            <q-btn
+              dense
+              round
+              flat
+              class="edit-memberbtn"
+              icon="delete"
+              @click="handleOpen(props?.row?.receiptId, true)"
+            />
+
             <!-- @click="handleClickAction(props)" -->
           </q-td>
         </template>
@@ -151,13 +160,19 @@
                 (dt) => dt?.receiptId === openDetailVisitor.receiptId
               ),
             ]"
-            :columns="visitorDetailColumns"
+            :columns="singleCollectionColumns"
             row-key="visitorName"
           />
         </div>
       </div>
     </q-card-section>
   </q-dialog>
+
+  <ConfirmationModal
+    :open="open"
+    :handleClose="handleClose"
+    :handleSubmit="handleSubmitCancel"
+  />
 </template>
 
 <script>
@@ -165,6 +180,7 @@ import {
   GET_VISITORS_GETT,
   GET_RECEIPTS_BY_DATE_REQUEST,
   GET_COLLECTIONS_BY_DATE_GETT,
+  CANCEL_RECEIPT_REQUEST,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
@@ -175,19 +191,27 @@ import {
   pagination,
   toastMessage,
   CREATE_ENTRY_VISITOR_URL,
+  singleCollectionColumns,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import moment from "moment";
-
+import { ConfirmationModal } from "@/components";
 export default defineComponent({
   name: "AllCollectionsView",
 
-  components: {},
+  components: { ConfirmationModal },
 
   setup() {
     const $store = useStore();
     const $router = useRouter();
     const tableLoader = ref(false);
+    const open = ref({
+      id: null,
+      bool: false,
+      loading: false,
+      title: "Cancel Receipt",
+      text: "Are you sure you want to cancel this receipt",
+    });
     const initialFilter = {
       fromDate: moment().subtract(2, "months").format(),
       toDate: moment().format(),
@@ -271,6 +295,44 @@ export default defineComponent({
       $router.push(url);
     };
 
+    const handleClose = () => {
+      open.value = { ...open.value, bool: !open.value.bool };
+    };
+
+    const handleOpen = (id = null, bool = false) => {
+      open.value = { ...open.value, bool, id };
+    };
+    const handleSubmitCancel = () => {
+      // CANCEL_RECEIPT_REQUEST
+      open.value = { ...open.value, loading: true };
+      $store.dispatch(CANCEL_RECEIPT_REQUEST, {
+        payload: {
+          receiptId: open.value.id,
+        },
+        responseCallback: (status, res) => {
+          console.log({ status, res });
+          if (status) {
+            tableLoader.value = true;
+
+            $store.dispatch(GET_RECEIPTS_BY_DATE_REQUEST, {
+              payload: {
+                fromDate: moment(filterBy.value.fromDate).toISOString(),
+                toDate: moment(filterBy.value.toDate).toISOString(),
+              },
+              responseCallback: () => {
+                tableLoader.value = false;
+                toastMessage(res?.message, true);
+                open.value = { ...open.value, loading: false, bool: false };
+              },
+            });
+          } else {
+            toastMessage(res?.message || "Something went wrong", false);
+
+            open.value = { ...open.value, loading: false, bool: false };
+          }
+        },
+      });
+    };
     return {
       //states
       tableLoader,
@@ -292,9 +354,14 @@ export default defineComponent({
       allCollectionsByDateColumns,
       visitorDetailColumns,
       $router,
+      singleCollectionColumns,
+      open,
       //handlers
+      handleSubmitCancel,
+      handleOpen,
       handleRoute,
       handleRowClick,
+      handleClose,
       handleCloseVisitorDetail,
       getCustomDateCollection,
     };

@@ -132,6 +132,13 @@ export const SAVE_RECEIPT_URL = {
   accesstoken: true,
   headers: false,
 };
+
+export const CANCEL_RECEIPT_URL = {
+  url: "v1/Receipt/CancelReceipt",
+  accesstoken: true,
+  headers: false,
+};
+
 export const GET_RECEIPTS_BY_DATE_URL = {
   url: "v1/Receipt/GetReceiptsByDate",
   accesstoken: true,
@@ -607,6 +614,68 @@ export const allCollectionsByDateColumns = [
     label: "Action",
     align: "left",
     field: "actions",
+    sortable: true,
+  },
+];
+
+export const singleCollectionColumns = [
+  {
+    name: "receiptId",
+    label: "Receipt Number",
+    align: "left",
+    field: "receiptId",
+    sortable: true,
+  },
+  {
+    name: "createdBy",
+    label: "Created By",
+    align: "left",
+    field: "createdBy",
+    sortable: true,
+  },
+  {
+    name: "memberFullName",
+    label: "Name",
+    align: "left",
+    field: "memberFullName",
+    sortable: true,
+  },
+
+  {
+    name: "billStartDate",
+    label: "Billing Date",
+    align: "left",
+    field: "billStartDate",
+    sortable: true,
+  },
+  {
+    name: "isCancelled",
+    label: "Cancelled",
+    align: "left",
+    field: "isCancelled",
+    sortable: true,
+  },
+  {
+    name: "receiptDate",
+    label: "Receipt Date",
+    align: "left",
+    field: "receiptDate",
+    sortable: true,
+  },
+
+  {
+    name: "payModeDesc",
+    label: "Payment mode",
+    align: "left",
+    field: "payModeDesc",
+    sortable: true,
+  },
+
+  {
+    name: "amount",
+    label: "Amount Rs.",
+    align: "left",
+    field: "amount",
     sortable: true,
   },
 ];

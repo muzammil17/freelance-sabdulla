@@ -1,4 +1,5 @@
 import {
+  CANCEL_RECEIPT_URL,
   CREATE_PROGRAM_URL,
   GET_ALL_PROGRAMS_URL,
   GET_BANKS_URL,
@@ -275,6 +276,32 @@ export const getReceiptsByDateRequest = async (
     if (result.data.success) {
       context.commit(SET_COLLECTIONS_BY_DATE_MUT, result.data?.data);
 
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const cancelReceiptRequest = async (
+  context,
+  { payload: { receiptId = null }, responseCallback }
+) => {
+  const query = receiptId ? `receiptId=${receiptId}` : "";
+  try {
+    const result = await postCall(
+      CANCEL_RECEIPT_URL,
+      {},
+      "",
+      query,
+      CANCEL_RECEIPT_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);
