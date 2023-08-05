@@ -114,3 +114,4 @@ export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";
 export const GET_BILLING_CYCLES_REQUEST = "getBillCyclesRequest";
 //RFID ACTIONS
 export const GET_RFID_CARDS_REQUEST = "getRfidCardsRequest";
+export const ASSIGN_RFID_CARD_REQUEST = "assignRfidCardRequest";

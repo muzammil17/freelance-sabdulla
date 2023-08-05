@@ -33,6 +33,10 @@
                 ? dt
                 : dt?.gender?.toLowerCase()?.includes(search?.toLowerCase())
                 ? dt
+                : dt?.activeRFCard
+                    ?.toLowerCase()
+                    ?.includes(search?.toLowerCase())
+                ? dt
                 : dt?.phoneMobile
                     ?.toLowerCase()
                     ?.includes(search?.toLowerCase())
@@ -119,15 +123,32 @@
             </div>
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <q-input
+            <!-- <q-input
               outlined
               v-model="openDetailMember.rfid"
               type="text"
               class="input-field"
               label="RFID Number *"
-              lazy-rules
-            />
-            <!-- :rules="[handleRulesNotyetReason]" -->
+              :rules="[
+                (val) => (val && val.length > 0) || 'RFID number is required',
+              ]"
+            /> -->
+            <q-select
+              outlined
+              label="RFID Number *"
+              v-model="openDetailMember.rfid"
+              behavior="menu"
+              :options="rfids"
+              hint="* Select RFID"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row justify-end">
@@ -140,6 +161,11 @@
       </q-form>
     </q-card-section>
   </q-dialog>
+  <ConfirmationModal
+    :open="open"
+    :handleSubmit="handleSubmitConfirmation"
+    :handleClose="handleClose"
+  />
 </template>
 
 <script>
@@ -150,6 +176,7 @@ import {
   GET_MEMBERS_REQUEST,
   GET_RFID_CARDS_REQUEST,
   IS_AUTHENTICATED,
+  ASSIGN_RFID_CARD_REQUEST,
 } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
 import {
@@ -160,14 +187,23 @@ import {
 import { useQuasar } from "quasar";
 import { memberColumns } from "@/constants";
 
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal.vue";
+import { toastMessage } from "@/constants";
 export default defineComponent({
   name: "MemberListView",
 
-  components: {},
+  components: { ConfirmationModal },
 
   setup() {
     const $store = useStore();
     const $q = useQuasar();
+    const rfids = ref([]);
+    const open = ref({
+      bool: false,
+      loading: false,
+      title: "Confirmation",
+      text: "This member already has active RF Card assigned. Do want to re-assign new RF Card?",
+    });
     const openDetailMember = ref({ bool: false, data: null, rfid: "" });
 
     const initialPagination = {
@@ -186,22 +222,37 @@ export default defineComponent({
       return $store.getters[GET_MEMBERS_LIST_GETT];
     });
 
-    onBeforeMount(() => {
+    const getMembers = () => {
       $q.loading.show({
         delay: 400, // ms
       });
-      console.log("onbeforemounted");
-
       $store.dispatch(GET_MEMBERS_REQUEST, {
         payload: null,
         responseCallback: () => {
           $q.loading.hide();
         },
       });
+    };
+
+    onBeforeMount(() => {
+      getMembers();
 
       $store.dispatch(GET_RFID_CARDS_REQUEST, {
         payload: null,
-        responseCallback: () => {},
+        responseCallback: (status, res) => {
+          console.log({ res });
+          if (status) {
+            const options = res?.data?.map((item) => {
+              return {
+                ...item,
+                label: item?.rfCardNo,
+                value: item?.rfCardNo,
+              };
+            });
+
+            rfids.value = options;
+          }
+        },
       });
     });
 
@@ -218,6 +269,7 @@ export default defineComponent({
             ...item,
             membershipTypeDesc: item?.membershipTypeDesc || "-",
             fullName: `${item?.firstName} ${item?.lastName}`,
+            activeRFCardNumber: item?.activeRFCard || "-",
           });
         }
         membersRows.value = rowsTemp;
@@ -252,11 +304,52 @@ export default defineComponent({
 
     const handleOpenRFID = (data) => {
       console.log({ data });
-      openDetailMember.value = { bool: true, data };
+      openDetailMember.value = {
+        bool: data?.activeRFCard ? false : true,
+        data,
+        rfid: data?.activeRFCard,
+      };
+      data?.activeRFCard ? handleClose() : null;
+    };
+
+    const handleClose = () => {
+      open.value = { ...open.value, bool: !open.value.bool };
+    };
+
+    const handleSubmitConfirmation = () => {
+      handleClose();
+      openDetailMember.value = {
+        bool: true,
+      };
+    };
+
+    const onSubmit = () => {
+      $store.dispatch(ASSIGN_RFID_CARD_REQUEST, {
+        payload: {
+          rfCardNo: openDetailMember.value.rfid.value,
+          memberId: openDetailMember.value.data.memberId,
+        },
+        responseCallback: (status, res) => {
+          if (res.data) {
+            toastMessage(res.message, true);
+            getMembers();
+          } else {
+            toastMessage(res.message, false);
+          }
+          console.log({ res });
+          openDetailMember.value = {
+            bool: false,
+            data: null,
+            rfid: null,
+          };
+          console.log({ res });
+        },
+      });
     };
 
     return {
       //states
+      rfids,
       search,
       isLoggedIn,
       membersListGetter,
@@ -266,7 +359,11 @@ export default defineComponent({
       initialPagination,
       $q,
       openDetailMember,
+      open,
       //handlers
+      onSubmit,
+      handleSubmitConfirmation,
+      handleClose,
       handleOpenRFID,
       handleCloseRFID,
       handleRoute,

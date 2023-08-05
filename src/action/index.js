@@ -25,9 +25,10 @@ import {
   getReceiptsByDateRequest,
   cancelReceiptRequest,
 } from "./programs/program-actions";
-import { getRfidCardsRequest } from "./rfid/rfid";
+import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
 
 export {
+  assignRfidCardRequest,
   cancelReceiptRequest,
   getRfidCardsRequest,
   getReceiptsByDateRequest,

@@ -83,6 +83,12 @@ export const GET_RFID_CARDS_URL = {
   headers: false,
 };
 
+export const ASSIGN_RFID_CARD_URL = {
+  url: "v1/Member/AssignRFCard",
+  accesstoken: true,
+  headers: false,
+};
+
 //PROGRAMS REQUESTS
 export const GET_PROGRAMS_URL = {
   url: "v1/Programs/GetPrograms",
@@ -304,6 +310,14 @@ export const memberModalColumns = [
 
 export const memberColumns = [
   {
+    name: "memberId",
+    label: "Member Id",
+
+    align: "left",
+    field: "memberId",
+    sortable: true,
+  },
+  {
     name: "title",
     label: "Title",
     // style: "width: 500px",
@@ -342,6 +356,14 @@ export const memberColumns = [
     align: "center",
     label: "Mobile number",
     field: "phoneMobile",
+    sortable: true,
+  },
+
+  {
+    name: "activeRFCardNumber",
+    align: "center",
+    label: "Rfid number",
+    field: "activeRFCardNumber",
     sortable: true,
   },
   { name: "actions", label: "Actions", field: "", align: "center" },
@@ -564,25 +586,10 @@ export const allVisitorColumns = [
 
 export const allCollectionsByDateColumns = [
   {
-    name: "createdBy",
-    label: "Created By",
+    name: "receiptId",
+    label: "Receipt Id",
     align: "left",
-    field: "createdBy",
-    sortable: true,
-  },
-  {
-    name: "memberFullName",
-    label: "Name",
-    align: "left",
-    field: "memberFullName",
-    sortable: true,
-  },
-
-  {
-    name: "billStartDate",
-    label: "Billing Date",
-    align: "left",
-    field: "billStartDate",
+    field: "receiptId",
     sortable: true,
   },
   {
@@ -594,10 +601,18 @@ export const allCollectionsByDateColumns = [
   },
 
   {
-    name: "payModeDesc",
-    label: "Payment mode",
+    name: "memberFullName",
+    label: "Member name",
     align: "left",
-    field: "payModeDesc",
+    field: "memberFullName",
+    sortable: true,
+  },
+
+  {
+    name: "phone",
+    label: "Phone",
+    align: "left",
+    field: "phone",
     sortable: true,
   },
 
@@ -608,7 +623,21 @@ export const allCollectionsByDateColumns = [
     field: "amount",
     sortable: true,
   },
+  {
+    name: "isCancelled",
+    label: "Cancelled (Yes/No)",
+    align: "left",
+    field: "isCancelled",
+    sortable: true,
+  },
 
+  {
+    name: "createdBy",
+    label: "Created By",
+    align: "left",
+    field: "createdBy",
+    sortable: true,
+  },
   {
     name: "actions",
     label: "Action",
@@ -621,23 +650,32 @@ export const allCollectionsByDateColumns = [
 export const singleCollectionColumns = [
   {
     name: "receiptId",
-    label: "Receipt Number",
+    label: "Receipt Id",
     align: "left",
     field: "receiptId",
     sortable: true,
   },
   {
-    name: "createdBy",
-    label: "Created By",
+    name: "receiptDate",
+    label: "Receipt Date",
     align: "left",
-    field: "createdBy",
+    field: "receiptDate",
     sortable: true,
   },
+
   {
     name: "memberFullName",
-    label: "Name",
+    label: "Member name",
     align: "left",
     field: "memberFullName",
+    sortable: true,
+  },
+
+  {
+    name: "phone",
+    label: "Phone",
+    align: "left",
+    field: "phone",
     sortable: true,
   },
 
@@ -650,16 +688,9 @@ export const singleCollectionColumns = [
   },
   {
     name: "isCancelled",
-    label: "Cancelled",
+    label: "Cancelled (Yes/No)",
     align: "left",
     field: "isCancelled",
-    sortable: true,
-  },
-  {
-    name: "receiptDate",
-    label: "Receipt Date",
-    align: "left",
-    field: "receiptDate",
     sortable: true,
   },
 
@@ -668,6 +699,14 @@ export const singleCollectionColumns = [
     label: "Payment mode",
     align: "left",
     field: "payModeDesc",
+    sortable: true,
+  },
+
+  {
+    name: "createdBy",
+    label: "Created By",
+    align: "left",
+    field: "createdBy",
     sortable: true,
   },
 

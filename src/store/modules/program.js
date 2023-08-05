@@ -187,6 +187,7 @@ export const programModule = {
             billStartDate: moment(item?.billStartDate).format("lll"),
             receiptDate: moment(item?.receiptDate).format("lll"),
             isCancelled: item?.isCancelled ? "Yes" : "No",
+            phone: item?.phone || "-",
           });
         });
       }

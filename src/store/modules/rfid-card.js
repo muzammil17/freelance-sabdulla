@@ -1,4 +1,4 @@
-import { getRfidCardsRequest } from "@/action";
+import { getRfidCardsRequest, assignRfidCardRequest } from "@/action";
 import { GET_RFID_CARDS_GETT, SET_RFID_CARD_MUT } from "@/action/actionTypes";
 export const rfidModule = {
   state: () => ({
@@ -16,5 +16,5 @@ export const rfidModule = {
     },
   },
 
-  actions: { getRfidCardsRequest },
+  actions: { getRfidCardsRequest, assignRfidCardRequest },
 };
