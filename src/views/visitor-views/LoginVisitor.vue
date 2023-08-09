@@ -158,9 +158,9 @@ export default defineComponent({
         responseCallback: (status, res) => {
           console.log({ status, res });
           if (status) {
-            toastMessage("New Visitor added", true);
+            toastMessage(res?.message || "New Visitor added", true);
           } else {
-            toastMessage("Something went wrong", false);
+            toastMessage(res?.message || "Something went wrong", false);
           }
           btnLoader.value = false;
           $router.back();
