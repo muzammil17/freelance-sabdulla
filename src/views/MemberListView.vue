@@ -123,7 +123,7 @@
             </div>
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
-            <!-- <q-input
+            <q-input
               outlined
               v-model="openDetailMember.rfid"
               type="text"
@@ -132,8 +132,8 @@
               :rules="[
                 (val) => (val && val.length > 0) || 'RFID number is required',
               ]"
-            /> -->
-            <q-select
+            />
+            <!-- <q-select
               outlined
               label="RFID Number *"
               v-model="openDetailMember.rfid"
@@ -148,7 +148,7 @@
                   </q-item-section>
                 </q-item>
               </template>
-            </q-select>
+            </q-select> -->
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row justify-end">
@@ -326,7 +326,7 @@ export default defineComponent({
     const onSubmit = () => {
       $store.dispatch(ASSIGN_RFID_CARD_REQUEST, {
         payload: {
-          rfCardNo: openDetailMember.value.rfid.value,
+          rfCardNo: openDetailMember.value.rfid,
           memberId: openDetailMember.value.data.memberId,
         },
         responseCallback: (status, res) => {
