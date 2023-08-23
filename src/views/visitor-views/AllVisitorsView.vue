@@ -59,6 +59,7 @@
             />
             <q-btn
               dense
+              :disable="props?.row?.exitDateTime ? true : false"
               round
               flat
               class="edit-memberbtn"
@@ -283,15 +284,14 @@ export default defineComponent({
         payload: { data: { ...payload } },
         responseCallback: (status, res) => {
           if (status) {
-            toastMessage("Visitor logout Successfully", true);
+            toastMessage(res?.message, true);
             $store.dispatch(UPDATE_VISITORS_MUT, { ...payload });
             filterBy.value = initialFilter;
             handleGetAllVisitor();
             handleCloseVisitorLogout();
           } else {
-            toastMessage("Something Went Wrong!", false);
+            toastMessage(res?.message || "Something went wrong!", false);
           }
-          console.log({ status, res });
         },
       });
     };

@@ -566,10 +566,10 @@ export const allVisitorColumns = [
     sortable: true,
   },
   {
-    name: "exitDateTime",
+    name: "exitDateTimeLabel",
     label: "Exit time",
     align: "left",
-    field: "exitDateTime",
+    field: "exitDateTimeLabel",
     sortable: true,
   },
 
