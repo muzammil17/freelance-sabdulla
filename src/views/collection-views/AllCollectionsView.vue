@@ -70,7 +70,7 @@
         <div>
           <q-btn
             color="primary"
-            label="Get Date"
+            label="Get Data"
             @click="getCustomDateCollection"
           />
         </div>
@@ -276,7 +276,9 @@ export default defineComponent({
           },
           responseCallback: (status, res) => {
             console.log({ status, res });
-            tableLoader.value = false;
+            setTimeout(() => {
+              tableLoader.value = false;
+            }, 1000);
           },
         });
       }

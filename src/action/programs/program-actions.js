@@ -278,6 +278,8 @@ export const getReceiptsByDateRequest = async (
 
       responseCallback(true, result.data);
     } else {
+      context.commit(SET_COLLECTIONS_BY_DATE_MUT, []);
+
       responseCallback(false, result.data);
     }
 

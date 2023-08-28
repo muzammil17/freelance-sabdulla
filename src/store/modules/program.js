@@ -171,7 +171,6 @@ export const programModule = {
       state.banksForCart = clonePayload;
     },
     [SET_COLLECTIONS_BY_DATE_MUT]: (state, payload) => {
-      console.log({ payload });
       state.receipts = payload;
     },
   },

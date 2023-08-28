@@ -1,7 +1,22 @@
+import LoginView from "../views/LoginView.vue";
+import HomeView from "../views/HomeView.vue";
+import MemberView from "../views/MemberView.vue";
+import EditMemberView from "../views/EditMemberView.vue";
+import MemberListView from "../views/MemberListView.vue";
+import MemberDetailView from "@/views/MemberDetail.vue";
+import DashboardEmpty from "@/views/DashboardEmpty.vue";
+import ProgramsView from "@/views/program-views/ProgramsView.vue";
+import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
+import AllProgramView from "@/views/program-views/AllProgramView.vue";
+import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
+import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
+import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
+import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
+import CartView from "@/views/CartView.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-// export const API_URL = "https://api.ribat.com.pk/";
-export const API_URL = "https://stagingapi.ribat.com.pk/";
+export const API_URL = "https://api.ribat.com.pk/";
+// export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
@@ -12,6 +27,12 @@ export const toastMessage = (message, bool) => {
     position: "top",
     timeout: 2000,
   });
+};
+
+export const ROUTE_ROLES = {
+  PUBLIC: "PUBLIC",
+  PRIVATE: "PRIVATE",
+  AUTH: "AUTH",
 };
 
 export const LOGIN_URL = {
@@ -172,66 +193,132 @@ export const LOGOUT_VISITOR_URL = {
 };
 
 /////////////////////////////////////PAGES ROUTES////////////////////////////////////////////////
-export const LOGIN_VIEW_URL = { title: "Login", url: "/login" };
-export const DASHBOARD_VIEW_URL = { title: "Dashboard", url: "/dashboard" };
+export const LOGIN_VIEW_URL = {
+  title: "Login",
+  url: "/login",
+  auth: ROUTE_ROLES.AUTH,
+  component: LoginView,
+};
+export const DASHBOARD_VIEW_URL = {
+  title: "Dashboard",
+  url: "/dashboard",
+  component: HomeView,
+
+  auth: ROUTE_ROLES.PRIVATE,
+};
 export const MEMBER_VIEW_URL = {
   title: "Membership Form",
   url: "/membership-form",
+  component: MemberView,
+
+  auth: ROUTE_ROLES.PRIVATE,
 };
 export const EDIT_MEMBER_URL = {
   title: "Edit Member",
   url: "/edit-member/:memberId",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: EditMemberView,
 };
 
 export const VIEW_MEMBERS_LIST_URL = {
   title: "Members List",
   url: "/members",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: MemberListView,
 };
 export const VIEW_MEMBER_DETAIL_URL = {
   title: "Member Detail",
   url: "/member-detail/:memberId",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: MemberDetailView,
 };
 export const VIEW_PROGRAMS_URL = {
   title: "Programs",
   url: "/programs",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ProgramsView,
 };
 export const VIEW_PROGRAM_Detail_URL = {
   title: "Program information",
   url: "/program/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ProgramDetailView,
 };
 export const VIEW_CART_LIST_URL = {
   title: "Cart",
   url: "/cart",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CartView,
 };
 
 export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
   title: "All Programs",
   url: "/create-program",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AllProgramView,
 };
 
 export const VIEW_CREATE_PROGRAM_URL = {
   title: "Create Program",
   url: "/new-program",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CreateProgramView,
 };
 
 export const VIEW_UPDATE_PROGRAM_URL = {
   title: "Update Program",
   url: "/update-program/:progId",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CreateProgramView,
 };
 
 export const CREATE_ENTRY_VISITOR_URL = {
   title: "Visitor Login Entry",
   url: "/entry-visitor",
+  component: AddVisitor,
+
+  auth: ROUTE_ROLES.PRIVATE,
 };
 export const ALL_VISITOR_URL = {
   title: "Visitors",
+  component: AllVisitors,
+
   url: "/visitor_log",
+  auth: ROUTE_ROLES.PRIVATE,
 };
 
 export const ALL_COLLECTION_URL = {
   title: "Collection",
   url: "/collection",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AllCollection,
 };
+
+export const Home_URL = {
+  title: "Home",
+  url: "/",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: DashboardEmpty,
+};
+
+export const ALL_ROUTES = [
+  Home_URL,
+  MEMBER_VIEW_URL,
+  EDIT_MEMBER_URL,
+  VIEW_MEMBERS_LIST_URL,
+  VIEW_MEMBER_DETAIL_URL,
+  VIEW_PROGRAMS_URL,
+  VIEW_PROGRAM_Detail_URL,
+  VIEW_CART_LIST_URL,
+  VIEW_ALL_PROGRAMS_DISPLAY_URL,
+  VIEW_CREATE_PROGRAM_URL,
+  VIEW_UPDATE_PROGRAM_URL,
+  CREATE_ENTRY_VISITOR_URL,
+  LOGIN_VIEW_URL,
+  DASHBOARD_VIEW_URL,
+  ALL_COLLECTION_URL,
+  ALL_VISITOR_URL,
+];
 
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 export const pagination = {
