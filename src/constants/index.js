@@ -1,5 +1,4 @@
 import LoginView from "../views/LoginView.vue";
-import HomeView from "../views/HomeView.vue";
 import MemberView from "../views/MemberView.vue";
 import EditMemberView from "../views/EditMemberView.vue";
 import MemberListView from "../views/MemberListView.vue";
@@ -13,10 +12,11 @@ import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
 import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
 import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
 import CartView from "@/views/CartView.vue";
+import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-export const API_URL = "https://api.ribat.com.pk/";
-// export const API_URL = "https://stagingapi.ribat.com.pk/";
+// export const API_URL = "https://api.ribat.com.pk/";
+export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
@@ -199,13 +199,18 @@ export const LOGIN_VIEW_URL = {
   auth: ROUTE_ROLES.AUTH,
   component: LoginView,
 };
-export const DASHBOARD_VIEW_URL = {
-  title: "Dashboard",
-  url: "/dashboard",
-  component: HomeView,
+export const PAGE404_VIEW_URL = {
+  title: "Page Not Found",
+  url: "/:catchAll(.*)",
+  component: PageNotFound,
 
-  auth: ROUTE_ROLES.PRIVATE,
+  meta: {
+    requiresAuth: false,
+  },
+
+  auth: ROUTE_ROLES.PUBLIC,
 };
+
 export const MEMBER_VIEW_URL = {
   title: "Membership Form",
   url: "/membership-form",
@@ -265,12 +270,12 @@ export const VIEW_CREATE_PROGRAM_URL = {
   component: CreateProgramView,
 };
 
-export const VIEW_UPDATE_PROGRAM_URL = {
-  title: "Update Program",
-  url: "/update-program/:progId",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: CreateProgramView,
-};
+// export const VIEW_UPDATE_PROGRAM_URL = {
+//   title: "Update Program",
+//   url: "/update-program/:progId",
+//   auth: ROUTE_ROLES.PRIVATE,
+//   component: CreateProgramView,
+// };
 
 export const CREATE_ENTRY_VISITOR_URL = {
   title: "Visitor Login Entry",
@@ -307,15 +312,14 @@ export const ALL_ROUTES = [
   EDIT_MEMBER_URL,
   VIEW_MEMBERS_LIST_URL,
   VIEW_MEMBER_DETAIL_URL,
+  PAGE404_VIEW_URL,
   VIEW_PROGRAMS_URL,
   VIEW_PROGRAM_Detail_URL,
   VIEW_CART_LIST_URL,
   VIEW_ALL_PROGRAMS_DISPLAY_URL,
   VIEW_CREATE_PROGRAM_URL,
-  VIEW_UPDATE_PROGRAM_URL,
   CREATE_ENTRY_VISITOR_URL,
   LOGIN_VIEW_URL,
-  DASHBOARD_VIEW_URL,
   ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
 ];

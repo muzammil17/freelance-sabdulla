@@ -1,19 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import LoginView from "../views/LoginView.vue";
-// import HomeView from "../views/HomeView.vue";
-// import MemberView from "../views/MemberView.vue";
-// import EditMemberView from "../views/EditMemberView.vue";
-// import MemberListView from "../views/MemberListView.vue";
-// import MemberDetailView from "@/views/MemberDetail.vue";
-// import DashboardEmpty from "@/views/DashboardEmpty.vue";
-// import ProgramsView from "@/views/program-views/ProgramsView.vue";
-// import ProgramDetailView from "@/views/program-views/ProgramsDetailView.vue";
-// import AllProgramView from "@/views/program-views/AllProgramView.vue";
-// import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
-// import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
-// import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
-// import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
-// import CartView from "@/views/CartView.vue";
 
 import { store } from "@/store/store";
 import { computed } from "vue";
@@ -21,25 +6,7 @@ import {
   GET_USER_ALLOWED_MENUS_GETT,
   IS_AUTHENTICATED,
 } from "@/action/actionTypes";
-import {
-  // ALL_COLLECTION_URL,
-  ALL_ROUTES,
-  // ALL_VISITOR_URL,
-  // CREATE_ENTRY_VISITOR_URL,
-  // DASHBOARD_VIEW_URL,
-  // EDIT_MEMBER_URL,
-  LOGIN_VIEW_URL,
-  // MEMBER_VIEW_URL,
-  ROUTE_ROLES,
-  // VIEW_ALL_PROGRAMS_DISPLAY_URL,
-  // VIEW_CART_LIST_URL,
-  // VIEW_CREATE_PROGRAM_URL,
-  // VIEW_MEMBERS_LIST_URL,
-  // VIEW_MEMBER_DETAIL_URL,
-  // VIEW_PROGRAMS_URL,
-  // VIEW_PROGRAM_Detail_URL,
-  // VIEW_UPDATE_PROGRAM_URL,
-} from "@/constants";
+import { ALL_ROUTES, LOGIN_VIEW_URL, ROUTE_ROLES } from "@/constants";
 
 const IsAuthenticated = computed(() => {
   return store.getters[IS_AUTHENTICATED];
@@ -243,16 +210,16 @@ const getUserAllowedMenusGetter = computed(() => {
 //   },
 // ];
 
-let routes = ALL_ROUTES.map(({ auth, title, url, component }) => {
+let routes = ALL_ROUTES.map((dt) => {
   console.log({
     IsAuthenticated: IsAuthenticated.value,
     getUserAllowedMenusGetter: getUserAllowedMenusGetter.value,
   });
-  if (auth === ROUTE_ROLES.AUTH) {
+  if (dt?.auth === ROUTE_ROLES.AUTH) {
     return {
-      path: url,
-      name: title,
-      component: component,
+      path: dt?.url,
+      name: dt?.title,
+      component: dt?.component,
       beforeEnter: (to, from, next) => {
         if (IsAuthenticated.value) next("/");
         else {
@@ -260,11 +227,11 @@ let routes = ALL_ROUTES.map(({ auth, title, url, component }) => {
         }
       },
     };
-  } else if (auth === ROUTE_ROLES.PRIVATE) {
+  } else if (dt?.auth === ROUTE_ROLES.PRIVATE) {
     return {
-      path: url,
-      name: title,
-      component: component,
+      path: dt?.url,
+      name: dt?.title,
+      component: dt?.component,
       beforeEnter: (to, from, next) => {
         if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
         else {
@@ -274,9 +241,16 @@ let routes = ALL_ROUTES.map(({ auth, title, url, component }) => {
     };
   } else {
     return {
-      path: url,
-      name: title,
-      component: component,
+      path: dt?.url,
+      name: dt?.title,
+      component: dt?.component,
+      ...(dt?.meta
+        ? {
+            meta: {
+              requiresAuth: false,
+            },
+          }
+        : {}),
       beforeEnter: (to, from, next) => {
         if (IsAuthenticated.value) next("/");
         else {

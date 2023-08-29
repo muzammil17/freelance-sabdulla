@@ -250,6 +250,7 @@ export default {
       Cart,
       VIEW_CART_LIST_URL,
       getCartItemsGetter,
+      LOGIN_VIEW_URL,
       // functions
       handleLogout,
       toastMessage,
