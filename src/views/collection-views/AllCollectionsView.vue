@@ -112,7 +112,15 @@
               icon="info"
               @click="handleRowClick(props)"
             />
-            <q-btn dense round flat class="edit-memberbtn" icon="print" />
+            <q-btn
+              dense
+              round
+              flat
+              class="edit-memberbtn"
+              icon="print"
+              :disable="!props?.row?.printUrl ? true : false"
+              @click="handlePrint(props?.row)"
+            />
             <q-btn
               dense
               round
@@ -335,6 +343,11 @@ export default defineComponent({
         },
       });
     };
+
+    const handlePrint = (data) => {
+      window.open(data?.printUrl);
+    };
+
     return {
       //states
       tableLoader,
@@ -359,6 +372,7 @@ export default defineComponent({
       singleCollectionColumns,
       open,
       //handlers
+      handlePrint,
       handleSubmitCancel,
       handleOpen,
       handleRoute,

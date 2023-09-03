@@ -174,7 +174,6 @@ import { useStore } from "vuex";
 import {
   GET_MEMBERS_LIST_GETT,
   GET_MEMBERS_REQUEST,
-  GET_RFID_CARDS_REQUEST,
   IS_AUTHENTICATED,
   ASSIGN_RFID_CARD_REQUEST,
 } from "@/action/actionTypes";
@@ -237,23 +236,23 @@ export default defineComponent({
     onBeforeMount(() => {
       getMembers();
 
-      $store.dispatch(GET_RFID_CARDS_REQUEST, {
-        payload: null,
-        responseCallback: (status, res) => {
-          console.log({ res });
-          if (status) {
-            const options = res?.data?.map((item) => {
-              return {
-                ...item,
-                label: item?.rfCardNo,
-                value: item?.rfCardNo,
-              };
-            });
+      // $store.dispatch(GET_RFID_CARDS_REQUEST, {
+      //   payload: null,
+      //   responseCallback: (status, res) => {
+      //     console.log({ res });
+      //     if (status) {
+      //       const options = res?.data?.map((item) => {
+      //         return {
+      //           ...item,
+      //           label: item?.rfCardNo,
+      //           value: item?.rfCardNo,
+      //         };
+      //       });
 
-            rfids.value = options;
-          }
-        },
-      });
+      //       rfids.value = options;
+      //     }
+      //   },
+      // });
     });
 
     watch(membersListGetter, (currentVal) => {
@@ -311,6 +310,9 @@ export default defineComponent({
       };
       data?.activeRFCard ? handleClose() : null;
     };
+    watch(openDetailMember, () => {
+      console.log({ openDetailMember: openDetailMember.value });
+    });
 
     const handleClose = () => {
       open.value = { ...open.value, bool: !open.value.bool };
@@ -319,6 +321,7 @@ export default defineComponent({
     const handleSubmitConfirmation = () => {
       handleClose();
       openDetailMember.value = {
+        ...openDetailMember.value,
         bool: true,
       };
     };
