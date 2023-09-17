@@ -403,8 +403,7 @@ export const memberColumns = [
   {
     name: "memberId",
     label: "Member Id",
-
-    align: "left",
+    align: "center",
     field: "memberId",
     sortable: true,
   },

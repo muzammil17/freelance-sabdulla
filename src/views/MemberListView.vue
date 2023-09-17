@@ -108,6 +108,7 @@
               }}
             </div>
           </div>
+
           <div class="col-lg-2 col-xl-2 col-md-2 col-sm-2 col-xs-2">
             <div class="row justify-end">
               <div>
@@ -122,6 +123,15 @@
               </div>
             </div>
           </div>
+          <div
+            class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10"
+            v-if="openDetailMember.data?.activeRFCard"
+          >
+            <div class="text-subtitle1 text-primary">
+              * Current Assigned RFID"
+              {{ openDetailMember.data?.activeRFCard }}
+            </div>
+          </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <q-input
               outlined
@@ -131,24 +141,11 @@
               label="RFID Number *"
               :rules="[
                 (val) => (val && val.length > 0) || 'RFID number is required',
+                (val) =>
+                  (val && openDetailMember.data?.activeRFCard !== val) ||
+                  'This RFID number is already assigned',
               ]"
             />
-            <!-- <q-select
-              outlined
-              label="RFID Number *"
-              v-model="openDetailMember.rfid"
-              behavior="menu"
-              :options="rfids"
-              hint="* Select RFID"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select> -->
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row justify-end">
@@ -235,24 +232,6 @@ export default defineComponent({
 
     onBeforeMount(() => {
       getMembers();
-
-      // $store.dispatch(GET_RFID_CARDS_REQUEST, {
-      //   payload: null,
-      //   responseCallback: (status, res) => {
-      //     console.log({ res });
-      //     if (status) {
-      //       const options = res?.data?.map((item) => {
-      //         return {
-      //           ...item,
-      //           label: item?.rfCardNo,
-      //           value: item?.rfCardNo,
-      //         };
-      //       });
-
-      //       rfids.value = options;
-      //     }
-      //   },
-      // });
     });
 
     watch(membersListGetter, (currentVal) => {
