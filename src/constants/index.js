@@ -400,22 +400,22 @@ export const memberModalColumns = [
 ];
 
 export const memberColumns = [
-  {
-    name: "memberId",
-    label: "Member Id",
-    align: "center",
-    field: "memberId",
-    sortable: true,
-  },
-  {
-    name: "title",
-    label: "Title",
-    // style: "width: 500px",
+  // {
+  //   name: "memberId",
+  //   label: "Member Id",
+  //   align: "center",
+  //   field: "memberId",
+  //   sortable: true,
+  // },
+  // {
+  //   name: "title",
+  //   label: "Title",
+  //   // style: "width: 500px",
 
-    align: "left",
-    field: "title",
-    sortable: true,
-  },
+  //   align: "left",
+  //   field: "title",
+  //   sortable: true,
+  // },
   {
     name: "fullName",
     label: "Full Name",

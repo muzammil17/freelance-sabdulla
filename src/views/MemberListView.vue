@@ -123,15 +123,7 @@
               </div>
             </div>
           </div>
-          <div
-            class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10"
-            v-if="openDetailMember.data?.activeRFCard"
-          >
-            <div class="text-subtitle1 text-primary">
-              * Current Assigned RFID"
-              {{ openDetailMember.data?.activeRFCard }}
-            </div>
-          </div>
+
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <q-input
               outlined
@@ -146,6 +138,17 @@
                   'This RFID number is already assigned',
               ]"
             />
+          </div>
+          <div
+            class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10"
+            v-if="openDetailMember.data?.activeRFCard"
+          >
+            <div class="text-subtitle1 text-primary">
+              * Existing Card No :
+              <span class="text-weight-bold">
+                {{ openDetailMember.data?.activeRFCard }}
+              </span>
+            </div>
           </div>
           <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row justify-end">
@@ -246,7 +249,9 @@ export default defineComponent({
           rowsTemp.push({
             ...item,
             membershipTypeDesc: item?.membershipTypeDesc || "-",
-            fullName: `${item?.firstName} ${item?.lastName}`,
+            fullName: `${item?.title ? item?.title + " " : ""}${
+              item?.firstName
+            } ${item?.lastName}`,
             activeRFCardNumber: item?.activeRFCard || "-",
           });
         }
@@ -285,7 +290,7 @@ export default defineComponent({
       openDetailMember.value = {
         bool: data?.activeRFCard ? false : true,
         data,
-        rfid: data?.activeRFCard,
+        rfid: "",
       };
       data?.activeRFCard ? handleClose() : null;
     };
