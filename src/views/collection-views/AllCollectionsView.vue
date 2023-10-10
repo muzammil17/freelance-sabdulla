@@ -345,6 +345,11 @@ export default defineComponent({
     };
 
     const handlePrint = (data) => {
+      // var win = window.open();
+      // win.document.write(
+      //   `<iframe src="${data?.printUrl}" target="_top" width="100%"></iframe`
+      // );
+
       window.open(data?.printUrl);
     };
 

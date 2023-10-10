@@ -503,7 +503,7 @@ export default defineComponent({
         let cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
         console.log(cartData.value);
-        let billStart = moment(billingStartDateInput.value).toISOString();
+        let billStart = moment(billingStartDateInput.value).format();
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
@@ -521,7 +521,7 @@ export default defineComponent({
           payModeId,
           payModeDesc,
           memberId,
-          receiptDate: moment().toISOString(),
+          receiptDate: moment().format(),
           colTypeId: value,
           colTypeDesc: label,
           ...(!paymentInput.value.defaultRealized
@@ -529,13 +529,12 @@ export default defineComponent({
                 chqBankId: selectBankInput.value?.value,
                 cheBankName: selectBankInput.value?.label,
                 chequeNo: String(chequeInput?.value),
-                chequeDate: moment(chequeDateInput.value).toISOString(),
+                chequeDate: moment(chequeDateInput.value).format(),
               }
             : {}),
           memberFullName: `${firstName} ${lastName}`,
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
-        console.log({ payload });
         $store.dispatch(SAVE_RECEIPT_REQUEST, {
           payload,
           responseCallback: (statusreceipt, responseReceipt) => {
