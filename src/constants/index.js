@@ -363,7 +363,7 @@ export const ALL_ROUTES = [
   LOGIN_VIEW_URL,
   ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
-  PAGE_404_VIEW_URL,
+  // PAGE_404_VIEW_URL,
 ];
 export const DefaultPrivate = [Home_URL.url, VIEW_CART_LIST_URL.url];
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
