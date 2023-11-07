@@ -13,6 +13,7 @@ export const vuexLocal = new VuexPersistence({
   storage: window.localStorage,
   reducer: (state) => ({
     user: state.user,
+    menu: state.menu,
   }),
 });
 

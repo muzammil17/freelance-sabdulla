@@ -46,6 +46,13 @@ export const GET_USER_ALLOWED_MENU_URL = {
   accesstoken: true,
   headers: false,
 };
+
+export const GET_USER_ACCESS_TYPES_URL = {
+  url: "v1/UserAccount/GetUserAccessTypes",
+  accesstoken: true,
+  headers: false,
+};
+
 export const GET_MEMBER_TYPES_URL = {
   url: "v1/Member/GetMemberTypes",
   accesstoken: true,
@@ -210,12 +217,22 @@ export const PAGE404_VIEW_URL = {
 
   auth: ROUTE_ROLES.PUBLIC,
 };
+export const PAGE_404_VIEW_URL = {
+  title: "Page Not Found",
+  url: "/404",
+  component: PageNotFound,
+
+  meta: {
+    requiresAuth: false,
+  },
+
+  auth: ROUTE_ROLES.PUBLIC,
+};
 
 export const MEMBER_VIEW_URL = {
   title: "Membership Form",
   url: "/membership-form",
   component: MemberView,
-
   auth: ROUTE_ROLES.PRIVATE,
 };
 export const EDIT_MEMBER_URL = {
@@ -230,6 +247,11 @@ export const VIEW_MEMBERS_LIST_URL = {
   url: "/members",
   auth: ROUTE_ROLES.PRIVATE,
   component: MemberListView,
+  view: ["/member-detail/:memberId", "/members"],
+  create: ["/membership-form"],
+  update: ["/edit-member/:memberId"],
+  print: [],
+  delete: [],
 };
 export const VIEW_MEMBER_DETAIL_URL = {
   title: "Member Detail",
@@ -242,6 +264,11 @@ export const VIEW_PROGRAMS_URL = {
   url: "/programs",
   auth: ROUTE_ROLES.PRIVATE,
   component: ProgramsView,
+  view: ["/program/:id", "/programs"],
+  create: [],
+  update: [],
+  print: [],
+  delete: [],
 };
 export const VIEW_PROGRAM_Detail_URL = {
   title: "Program information",
@@ -249,18 +276,16 @@ export const VIEW_PROGRAM_Detail_URL = {
   auth: ROUTE_ROLES.PRIVATE,
   component: ProgramDetailView,
 };
-export const VIEW_CART_LIST_URL = {
-  title: "Cart",
-  url: "/cart",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: CartView,
-};
-
 export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
   title: "All Programs",
   url: "/create-program",
   auth: ROUTE_ROLES.PRIVATE,
   component: AllProgramView,
+  view: ["/create-program"],
+  create: ["/new-program"],
+  update: [],
+  print: [],
+  delete: [],
 };
 
 export const VIEW_CREATE_PROGRAM_URL = {
@@ -268,6 +293,12 @@ export const VIEW_CREATE_PROGRAM_URL = {
   url: "/new-program",
   auth: ROUTE_ROLES.PRIVATE,
   component: CreateProgramView,
+};
+export const VIEW_CART_LIST_URL = {
+  title: "Cart",
+  url: "/cart",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CartView,
 };
 
 // export const VIEW_UPDATE_PROGRAM_URL = {
@@ -290,6 +321,11 @@ export const ALL_VISITOR_URL = {
 
   url: "/visitor_log",
   auth: ROUTE_ROLES.PRIVATE,
+  view: ["/visitor_log"],
+  create: ["/entry-visitor"],
+  update: [],
+  print: [],
+  delete: [],
 };
 
 export const ALL_COLLECTION_URL = {
@@ -297,6 +333,11 @@ export const ALL_COLLECTION_URL = {
   url: "/collection",
   auth: ROUTE_ROLES.PRIVATE,
   component: AllCollection,
+  view: ["/collection"],
+  create: [],
+  update: [],
+  print: [],
+  delete: [],
 };
 
 export const Home_URL = {
@@ -322,8 +363,9 @@ export const ALL_ROUTES = [
   LOGIN_VIEW_URL,
   ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
+  PAGE_404_VIEW_URL,
 ];
-
+export const DefaultPrivate = [Home_URL.url, VIEW_CART_LIST_URL.url];
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 export const pagination = {
   sortBy: "desc",

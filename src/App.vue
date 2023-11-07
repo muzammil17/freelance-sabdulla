@@ -168,7 +168,9 @@ export default {
       if (isLoggedIn.value) {
         $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
           payload: getUserGetter.value,
-          responseCallback: () => {},
+          responseCallback: (res) => {
+            console.log({ res });
+          },
         });
       }
     });
@@ -188,7 +190,9 @@ export default {
       if (isLoggedIn.value) {
         $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
           payload: getUserGetter.value,
-          responseCallback: () => {},
+          responseCallback: (res) => {
+            console.log({ res });
+          },
         });
       }
     });
