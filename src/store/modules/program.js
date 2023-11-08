@@ -183,8 +183,16 @@ export const programModule = {
         state?.receipts.forEach((item) => {
           clone.push({
             ...item,
-            billStartDate: moment(item?.billStartDate).format("lll"),
-            receiptDate: moment(item?.receiptDate).format("lll"),
+            billStartDate: item?.receiptDate
+              ? moment(item?.billStartDate).format("DD/MM/YYYY")
+              : "-",
+            receiptDate: item?.receiptDate
+              ? moment(item?.receiptDate).format("DD/MM/YYYY")
+              : "-",
+            cancelledWhen: item?.cancelledWhen
+              ? moment(item?.cancelledWhen).format("DD/MM/YYYY")
+              : "-",
+            cancelleddBy: item?.cancelleddBy ? item?.cancelleddBy : "-",
             isCancelled: item?.isCancelled ? "Yes" : "No",
             phone: item?.phone || "-",
           });

@@ -111,6 +111,7 @@
               class="edit-memberbtn"
               icon="info"
               @click="handleRowClick(props)"
+              v-if="allowed.viewCollection"
             />
             <q-btn
               dense
@@ -120,6 +121,7 @@
               icon="print"
               :disable="!props?.row?.printUrl ? true : false"
               @click="handlePrint(props?.row)"
+              v-if="allowed.printCollection"
             />
             <q-btn
               dense
@@ -128,6 +130,7 @@
               class="edit-memberbtn"
               icon="delete"
               @click="handleOpen(props?.row?.receiptId, true)"
+              v-if="allowed.deleteCollection"
             />
 
             <!-- @click="handleClickAction(props)" -->
@@ -189,6 +192,7 @@ import {
   GET_RECEIPTS_BY_DATE_REQUEST,
   GET_COLLECTIONS_BY_DATE_GETT,
   CANCEL_RECEIPT_REQUEST,
+  GET_USER_ALLOWED_MENUS_GETT,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
@@ -200,6 +204,7 @@ import {
   toastMessage,
   CREATE_ENTRY_VISITOR_URL,
   singleCollectionColumns,
+  ALL_ROUTES,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import moment from "moment";
@@ -228,6 +233,15 @@ export default defineComponent({
     let search = ref(null);
     let logoutVisitor = ref(null);
 
+    const currentRoute = $router.currentRoute.value;
+
+    // allowed actions
+    const allowed = ref({
+      viewCollection: false,
+      printCollection: false,
+      deleteCollection: false,
+    });
+
     const initialFormState = {
       identityReturned: false,
       rfCardReturned: false,
@@ -248,6 +262,8 @@ export default defineComponent({
           tableLoader.value = false;
         },
       });
+
+      handleAllowedActions();
     });
 
     // watch(filterBy, (filterNewVal) => {
@@ -299,6 +315,10 @@ export default defineComponent({
 
     const getVisitorsGetter = computed(() => {
       return $store.getters[GET_VISITORS_GETT];
+    });
+
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
     });
 
     const handleRoute = (url) => {
@@ -353,6 +373,49 @@ export default defineComponent({
       window.open(data?.printUrl);
     };
 
+    const handleAllowedActions = () => {
+      const findRoute = ALL_ROUTES?.find(
+        (dt) =>
+          dt?.url !== "/" &&
+          (dt?.view?.includes(currentRoute.matched[0].path) ||
+            dt?.create?.includes(currentRoute?.matched[0].path) ||
+            dt?.update?.includes(currentRoute?.matched[0].path) ||
+            dt?.delete?.includes(currentRoute?.matched[0].path) ||
+            dt?.print?.includes(currentRoute?.matched[0].path))
+      );
+      const menuFind = getUserAllowedMenusGetter.value?.find(
+        (dt) =>
+          dt?.menuUrl !== "/" &&
+          (findRoute?.view?.includes(dt?.menuUrl) ||
+            findRoute?.create?.includes(dt?.menuUrl) ||
+            findRoute?.update?.includes(dt?.menuUrl) ||
+            findRoute?.delete?.includes(dt?.menuUrl) ||
+            findRoute?.print?.includes(dt?.menuUrl))
+      );
+      if (menuFind) {
+        for (const item of menuFind?.accessMenu) {
+          if (item?.accessTypeId === 1) {
+            allowed.value.viewCollection = true;
+          }
+          // else if (item?.accessTypeId === 3) {
+          //   if (findRoute?.create?.includes(currentRoute?.matched[0].path)) {
+          //     // allowed.value.addVisitor = true;
+          //   }
+          // }
+          // else if (item?.accessTypeId === 2) {
+          //   if (findRoute?.update?.includes(currentRoute?.matched[0].path)) {
+          //     allowed.value.logoutVisitor = true;
+          //   }
+          // }
+          else if (item?.accessTypeId === 4) {
+            allowed.value.printCollection = true;
+          } else if (item?.accessTypeId === 5) {
+            allowed.value.deleteCollection = true;
+          }
+        }
+      }
+    };
+
     return {
       //states
       tableLoader,
@@ -376,6 +439,7 @@ export default defineComponent({
       $router,
       singleCollectionColumns,
       open,
+      allowed,
       //handlers
       handlePrint,
       handleSubmitCancel,

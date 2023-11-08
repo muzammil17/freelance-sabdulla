@@ -78,9 +78,9 @@
             <q-input
               outlined
               v-model="formState.dob"
-              mask="date"
+              mask="##/##/####"
               label="Date of birth"
-              hint="ex: 2000/12/30"
+              hint="ex: 12/06/2000"
               lazy-rules
               class="input-field"
               :rules="[
@@ -106,6 +106,7 @@
                             `day`
                           )
                       "
+                      mask="DD/MM/YYYY"
                     >
                       <div class="row items-center justify-end">
                         <q-btn
@@ -324,6 +325,7 @@ import {
   checkPhoneLandline,
   checkCNIC,
   EDIT_MEMBER_URL,
+  VIEW_MEMBERS_LIST_URL,
 } from "@/constants/index";
 import moment from "moment";
 import { useQuasar } from "quasar";
@@ -585,15 +587,18 @@ export default defineComponent({
             if (EDIT_MEMBER_URL.title !== pageName) {
               // formState.value = { ...initialState.value };
             }
+            // `Form ${
+            //   EDIT_MEMBER_URL.title === pageName ? "updated" : "submitted"
+            // } successfully`,
             toastMessage(
-              `Form ${
-                EDIT_MEMBER_URL.title === pageName ? "updated" : "submitted"
-              } successfully`,
+              "Member information has been saved",
+
               status
             );
           } else {
             toastMessage("Something went wrong", status);
           }
+          $router.replace(VIEW_MEMBERS_LIST_URL.url);
         },
       });
     };

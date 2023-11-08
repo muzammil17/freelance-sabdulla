@@ -7,6 +7,7 @@
             label="Add new program"
             color="primary"
             @click="$router.push(VIEW_CREATE_PROGRAM_URL.url)"
+            v-if="allowed.createProgram"
           />
         </div>
       </div>
@@ -40,13 +41,19 @@
         v-if="selected"
       >
         {{
-          getAllProgramsGetter?.find((dt) => dt?.progId == selected)
-            ?.progDesc || ""
+          `${
+            getAllProgramsGetter?.find((dt) => dt?.progId == selected)?.progDesc
+          } (Prog. ${
+            getAllProgramsGetter?.find((dt) => dt?.progId == selected).progId
+          })` || ""
         }}
       </p>
     </div>
 
-    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-xs-12 q-px-lg q-mt-md">
+    <div
+      class="col-12 col-md-6 q-px-lg q-mt-md"
+      :class="allowed.updateProgram ? '' : 'col-md-12'"
+    >
       <q-tree
         :filter="filter"
         icon="ion-arrow-forward"
@@ -61,7 +68,7 @@
     </div>
     <div
       class="col-lg-6 col-xl-6 col-md-6 col-sm-12 col-xs-12 q-px-lg q-mt-lg"
-      v-if="selected"
+      v-if="selected && allowed.updateProgram"
     >
       <div class="row justify-center">
         <div class="col-lg-11 col-xl-11 col-md-11 col-sm-11 col-xs-11">
@@ -218,9 +225,11 @@ import {
   GET_BILLING_CYCLES_REQUEST,
   GET_BILLING_CYCLES_GETT,
   SAVE_PROGRAM_REQUEST,
+  GET_USER_ALLOWED_MENUS_GETT,
 } from "@/action/actionTypes";
 // import { useRouter } from "vue-router";
-import { VIEW_CREATE_PROGRAM_URL } from "@/constants";
+import { ALL_ROUTES, VIEW_CREATE_PROGRAM_URL } from "@/constants";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "AllProgramView",
@@ -232,7 +241,14 @@ export default defineComponent({
     const $store = useStore();
     const filter = ref("");
 
-    // const $router = useRouter();
+    const $router = useRouter();
+    const currentRoute = $router.currentRoute.value;
+
+    // allowed actions
+    const allowed = ref({
+      createProgram: false,
+      updateProgram: false,
+    });
 
     const initialFormState = {
       isDetail: false,
@@ -271,6 +287,8 @@ export default defineComponent({
           $q.loading.hide();
         },
       });
+
+      handleAllowedActions();
     });
 
     const handleGetAllProgs = () => {
@@ -325,6 +343,11 @@ export default defineComponent({
     const getBillCyclesGetter = computed(() => {
       return $store.getters[GET_BILLING_CYCLES_GETT];
     });
+
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
+    });
+
     // GET_PROGRAMS_TREE_GETT
 
     const selectedProg = (node, filter) => {
@@ -349,6 +372,46 @@ export default defineComponent({
     const handleChange = (val) => {
       if (val) {
         formState.value.isDetail = true;
+      }
+    };
+
+    const handleAllowedActions = () => {
+      const findRoute = ALL_ROUTES?.find(
+        (dt) =>
+          dt?.url !== "/" &&
+          (dt?.view?.includes(currentRoute.matched[0].path) ||
+            dt?.create?.includes(currentRoute?.matched[0].path) ||
+            dt?.update?.includes(currentRoute?.matched[0].path) ||
+            dt?.delete?.includes(currentRoute?.matched[0].path) ||
+            dt?.print?.includes(currentRoute?.matched[0].path))
+      );
+      const menuFind = getUserAllowedMenusGetter.value?.find(
+        (dt) =>
+          dt?.menuUrl !== "/" &&
+          (findRoute?.view?.includes(dt?.menuUrl) ||
+            findRoute?.create?.includes(dt?.menuUrl) ||
+            findRoute?.update?.includes(dt?.menuUrl) ||
+            findRoute?.delete?.includes(dt?.menuUrl) ||
+            findRoute?.print?.includes(dt?.menuUrl))
+      );
+      if (menuFind) {
+        for (const item of menuFind?.accessMenu) {
+          // if (item?.accessTypeId === 1) {
+          //   allowed.value.viewCollection = true;
+          // }
+          if (item?.accessTypeId === 3) {
+            allowed.value.createProgram = true;
+          } else if (item?.accessTypeId === 2) {
+            // if (findRoute?.update?.includes(currentRoute?.matched[0].path)) {
+            allowed.value.updateProgram = true;
+            // }
+          }
+          //  else if (item?.accessTypeId === 4) {
+          //   allowed.value.printCollection = true;
+          // } else if (item?.accessTypeId === 5) {
+          //   allowed.value.deleteCollection = true;
+          // }
+        }
       }
     };
 
@@ -432,7 +495,9 @@ export default defineComponent({
       expanded,
       getBillCyclesGetter,
       createProgLoader,
+      allowed,
       VIEW_CREATE_PROGRAM_URL,
+
       //handlers
       handleClear,
       handleChange,

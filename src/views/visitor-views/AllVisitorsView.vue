@@ -7,6 +7,7 @@
             color="primary"
             label="Add Visitor"
             @click="handleRoute(CREATE_ENTRY_VISITOR_URL.url)"
+            v-if="allowed.addVisitor"
           />
         </div>
       </div>
@@ -55,6 +56,7 @@
               flat
               class="edit-memberbtn"
               icon="info"
+              v-if="allowed.viewVisitor"
               @click="handleRowClick(props)"
             />
             <q-btn
@@ -64,6 +66,7 @@
               flat
               class="edit-memberbtn"
               icon="logout"
+              v-if="allowed.logoutVisitor"
               @click="handleClickAction(props)"
             />
           </q-td>
@@ -213,6 +216,7 @@ import {
   GET_VISITORS_GETT,
   LOGOUT_VISITOR_REQUEST,
   UPDATE_VISITORS_MUT,
+  GET_USER_ALLOWED_MENUS_GETT,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed, watch } from "vue";
 import { useStore } from "vuex";
@@ -221,6 +225,7 @@ import {
   visitorDetailColumns,
   pagination,
   CREATE_ENTRY_VISITOR_URL,
+  ALL_ROUTES,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
@@ -235,10 +240,19 @@ export default defineComponent({
     const $router = useRouter();
     const tableLoader = ref(false);
     const $q = useQuasar();
+
+    const currentRoute = $router.currentRoute.value;
     const initialFilter = { label: "All Visitors", value: true };
     let filterBy = ref(initialFilter);
     let search = ref(null);
     let logoutVisitor = ref(null);
+
+    // allowed actions
+    const allowed = ref({
+      addVisitor: false,
+      viewVisitor: false,
+      logoutVisitor: false,
+    });
 
     const initialFormState = {
       identityReturned: false,
@@ -251,6 +265,10 @@ export default defineComponent({
     let openDetailVisitor = ref({ bool: false, visitorId: null });
     let openLogoutVisitor = ref({ bool: false, visitorId: null });
 
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
+    });
+
     onBeforeMount(() => {
       tableLoader.value = true;
       $store.dispatch(GET_VISITORS_REQUEST, {
@@ -260,7 +278,50 @@ export default defineComponent({
           tableLoader.value = false;
         },
       });
+
+      // handling allowed actions
+      handleAllowedActions();
     });
+
+    const handleAllowedActions = () => {
+      const findRoute = ALL_ROUTES?.find(
+        (dt) =>
+          dt?.url !== "/" &&
+          (dt?.view?.includes(currentRoute.matched[0].path) ||
+            dt?.create?.includes(currentRoute?.matched[0].path) ||
+            dt?.update?.includes(currentRoute?.matched[0].path) ||
+            dt?.delete?.includes(currentRoute?.matched[0].path) ||
+            dt?.print?.includes(currentRoute?.matched[0].path))
+      );
+      const menuFind = getUserAllowedMenusGetter.value?.find(
+        (dt) =>
+          dt?.menuUrl !== "/" &&
+          (findRoute?.view?.includes(dt?.menuUrl) ||
+            findRoute?.create?.includes(dt?.menuUrl) ||
+            findRoute?.update?.includes(dt?.menuUrl) ||
+            findRoute?.delete?.includes(dt?.menuUrl) ||
+            findRoute?.print?.includes(dt?.menuUrl))
+      );
+      console.log({ menuFind });
+      if (menuFind) {
+        for (const item of menuFind?.accessMenu) {
+          if (item?.accessTypeId === 1) {
+            allowed.value.viewVisitor = true;
+          } else if (item?.accessTypeId === 3) {
+            allowed.value.addVisitor = true;
+          } else if (item?.accessTypeId === 2) {
+            allowed.value.logoutVisitor = true;
+          }
+          // else if (item?.accessTypeId === 4) {
+          //   if (findRoute?.print?.includes(currentRoute?.matched[0].path)) {
+          //   }
+          // } else if (item?.accessTypeId === 5) {
+          //   if (findRoute?.delete?.includes(currentRoute?.matched[0].path)) {
+          //   }
+          // }
+        }
+      }
+    };
 
     watch(filterBy, (filterNewVal) => {
       tableLoader.value = true;
@@ -404,6 +465,8 @@ export default defineComponent({
       allVisitorColumns,
       visitorDetailColumns,
       $router,
+      getUserAllowedMenusGetter,
+      allowed,
       //handlers
       handleRulesNotyetReason,
       handleRulesRFIDCheckBox,

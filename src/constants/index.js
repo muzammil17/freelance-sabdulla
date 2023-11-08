@@ -442,13 +442,13 @@ export const memberModalColumns = [
 ];
 
 export const memberColumns = [
-  // {
-  //   name: "memberId",
-  //   label: "Member Id",
-  //   align: "center",
-  //   field: "memberId",
-  //   sortable: true,
-  // },
+  {
+    name: "memberId",
+    label: "Member Id",
+    align: "left",
+    field: "memberId",
+    sortable: true,
+  },
   // {
   //   name: "title",
   //   label: "Title",
@@ -751,7 +751,7 @@ export const allCollectionsByDateColumns = [
   {
     name: "amount",
     label: "Amount Rs.",
-    align: "left",
+    align: "right",
     field: "amount",
     sortable: true,
   },
@@ -845,8 +845,22 @@ export const singleCollectionColumns = [
   {
     name: "amount",
     label: "Amount Rs.",
-    align: "left",
+    align: "right",
     field: "amount",
+    sortable: true,
+  },
+  {
+    name: "cancelleddBy",
+    label: "Cancelled By",
+    align: "left",
+    field: "cancelleddBy",
+    sortable: true,
+  },
+  {
+    name: "cancelledWhen",
+    label: "Cancelled When",
+    align: "left",
+    field: "cancelledWhen",
     sortable: true,
   },
 ];

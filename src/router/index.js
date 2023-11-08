@@ -60,23 +60,23 @@ let routes = ALL_ROUTES.map((dt) => {
           console.log({ menuFind });
           if (menuFind) {
             for (const item of menuFind?.accessMenu) {
-              if (item?.accessType === "View") {
+              if (item?.accessTypeId === 1) {
                 if (findRoute?.view?.includes(to?.matched[0].path)) {
                   next();
                 }
-              } else if (item?.accessType === "Create") {
+              } else if (item?.accessTypeId === 3) {
                 if (findRoute?.create?.includes(to?.matched[0].path)) {
                   next();
                 }
-              } else if (item?.accessType === "Update") {
+              } else if (item?.accessTypeId === 2) {
                 if (findRoute?.update?.includes(to?.matched[0].path)) {
                   next();
                 }
-              } else if (item?.accessType === "Print") {
+              } else if (item?.accessTypeId === 4) {
                 if (findRoute?.print?.includes(to?.matched[0].path)) {
                   next();
                 }
-              } else if (item?.accessType === "Delete") {
+              } else if (item?.accessTypeId === 5) {
                 if (findRoute?.delete?.includes(to?.matched[0].path)) {
                   next();
                 }

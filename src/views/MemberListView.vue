@@ -13,7 +13,11 @@
         </div>
         <div class="col-lg-8 col-xl-8 col-md-6 col-sm-11 col-xs-11">
           <span class="add-member-btn-wrapper">
-            <q-btn class="add-memberbtn" @click="handleRoute">
+            <q-btn
+              class="add-memberbtn"
+              @click="handleRoute"
+              v-if="allowed.addMember"
+            >
               Add a member
             </q-btn>
           </span>
@@ -58,6 +62,17 @@
         :columns="memberColumns"
         row-key="name"
       >
+        <template v-slot:top-right>
+          <q-btn
+            color="primary"
+            icon="sync"
+            dense
+            round
+            flat
+            @click="getMembers"
+          >
+          </q-btn>
+        </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn
@@ -67,6 +82,7 @@
               class="edit-memberbtn"
               @click="editRow(props)"
               icon="edit"
+              v-if="allowed.editMember"
             ></q-btn>
             <q-btn
               dense
@@ -83,6 +99,7 @@
               class="edit-memberbtn"
               @click="handleOpenRFID(props.row)"
               icon="badge"
+              v-if="allowed.editMember"
             ></q-btn>
           </q-td>
         </template>
@@ -176,12 +193,14 @@ import {
   GET_MEMBERS_REQUEST,
   IS_AUTHENTICATED,
   ASSIGN_RFID_CARD_REQUEST,
+  GET_USER_ALLOWED_MENUS_GETT,
 } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
 import {
   MEMBER_VIEW_URL,
   EDIT_MEMBER_URL,
   VIEW_MEMBER_DETAIL_URL,
+  ALL_ROUTES,
 } from "@/constants";
 import { useQuasar } from "quasar";
 import { memberColumns } from "@/constants";
@@ -196,6 +215,7 @@ export default defineComponent({
   setup() {
     const $store = useStore();
     const $q = useQuasar();
+    const $router = useRouter();
     const rfids = ref([]);
     const open = ref({
       bool: false,
@@ -205,13 +225,20 @@ export default defineComponent({
     });
     const openDetailMember = ref({ bool: false, data: null, rfid: "" });
 
+    const currentRoute = $router.currentRoute.value;
+
+    // allowed actions
+    const allowed = ref({
+      addMember: false,
+      editMember: false,
+    });
+
     const initialPagination = {
       sortBy: "desc",
       descending: false,
       rowsPerPage: 10,
       // rowsNumber: xx if getting data from a server
     };
-    const $router = useRouter();
 
     const search = ref(null);
     const membersList = ref([]);
@@ -235,6 +262,7 @@ export default defineComponent({
 
     onBeforeMount(() => {
       getMembers();
+      handleAllowedActions();
     });
 
     watch(membersListGetter, (currentVal) => {
@@ -334,6 +362,49 @@ export default defineComponent({
       });
     };
 
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
+    });
+    const handleAllowedActions = () => {
+      const findRoute = ALL_ROUTES?.find(
+        (dt) =>
+          dt?.url !== "/" &&
+          (dt?.view?.includes(currentRoute.matched[0].path) ||
+            dt?.create?.includes(currentRoute?.matched[0].path) ||
+            dt?.update?.includes(currentRoute?.matched[0].path) ||
+            dt?.delete?.includes(currentRoute?.matched[0].path) ||
+            dt?.print?.includes(currentRoute?.matched[0].path))
+      );
+      const menuFind = getUserAllowedMenusGetter.value?.find(
+        (dt) =>
+          dt?.menuUrl !== "/" &&
+          (findRoute?.view?.includes(dt?.menuUrl) ||
+            findRoute?.create?.includes(dt?.menuUrl) ||
+            findRoute?.update?.includes(dt?.menuUrl) ||
+            findRoute?.delete?.includes(dt?.menuUrl) ||
+            findRoute?.print?.includes(dt?.menuUrl))
+      );
+      if (menuFind) {
+        for (const item of menuFind?.accessMenu) {
+          // if (item?.accessTypeId === 1) {
+          //   allowed.value.viewCollection = true;
+          // }
+          if (item?.accessTypeId === 3) {
+            allowed.value.addMember = true;
+          } else if (item?.accessTypeId === 2) {
+            // if (findRoute?.update?.includes(currentRoute?.matched[0].path)) {
+            allowed.value.editMember = true;
+            // }
+          }
+          //  else if (item?.accessTypeId === 4) {
+          //   allowed.value.printCollection = true;
+          // } else if (item?.accessTypeId === 5) {
+          //   allowed.value.deleteCollection = true;
+          // }
+        }
+      }
+    };
+
     return {
       //states
       rfids,
@@ -347,6 +418,7 @@ export default defineComponent({
       $q,
       openDetailMember,
       open,
+      allowed,
       //handlers
       onSubmit,
       handleSubmitConfirmation,
@@ -356,6 +428,7 @@ export default defineComponent({
       handleRoute,
       memberInfo,
       editRow,
+      getMembers,
     };
   },
 });
