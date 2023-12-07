@@ -226,7 +226,6 @@ export default {
       return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
     });
 
-    console.log("getPrivateMenu", getUserAllowedMenusGetter.value);
     const handleRoute = (url) => {
       $router.push(url);
     };

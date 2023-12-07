@@ -1,4 +1,4 @@
-import { loginRequest } from "./user/auth-actions";
+import { loginRequest, getUserGroupsRequest } from "./user/auth-actions";
 import { getUserAllowedMenusRequest } from "./menu/menu-actions";
 import {
   getMemberTypesRequest,
@@ -28,6 +28,7 @@ import {
 import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
 
 export {
+  getUserGroupsRequest,
   assignRfidCardRequest,
   cancelReceiptRequest,
   getRfidCardsRequest,

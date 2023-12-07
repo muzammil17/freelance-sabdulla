@@ -11,6 +11,8 @@ import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
 import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
 import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
 import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
+import ManageMenu from "@/views/manage-menu/ManageMenu.vue";
+
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
@@ -47,8 +49,20 @@ export const GET_USER_ALLOWED_MENU_URL = {
   headers: false,
 };
 
+export const GET_MENU_BY_USER_GROUP_URL = {
+  url: "v1/Menu/GetMenusByUserGroup",
+  accesstoken: true,
+  headers: false,
+};
+
 export const GET_USER_ACCESS_TYPES_URL = {
   url: "v1/UserAccount/GetUserAccessTypes",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_USER_GROUP_URL = {
+  url: "v1/UserGroup/GetUserGroups",
   accesstoken: true,
   headers: false,
 };
@@ -288,6 +302,18 @@ export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
   delete: [],
 };
 
+export const VIEW_MANAGE_MENU_URL = {
+  title: "Manage Menu",
+  url: "/manage-menu",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ManageMenu,
+  view: ["/manage-menu"],
+  create: [""],
+  update: [],
+  print: [],
+  delete: [],
+};
+
 export const VIEW_CREATE_PROGRAM_URL = {
   title: "Create Program",
   url: "/new-program",
@@ -348,6 +374,7 @@ export const Home_URL = {
 };
 
 export const ALL_ROUTES = [
+  VIEW_MANAGE_MENU_URL,
   Home_URL,
   MEMBER_VIEW_URL,
   EDIT_MEMBER_URL,
@@ -861,6 +888,30 @@ export const singleCollectionColumns = [
     label: "Cancelled When",
     align: "left",
     field: "cancelledWhen",
+    sortable: true,
+  },
+];
+
+export const USER_GROUPS_COLUMNS = [
+  {
+    name: "userGroupId",
+    label: "User Group Id",
+    align: "left",
+    field: "userGroupId",
+    sortable: true,
+  },
+  {
+    name: "userGroupName",
+    label: "User Group Name",
+    align: "left",
+    field: "userGroupName",
+    sortable: true,
+  },
+  {
+    name: "userGroupStatus",
+    label: "Status",
+    align: "left",
+    field: "userGroupStatus",
     sortable: true,
   },
 ];

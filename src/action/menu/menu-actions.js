@@ -29,7 +29,6 @@ export const getUserAllowedMenusRequest = async (
         );
 
         if (resultAccess?.data?.data?.length) {
-          console.log({ ss: resultAccess?.data?.data });
           access = [
             ...access,
             { ...item, accessMenu: resultAccess?.data?.data },
