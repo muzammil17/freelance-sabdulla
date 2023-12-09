@@ -2,17 +2,16 @@
   <div class="row q-mx-md q-col-gutter-sm">
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
       <div class="row justify-end">
-        <div>
-          <q-btn color="primary" label="Add Menu Role" />
-          <!-- @click="getCustomDateCollection" -->
-        </div>
+        <!-- <div>
+            <q-btn color="primary" label="Add Menu Role" />
+          </div> -->
       </div>
     </div>
 
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
       <q-table
         :loading="tableLoader"
-        title="Collection"
+        title="User Groups"
         dense
         :pagination="pagination"
         class="table-header-wrapper"
@@ -39,44 +38,22 @@
             <q-btn
               dense
               round
-              flat
+              color="primary"
+              size="sm"
               class="edit-memberbtn"
-              icon="info"
-              @click="handleRowClick(props)"
-              v-if="allowed.viewCollection"
+              icon="edit"
+              @click="handleOpen(props.row, true)"
             />
-            <q-btn
-              dense
-              round
-              flat
-              class="edit-memberbtn"
-              icon="print"
-              :disable="!props?.row?.printUrl ? true : false"
-              @click="handlePrint(props?.row)"
-              v-if="allowed.printCollection"
-            />
-            <q-btn
-              dense
-              round
-              flat
-              class="edit-memberbtn"
-              icon="delete"
-              @click="handleOpen(props?.row?.receiptId, true)"
-              v-if="allowed.deleteCollection"
-            />
-
-            <!-- @click="handleClickAction(props)" -->
+            <!-- :disable="!props?.row?.printUrl ? true : false"
+              v-if="allowed.printCollection" -->
           </q-td>
         </template>
       </q-table>
     </div>
   </div>
 
-  <!-- <ConfirmationModal
-    :open="open"
-    :handleClose="handleClose"
-    :handleSubmit="handleSubmitCancel" -->
-  />
+  <EditMeuRoleModal :open="open" rows="open" :handleClose="handleClose" />
+  <!-- :handleSubmit="handleSubmitCancel"  -->
 </template>
 
 <script>
@@ -84,6 +61,7 @@ import {
   GET_VISITORS_GETT,
   GET_USER_GROUPS_GETT,
   GET_USER_GROUP_REQUEST,
+  GET_ALL_MENU_REQUEST,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
@@ -97,11 +75,11 @@ import {
   singleCollectionColumns,
 } from "@/constants";
 import { useRouter } from "vue-router";
-// import { ConfirmationModal } from "@/components";
+import { EditMeuRoleModal } from "@/components";
 export default defineComponent({
   name: "ManageMenu",
 
-  // components: { ConfirmationModal },
+  components: { EditMeuRoleModal },
 
   setup() {
     const $store = useStore();
@@ -109,9 +87,10 @@ export default defineComponent({
     const tableLoader = ref(false);
     const open = ref({
       id: null,
+      item: null,
       bool: false,
       loading: false,
-      title: "Cancel Receipt",
+      title: "Edit User Group Role",
       text: "Are you sure you want to cancel this receipt",
     });
 
@@ -125,6 +104,10 @@ export default defineComponent({
           console.log({ status, res });
           tableLoader.value = false;
         },
+      });
+      $store.dispatch(GET_ALL_MENU_REQUEST, {
+        payload: {},
+        responseCallback: () => {},
       });
     });
 
@@ -145,8 +128,8 @@ export default defineComponent({
       open.value = { ...open.value, bool: !open.value.bool };
     };
 
-    const handleOpen = (id = null, bool = false) => {
-      open.value = { ...open.value, bool, id };
+    const handleOpen = (value = null, bool = false) => {
+      open.value = { ...open.value, item: value, bool };
     };
 
     return {

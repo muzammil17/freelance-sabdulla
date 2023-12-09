@@ -51,7 +51,14 @@ export const getUserGroupsRequest = async (
           GET_MENU_BY_USER_GROUP_URL.headers ? {} : null
         );
 
-        userGroups.push({ ...item, assignedMenus: result1?.data?.data || [] });
+        let menus = result1?.data?.data?.map((item) => {
+          return {
+            ...item,
+            isActiveLabel: item?.isActive ? "Yes" : "No",
+          };
+        });
+
+        userGroups.push({ ...item, assignedMenus: menus || [] });
       }
       console.log({ userGroups });
 

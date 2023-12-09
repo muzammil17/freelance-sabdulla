@@ -49,6 +49,12 @@ export const GET_USER_ALLOWED_MENU_URL = {
   headers: false,
 };
 
+export const GET_ALL_MENU_URL = {
+  url: "v1/Menu/GetMenus",
+  accesstoken: true,
+  headers: false,
+};
+
 export const GET_MENU_BY_USER_GROUP_URL = {
   url: "v1/Menu/GetMenusByUserGroup",
   accesstoken: true,
@@ -912,6 +918,37 @@ export const USER_GROUPS_COLUMNS = [
     label: "Status",
     align: "left",
     field: "userGroupStatus",
+    sortable: true,
+  },
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
+];
+
+export const USER_GROUPS_MENUS_COLUMNS = [
+  {
+    name: "menuName",
+    label: "Menu Name",
+    align: "left",
+    field: "menuName",
+    sortable: true,
+  },
+  {
+    name: "menuUrl",
+    label: "Menu Url",
+    align: "left",
+    field: "menuUrl",
+    sortable: true,
+  },
+  {
+    name: "isActiveLabel",
+    label: "Status",
+    align: "left",
+    field: "isActiveLabel",
     sortable: true,
   },
 ];

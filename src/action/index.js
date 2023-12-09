@@ -1,5 +1,8 @@
 import { loginRequest, getUserGroupsRequest } from "./user/auth-actions";
-import { getUserAllowedMenusRequest } from "./menu/menu-actions";
+import {
+  getUserAllowedMenusRequest,
+  getAllMenusRequest,
+} from "./menu/menu-actions";
 import {
   getMemberTypesRequest,
   saveMemberRequest,
@@ -55,4 +58,5 @@ export {
   getUserAllowedMenusRequest,
   getMemberTypesRequest,
   saveMemberRequest,
+  getAllMenusRequest,
 };

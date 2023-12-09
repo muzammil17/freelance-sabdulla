@@ -1,3 +1,3 @@
 import ConfirmationModal from "./ConfirmationModal/ConfirmationModal.vue";
-
-export { ConfirmationModal };
+import EditMeuRoleModal from "./EditMenuRolesModal/EditMenuRolesModal.vue";
+export { ConfirmationModal, EditMeuRoleModal };

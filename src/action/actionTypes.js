@@ -90,6 +90,7 @@ export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
   "getUserAllowedMenusRequest";
 
 export const GET_MENU_BY_USER_GROUP_REQUEST = "getAllMenusByUserGroupRequest";
+export const GET_ALL_MENU_REQUEST = "getAllMenusRequest";
 
 //member actions
 export const GET_MEMBER_TYPES_REQUEST = "getMemberTypesRequest";
