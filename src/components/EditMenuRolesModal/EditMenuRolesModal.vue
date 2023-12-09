@@ -22,8 +22,8 @@
           <div class="row q-col-gutter-md w-100">
             <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12">
               <q-select
-                filled
                 v-model="model"
+                filled
                 clearable
                 use-input
                 hide-selected
@@ -31,9 +31,10 @@
                 input-debounce="0"
                 label="Focus after filtering"
                 :options="options"
-                @filter="filterFn"
-                @filter-abort="abortFilterFn"
+                @filter="filterFnAutoselect"
               >
+                <!-- @filter="filterFn"
+                @filter-abort="abortFilterFn" -->
                 <template v-slot:no-option>
                   <q-item>
                     <q-item-section class="text-grey">
@@ -46,7 +47,7 @@
             <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12 q-my-sm">
               <div class="row justify-end">
                 <div>
-                  <q-btn color="primary" label="Add Menu Role" />
+                  <q-btn color="primary" label="Add Menu" />
                 </div>
               </div>
             </div>
@@ -60,7 +61,7 @@
                 class="table-header-wrapper"
                 :filter="search"
                 :columns="USER_GROUPS_MENUS_COLUMNS"
-                row-key="memberName"
+                row-key="menuName"
               >
                 <template v-slot:top-right>
                   <q-input
@@ -74,6 +75,18 @@
                       <q-icon name="search" />
                     </template>
                   </q-input>
+                </template>
+                <template v-slot:body-cell-actions="props">
+                  <q-td :props="props">
+                    <q-btn
+                      dense
+                      round
+                      color="primary"
+                      size="sm"
+                      class="edit-memberbtn"
+                      icon="delete"
+                    />
+                  </q-td>
                 </template>
               </q-table>
             </div>
@@ -102,7 +115,7 @@
   </q-dialog>
 </template>
 <script>
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, toRefs, ref, watch } from "vue";
 import { USER_GROUPS_MENUS_COLUMNS } from "@/constants";
 // import { useRouter } from "vue-router";
 // import { GET_ALL_MENU_REQUEST } from "@/action/actionTypes";
@@ -111,6 +124,7 @@ export default defineComponent({
   components: {},
   props: {
     open: Object,
+    allMenus: Array,
     handleClose: { required: true, type: Function },
     rows: { required: true, type: Array },
 
@@ -118,15 +132,49 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { open } = toRefs(props);
-    // const $store = useRouter();
-    console.log({ openCopy: open.value });
+    const { open, allMenus } = toRefs(props);
+    const search = ref("");
+    const model = ref("");
 
-    // onMounted(() => {
+    const options = ref([]);
+    console.log({ allMenus: allMenus.value });
 
-    // });
+    watch(open, () => {
+      if (open.value.bool) {
+        let newoptions = allMenus.value?.map((item) => {
+          return { label: item?.menuName, value: item?.menuId };
+        });
+        options.value = newoptions;
+        console.log({ newoptions: newoptions, allMenus: allMenus.value });
+      }
+    });
 
-    return { openCopy: open, USER_GROUPS_MENUS_COLUMNS };
+    const filterFnAutoselect = (val, update) => {
+      // call abort() at any time if you can't retrieve data somehow
+      update(() => {
+        console.log({ val, update });
+        const needle = val.toLocaleLowerCase();
+        options.value = allMenus.value
+          ?.filter((v) => v?.menuName.toLocaleLowerCase().indexOf(needle) > -1)
+          .map((item) => {
+            return { label: item?.menuName, value: item?.menuId };
+          });
+      });
+    };
+
+    watch(model, () => {
+      console.log({ model: model.value });
+      console.log("mounteddddd");
+    });
+
+    return {
+      openCopy: open,
+      USER_GROUPS_MENUS_COLUMNS,
+      search,
+      options,
+      filterFnAutoselect,
+      model,
+    };
   },
 });
 </script>

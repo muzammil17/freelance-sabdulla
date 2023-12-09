@@ -951,6 +951,13 @@ export const USER_GROUPS_MENUS_COLUMNS = [
     field: "isActiveLabel",
     sortable: true,
   },
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
 ];
 
 export const visitorDetailColumns = [

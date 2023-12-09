@@ -38,21 +38,25 @@
             <q-btn
               dense
               round
+              flat
               color="primary"
               size="sm"
               class="edit-memberbtn"
               icon="edit"
               @click="handleOpen(props.row, true)"
             />
-            <!-- :disable="!props?.row?.printUrl ? true : false"
-              v-if="allowed.printCollection" -->
           </q-td>
         </template>
       </q-table>
     </div>
   </div>
 
-  <EditMeuRoleModal :open="open" rows="open" :handleClose="handleClose" />
+  <EditMeuRoleModal
+    :allMenus="allMenus"
+    :open="open"
+    rows="open"
+    :handleClose="handleClose"
+  />
   <!-- :handleSubmit="handleSubmitCancel"  -->
 </template>
 
@@ -85,6 +89,9 @@ export default defineComponent({
     const $store = useStore();
     const $router = useRouter();
     const tableLoader = ref(false);
+    const search = ref("");
+    const allMenus = ref([]);
+
     const open = ref({
       id: null,
       item: null,
@@ -107,7 +114,12 @@ export default defineComponent({
       });
       $store.dispatch(GET_ALL_MENU_REQUEST, {
         payload: {},
-        responseCallback: () => {},
+        responseCallback: (status, res) => {
+          if (res?.data?.length) {
+            allMenus.value = res?.data;
+          }
+          console.log({ res });
+        },
       });
     });
 
@@ -146,6 +158,8 @@ export default defineComponent({
       singleCollectionColumns,
       open,
       getUserGroupsGetter,
+      search,
+      allMenus,
       //handlers
       handleOpen,
       handleRoute,
