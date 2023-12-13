@@ -11,7 +11,9 @@ import CreateProgramView from "@/views/program-views/CreateProgramView.vue";
 import AddVisitor from "@/views/visitor-views/LoginVisitor.vue";
 import AllVisitors from "@/views/visitor-views/AllVisitorsView.vue";
 import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
-import ManageMenu from "@/views/manage-menu/ManageMenu.vue";
+import ManageAllUserGroups from "@/views/usergroups/ManageAllUserGroups.vue";
+import ManageUserGroup from "@/views/manage-usergroup/EditUserGroup.vue";
+import AllMenus from "@/views/manage-menu/AllMenus.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
@@ -69,6 +71,23 @@ export const GET_USER_ACCESS_TYPES_URL = {
 
 export const GET_USER_GROUP_URL = {
   url: "v1/UserGroup/GetUserGroups",
+  accesstoken: true,
+  headers: false,
+};
+export const GET_USER_GROUP_BY_ID_URL = {
+  url: "v1/UserGroup/GetUserGroupById",
+  accesstoken: true,
+  headers: false,
+};
+
+export const SAVE_USER_GROUP_URL = {
+  url: "v1/UserGroup/SaveUserGroup",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_ACCESS_TYPE_URL = {
+  url: "v1/AccessType/GetAllAccessTypes",
   accesstoken: true,
   headers: false,
 };
@@ -308,18 +327,6 @@ export const VIEW_ALL_PROGRAMS_DISPLAY_URL = {
   delete: [],
 };
 
-export const VIEW_MANAGE_MENU_URL = {
-  title: "Manage Menu",
-  url: "/manage-menu",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: ManageMenu,
-  view: ["/manage-menu"],
-  create: [""],
-  update: [],
-  print: [],
-  delete: [],
-};
-
 export const VIEW_CREATE_PROGRAM_URL = {
   title: "Create Program",
   url: "/new-program",
@@ -379,7 +386,45 @@ export const Home_URL = {
   component: DashboardEmpty,
 };
 
+export const VIEW_MANAGE_MENU_URL = {
+  title: "User Group",
+  url: "/manage-groups",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ManageAllUserGroups,
+  view: ["/manage-groups"],
+  create: [""],
+  update: ["/edit-usergroup"],
+  print: [],
+  delete: [],
+};
+
+export const EDIT_USER_GROUP_URL = {
+  title: "Edit User Group",
+  url: "/edit-usergroup/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ManageUserGroup,
+  // view: ["/manage-menu"],
+  // create: [""],
+  // update: [],
+  // print: [],
+  // delete: [],
+};
+
+export const VIEW_ALL_MENUS_URL = {
+  title: "Manage Menus",
+  url: "/manage-menus",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AllMenus,
+  view: ["/manage-menus"],
+  create: [""],
+  update: [""],
+  print: [],
+  delete: [],
+};
+
 export const ALL_ROUTES = [
+  EDIT_USER_GROUP_URL,
+  VIEW_ALL_MENUS_URL,
   VIEW_MANAGE_MENU_URL,
   Home_URL,
   MEMBER_VIEW_URL,
@@ -950,6 +995,14 @@ export const USER_GROUPS_MENUS_COLUMNS = [
     align: "left",
     field: "isActiveLabel",
     sortable: true,
+  },
+  {
+    name: "accesstypes",
+    label: "Access Types",
+    align: "left",
+    field: "accesstypes",
+    sortable: true,
+    width: 100,
   },
   {
     name: "actions",

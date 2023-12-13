@@ -1,0 +1,397 @@
+<template>
+  <div class="row q-mx-md q-col-gutter-sm">
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
+      <div class="row">
+        <!-- <div>
+            <q-btn color="primary" label="Add Menu Role" />
+          </div> -->
+        <div class="col-12 col-sm-6">
+          <q-input
+            outlined
+            v-model="currentUserGroup.userGroupName"
+            label="User Group Name *"
+            hint="ex: John"
+            lazy-rules
+            class="input-field"
+          />
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="flex justify-end">
+            <q-toggle
+              v-model="currentUserGroup.userGroupActive"
+              label="User Group Active"
+            />
+          </div>
+        </div>
+        <!-- :rules="[
+            (val) => (val && val.length > 0) || 'First Name is required',
+            (val) => (val && val.length <= 20) || 'Limit exceeded',
+          ]" -->
+      </div>
+    </div>
+    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12">
+      <q-select
+        v-model="model"
+        filled
+        clearable
+        use-input
+        hide-selected
+        fill-input
+        input-debounce="0"
+        label="Search Menus"
+        :options="options"
+        @filter="filterFnAutoselect"
+      >
+        <!-- @filter="filterFn"
+                @filter-abort="abortFilterFn" -->
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey"> No results </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+    </div>
+    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12 q-my-sm">
+      <div class="row justify-end">
+        <div>
+          <q-btn
+            color="primary"
+            size="small"
+            label="Add Menu"
+            @click="handleAddMenu"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+      <q-table
+        :loading="tableLoader"
+        title="User Group Menus"
+        dense
+        :rows="currentUserGroup.userGroupMenus"
+        :pagination="pagination"
+        class="table-header-wrapper"
+        :filter="search"
+        :columns="USER_GROUPS_MENUS_COLUMNS"
+        row-key="menuName"
+      >
+        <template v-slot:top-right>
+          <q-input
+            v-model="search"
+            borderless
+            dense
+            debounce="300"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template>
+        <template v-slot:body-cell-isActiveLabel="props">
+          <q-td :props="props">
+            {{ props?.row?.isActive ? "Active" : "In active" }}
+          </q-td>
+        </template>
+        <template v-slot:body-cell-accesstypes="props">
+          <q-td :props="props">
+            <div class="row">
+              <div
+                class="col-12 col-sm-6 col-md-3"
+                v-for="(item, index) in accesstype"
+                :key="index"
+              >
+                <q-toggle
+                  :model-value="
+                    props?.row.allowedAccessTypes?.find(
+                      (dt) => dt?.accessTypesId == item?.accessTypesId
+                    )
+                      ? true
+                      : false
+                  "
+                  @update:model-value="(e) => handleTogg(e, item, props)"
+                  :label="item?.accessTypeName"
+                />
+              </div>
+            </div>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <q-btn
+              dense
+              @click="handleDeleteMenu(props)"
+              round
+              color="primary"
+              size="sm"
+              class="edit-memberbtn"
+              icon="delete"
+            />
+          </q-td>
+        </template>
+      </q-table>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 text-right">
+      <q-btn
+        color="primary"
+        size="small"
+        class="q-ml-xs"
+        label="Confirm"
+        @click="confirm"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import {
+  GET_VISITORS_GETT,
+  GET_USER_GROUPS_GETT,
+  // GET_USER_GROUP_REQUEST,
+  GET_ALL_MENU_REQUEST,
+  GET_USER_GROUP_ID_REQUEST,
+  GET_ALL_ACCESSTYPES_REQUEST,
+  saveUserGroupRequest,
+} from "@/action/actionTypes";
+import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { useStore } from "vuex";
+import {
+  allVisitorColumns,
+  USER_GROUPS_COLUMNS,
+  visitorDetailColumns,
+  pagination,
+  // toastMessage,
+  CREATE_ENTRY_VISITOR_URL,
+  singleCollectionColumns,
+  USER_GROUPS_MENUS_COLUMNS,
+} from "@/constants";
+import { useRouter } from "vue-router";
+export default defineComponent({
+  name: "ManageUserGroup",
+
+  setup() {
+    const $store = useStore();
+    const $router = useRouter();
+    const tableLoader = ref(false);
+    const search = ref("");
+    const allMenus = ref([]);
+    const currentUserGroup = ref(null);
+    const model = ref("");
+    const options = ref([]);
+    const accesstype = ref([]);
+
+    const params = $router.currentRoute.value.params;
+    console.log({ params });
+
+    const open = ref({
+      id: null,
+      item: null,
+      bool: false,
+      loading: false,
+      title: "Edit User Group Role",
+      text: "Are you sure you want to cancel this receipt",
+    });
+
+    const handleTogg = (e, item, props) => {
+      console.log({ e });
+
+      let clone = [...(currentUserGroup.value?.userGroupMenus ?? [])];
+
+      let findIndex = clone?.findIndex(
+        (dt) => dt?.menuId == props?.row?.menuId
+      );
+      clone.splice(findIndex, 1, {
+        ...clone[findIndex],
+        allowedAccessTypes: [...clone[findIndex].allowedAccessTypes, item],
+      });
+      currentUserGroup.value = {
+        ...currentUserGroup.value,
+        userGroupMenus: clone,
+      };
+    };
+
+    // allowed actions
+
+    onBeforeMount(() => {
+      // tableLoader.value = true;
+      console.log("dsdsd");
+
+      $store.dispatch(GET_ALL_ACCESSTYPES_REQUEST, {
+        payload: {},
+        responseCallback: (status, res) => {
+          if (res?.data?.length) {
+            accesstype.value = res?.data;
+            // currentUserGroup.value = res?.data;
+            // console.log({ currentUserGroup: currentUserGroup.value });
+          }
+        },
+      });
+      if (!currentUserGroup.value) {
+        $store.dispatch(GET_USER_GROUP_ID_REQUEST, {
+          payload: { id: params?.id, withMenus: true },
+          responseCallback: (status, res) => {
+            if (res?.data) {
+              currentUserGroup.value = res?.data;
+              console.log({ currentUserGroup: currentUserGroup.value });
+            }
+          },
+        });
+      }
+
+      $store.dispatch(GET_ALL_MENU_REQUEST, {
+        payload: {},
+        responseCallback: (status, res) => {
+          if (res?.data?.length) {
+            allMenus.value = res?.data;
+            tableLoader.value = false;
+
+            // let newoptions = allMenus.value
+            //   ?.filter(
+            //     (item) =>
+            //       !currentUserGroup.value?.userGroupMenus.some(
+            //         (userItem) => userItem?.menuName == item?.menuName
+            //       )
+            //   )
+            //   ?.map((item) => {
+            //     return {
+            //       label: `${item?.menuName} (${item?.menuUrl})`,
+            //       value: item?.menuId,
+            //     };
+            //   });
+            // options.value = newoptions;
+          }
+          console.log({ res });
+        },
+      });
+    });
+
+    //getters
+    const getUserGroupsGetter = computed(() => {
+      return $store.getters[GET_USER_GROUPS_GETT];
+    });
+
+    const getVisitorsGetter = computed(() => {
+      return $store.getters[GET_VISITORS_GETT];
+    });
+
+    const handleRoute = (url) => {
+      $router.push(url);
+    };
+
+    const handleClose = () => {
+      open.value = { ...open.value, bool: !open.value.bool };
+    };
+
+    const handleOpen = (value = null, bool = false) => {
+      open.value = { ...open.value, item: value, bool };
+    };
+
+    const filterFnAutoselect = (val, update) => {
+      // call abort() at any time if you can't retrieve data somehow
+      update(() => {
+        console.log({
+          val,
+          update,
+          currentUserGroup: currentUserGroup.value,
+          allMenus: allMenus.value,
+        });
+        const needle = val.toLocaleLowerCase();
+        options.value = allMenus.value
+          ?.filter(
+            (item) =>
+              !currentUserGroup.value?.userGroupMenus.some(
+                (userItem) => userItem?.menuName == item?.menuName
+              )
+          )
+          ?.filter((v) => v?.menuName.toLocaleLowerCase().indexOf(needle) > -1)
+          .map((item) => {
+            return {
+              label: `${item?.menuName} (${item?.menuUrl})`,
+              value: item?.menuId,
+            };
+          });
+      });
+    };
+
+    const handleAddMenu = () => {
+      if (model.value) {
+        let clone = [...(currentUserGroup.value?.userGroupMenus ?? [])];
+        let findMenu = allMenus.value?.find(
+          (item) => item?.menuId == model.value?.value
+        );
+        clone.unshift({
+          ...findMenu,
+          isActiveLabel: findMenu?.isActive ? "Yes" : "No",
+        });
+        currentUserGroup.value = {
+          ...currentUserGroup.value,
+          userGroupMenus: clone,
+        };
+        console.log({ clone: clone });
+      }
+    };
+
+    const handleDeleteMenu = (row) => {
+      let clone = [...(currentUserGroup.value?.userGroupMenus ?? [])];
+      let findIndex = clone?.findIndex((dt) => dt?.menuId == row?.row?.menuId);
+      console.log({ row, findIndex });
+      clone.splice(findIndex, 1);
+      currentUserGroup.value = {
+        ...currentUserGroup.value,
+        userGroupMenus: clone,
+      };
+    };
+
+    const confirm = () => {
+      $store.dispatch(saveUserGroupRequest, {
+        payload: { ...currentUserGroup.value },
+        responseCallback: (status, res) => {
+          console.log({ status, res });
+        },
+      });
+    };
+    return {
+      //states
+      tableLoader,
+      CREATE_ENTRY_VISITOR_URL,
+      getVisitorsGetter,
+      pagination,
+
+      allVisitorColumns,
+      USER_GROUPS_COLUMNS,
+      visitorDetailColumns,
+      $router,
+      singleCollectionColumns,
+      open,
+      getUserGroupsGetter,
+      search,
+      allMenus,
+      currentUserGroup,
+      USER_GROUPS_MENUS_COLUMNS,
+      options,
+      model,
+      accesstype,
+      //handlers
+      handleTogg,
+      confirm,
+      handleAddMenu,
+      handleDeleteMenu,
+      filterFnAutoselect,
+      handleOpen,
+      handleRoute,
+      handleClose,
+    };
+  },
+});
+</script>
+<style scoped lang="scss">
+.title {
+  text-align: center;
+  margin: 0;
+}
+.visitor-detail-card {
+  border-radius: 15px;
+}
+</style>

@@ -84,6 +84,9 @@ export const SET_RFID_CARD_MUT = "SET_RFID_CARD_MUT";
 //auth actions
 export const LOGIN_ACTION_REQUEST = "loginRequest";
 export const GET_USER_GROUP_REQUEST = "getUserGroupsRequest";
+export const GET_USER_GROUP_ID_REQUEST = "getUserGroupByIdRequest";
+export const GET_ALL_ACCESSTYPES_REQUEST = "getAllAccessTypeRequest";
+export const saveUserGroupRequest = "saveUserGroupRequest";
 
 //menu actions
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =

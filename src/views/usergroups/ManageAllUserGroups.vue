@@ -43,7 +43,25 @@
               size="sm"
               class="edit-memberbtn"
               icon="edit"
-              @click="handleOpen(props.row, true)"
+              @click="
+                handleRoute(
+                  EDIT_USER_GROUP_URL.url.replace(
+                    ':id',
+                    props?.row?.userGroupId
+                  ),
+                  props
+                )
+              "
+            />
+            <q-btn
+              dense
+              round
+              flat
+              color="primary"
+              size="sm"
+              class="edit-memberbtn"
+              icon="delete"
+              @click="handleOpen(props?.row, true)"
             />
           </q-td>
         </template>
@@ -51,10 +69,9 @@
     </div>
   </div>
 
-  <EditMeuRoleModal
-    :allMenus="allMenus"
+  <ConfirmationModal
+    :handleSubmit="handleSubmit"
     :open="open"
-    rows="open"
     :handleClose="handleClose"
   />
   <!-- :handleSubmit="handleSubmitCancel"  -->
@@ -77,13 +94,14 @@ import {
   // toastMessage,
   CREATE_ENTRY_VISITOR_URL,
   singleCollectionColumns,
+  EDIT_USER_GROUP_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
-import { EditMeuRoleModal } from "@/components";
+import { ConfirmationModal } from "@/components";
 export default defineComponent({
   name: "ManageMenu",
 
-  components: { EditMeuRoleModal },
+  components: { ConfirmationModal },
 
   setup() {
     const $store = useStore();
@@ -97,8 +115,8 @@ export default defineComponent({
       item: null,
       bool: false,
       loading: false,
-      title: "Edit User Group Role",
-      text: "Are you sure you want to cancel this receipt",
+      title: "Delete User Group",
+      text: "Are you sure you want to delete this user group",
     });
 
     // allowed actions
@@ -132,7 +150,8 @@ export default defineComponent({
       return $store.getters[GET_VISITORS_GETT];
     });
 
-    const handleRoute = (url) => {
+    const handleRoute = (url, prp) => {
+      console.log({ prp });
       $router.push(url);
     };
 
@@ -142,6 +161,10 @@ export default defineComponent({
 
     const handleOpen = (value = null, bool = false) => {
       open.value = { ...open.value, item: value, bool };
+    };
+
+    const handleSubmit = () => {
+      handleClose();
     };
 
     return {
@@ -160,8 +183,10 @@ export default defineComponent({
       getUserGroupsGetter,
       search,
       allMenus,
+      EDIT_USER_GROUP_URL,
       //handlers
       handleOpen,
+      handleSubmit,
       handleRoute,
       handleClose,
     };

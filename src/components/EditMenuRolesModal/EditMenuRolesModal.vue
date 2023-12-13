@@ -47,7 +47,12 @@
             <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12 q-my-sm">
               <div class="row justify-end">
                 <div>
-                  <q-btn color="primary" label="Add Menu" />
+                  <q-btn
+                    color="primary"
+                    size="small"
+                    label="Add Menu"
+                    @click="handleAddMenu"
+                  />
                 </div>
               </div>
             </div>
@@ -56,7 +61,7 @@
                 :loading="tableLoader"
                 title="User Group Menus"
                 dense
-                :rows="openCopy.item.assignedMenus"
+                :rows="currentUserGroup.assignedMenus"
                 :pagination="pagination"
                 class="table-header-wrapper"
                 :filter="search"
@@ -76,10 +81,25 @@
                     </template>
                   </q-input>
                 </template>
+                <template v-slot:body-cell-accesstypes="props">
+                  <q-td :props="props">
+                    <div>
+                      <q-toggle v-model="checkeddd" label="View" />
+                      <q-toggle v-model="checkeddd" label="Edit" />
+                    </div>
+
+                    <div>
+                      <q-toggle v-model="checkeddd" label="Delete" />
+                      <q-toggle v-model="checkeddd" label="Update" />
+                    </div>
+                  </q-td>
+                </template>
+
                 <template v-slot:body-cell-actions="props">
                   <q-td :props="props">
                     <q-btn
                       dense
+                      @click="handleDeleteMenu(props)"
                       round
                       color="primary"
                       size="sm"
@@ -92,15 +112,9 @@
             </div>
           </div>
         </div>
-        <!-- <div
-          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 text-center"
+        <div
+          class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 text-right"
         >
-          <q-btn
-            color="primary"
-            size="small"
-            label="Cancel"
-            @click="handleClose"
-          />
           <q-btn
             color="primary"
             size="small"
@@ -109,7 +123,7 @@
             :loading="openCopy.loading"
             @click="handleSubmit"
           />
-        </div> -->
+        </div>
       </div>
     </q-card-section>
   </q-dialog>
@@ -135,19 +149,67 @@ export default defineComponent({
     const { open, allMenus } = toRefs(props);
     const search = ref("");
     const model = ref("");
+    const checkeddd = ref(false);
+    const currentUserGroup = ref(null);
 
     const options = ref([]);
     console.log({ allMenus: allMenus.value });
 
     watch(open, () => {
       if (open.value.bool) {
-        let newoptions = allMenus.value?.map((item) => {
-          return { label: item?.menuName, value: item?.menuId };
-        });
+        console.log({ open: open.value });
+        currentUserGroup.value = open.value.item;
+
+        let newoptions = allMenus.value
+          ?.filter(
+            (item) =>
+              !currentUserGroup.value?.assignedMenus.some(
+                (userItem) => userItem?.menuName == item?.menuName
+              )
+          )
+          ?.map((item) => {
+            return {
+              label: `${item?.menuName} (${item?.menuUrl})`,
+              value: item?.menuId,
+            };
+          });
         options.value = newoptions;
-        console.log({ newoptions: newoptions, allMenus: allMenus.value });
+        console.log({
+          currentUserGroup: currentUserGroup.value,
+          newoptions: newoptions,
+          allMenus: allMenus.value,
+        });
       }
     });
+
+    const handleAddMenu = () => {
+      if (model.value) {
+        let clone = [...(currentUserGroup.value?.assignedMenus ?? [])];
+        let findMenu = allMenus.value?.find(
+          (item) => item?.menuId == model.value?.value
+        );
+        clone.unshift({
+          ...findMenu,
+          isActiveLabel: findMenu?.isActive ? "Yes" : "No",
+        });
+        currentUserGroup.value = {
+          ...currentUserGroup.value,
+          assignedMenus: clone,
+        };
+        console.log({ clone: clone });
+      }
+    };
+
+    const handleDeleteMenu = (row) => {
+      let clone = [...(currentUserGroup.value?.assignedMenus ?? [])];
+      let findIndex = clone?.findIndex((dt) => dt?.menuId == row?.row?.menuId);
+      console.log({ row, findIndex });
+      clone.splice(findIndex, 1);
+      currentUserGroup.value = {
+        ...currentUserGroup.value,
+        assignedMenus: clone,
+      };
+    };
 
     const filterFnAutoselect = (val, update) => {
       // call abort() at any time if you can't retrieve data somehow
@@ -155,24 +217,32 @@ export default defineComponent({
         console.log({ val, update });
         const needle = val.toLocaleLowerCase();
         options.value = allMenus.value
+          ?.filter(
+            (item) =>
+              !currentUserGroup.value?.assignedMenus.some(
+                (userItem) => userItem?.menuName == item?.menuName
+              )
+          )
           ?.filter((v) => v?.menuName.toLocaleLowerCase().indexOf(needle) > -1)
           .map((item) => {
-            return { label: item?.menuName, value: item?.menuId };
+            return {
+              label: `${item?.menuName} (${item?.menuUrl})`,
+              value: item?.menuId,
+            };
           });
       });
     };
-
-    watch(model, () => {
-      console.log({ model: model.value });
-      console.log("mounteddddd");
-    });
 
     return {
       openCopy: open,
       USER_GROUPS_MENUS_COLUMNS,
       search,
       options,
+      currentUserGroup,
+      checkeddd,
       filterFnAutoselect,
+      handleAddMenu,
+      handleDeleteMenu,
       model,
     };
   },

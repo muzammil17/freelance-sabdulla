@@ -8,7 +8,13 @@ import {
   LOGOUT_SUCCESS,
   SET_USER_GROUPS_MUT,
 } from "@/action/actionTypes";
-import { loginRequest, getUserGroupsRequest } from "@/action";
+import {
+  loginRequest,
+  getUserGroupsRequest,
+  getUserGroupByIdRequest,
+  getAllAccessTypeRequest,
+  saveUserGroupRequest,
+} from "@/action";
 
 export const userModule = {
   state: () => ({
@@ -60,5 +66,11 @@ export const userModule = {
     },
   },
 
-  actions: { loginRequest, getUserGroupsRequest },
+  actions: {
+    saveUserGroupRequest,
+    loginRequest,
+    getUserGroupsRequest,
+    getUserGroupByIdRequest,
+    getAllAccessTypeRequest,
+  },
 };

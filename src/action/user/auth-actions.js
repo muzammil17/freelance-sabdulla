@@ -1,7 +1,11 @@
 import {
+  GET_ACCESS_TYPE_URL,
   GET_MENU_BY_USER_GROUP_URL,
+  GET_USER_GROUP_BY_ID_URL,
+  // GET_USER_GROUP_BY_ID_URL,
   GET_USER_GROUP_URL,
   LOGIN_URL,
+  SAVE_USER_GROUP_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
 import { LOGIN_SUCCESS, SET_USER_GROUPS_MUT } from "../actionTypes";
@@ -63,6 +67,80 @@ export const getUserGroupsRequest = async (
       console.log({ userGroups });
 
       context.commit(SET_USER_GROUPS_MUT, userGroups);
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+export const getAllAccessTypeRequest = async (
+  context,
+  { responseCallback }
+) => {
+  try {
+    const result = await getCall(
+      GET_ACCESS_TYPE_URL,
+      ``,
+      ``,
+      GET_ACCESS_TYPE_URL.headers ? {} : null
+    );
+    console.log({ result });
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getUserGroupByIdRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  const withMenus = payload?.withMenus || false;
+  const userGroupId = payload?.id;
+  try {
+    const result = await getCall(
+      GET_USER_GROUP_BY_ID_URL,
+      ``,
+      `userGroupId=${userGroupId}&withMenus=${withMenus}`,
+      GET_USER_GROUP_BY_ID_URL.headers ? {} : null
+    );
+    console.log({ result });
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const saveUserGroupRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      SAVE_USER_GROUP_URL,
+      payload,
+      ``,
+      "",
+      SAVE_USER_GROUP_URL.headers ? {} : null
+    );
+    console.log({ result });
+    if (result.data.success) {
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);
