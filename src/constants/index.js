@@ -14,6 +14,7 @@ import AllCollection from "@/views/collection-views/AllCollectionsView.vue";
 import ManageAllUserGroups from "@/views/usergroups/ManageAllUserGroups.vue";
 import ManageUserGroup from "@/views/manage-usergroup/EditUserGroup.vue";
 import AllMenus from "@/views/manage-menu/AllMenus.vue";
+import CreateEditMenu from "@/views/manage-menu/CreateEditMenu.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
@@ -53,6 +54,17 @@ export const GET_USER_ALLOWED_MENU_URL = {
 
 export const GET_ALL_MENU_URL = {
   url: "v1/Menu/GetMenus",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_MENU_BY_ID_URL = {
+  url: "v1/Menu/GetMenuById",
+  accesstoken: true,
+  headers: false,
+};
+export const SAVE_MENU_URL = {
+  url: "v1/Menu/SaveMenu",
   accesstoken: true,
   headers: false,
 };
@@ -421,8 +433,23 @@ export const VIEW_ALL_MENUS_URL = {
   print: [],
   delete: [],
 };
+export const EDIT_MENU_URL = {
+  title: "Edit Menu",
+  url: "/edit-menu/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CreateEditMenu,
+};
+
+export const ADD_MENU_URL = {
+  title: "Add Menu",
+  url: "/add-menu",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: CreateEditMenu,
+};
 
 export const ALL_ROUTES = [
+  ADD_MENU_URL,
+  EDIT_MENU_URL,
   EDIT_USER_GROUP_URL,
   VIEW_ALL_MENUS_URL,
   VIEW_MANAGE_MENU_URL,
@@ -1004,6 +1031,44 @@ export const USER_GROUPS_MENUS_COLUMNS = [
     sortable: true,
     width: 100,
   },
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
+];
+export const ALL_MENUS_COLUMNS = [
+  {
+    name: "menuId",
+    label: "Menu ID",
+    align: "left",
+    field: "menuId",
+    sortable: true,
+  },
+  {
+    name: "menuName",
+    label: "Menu Name",
+    align: "left",
+    field: "menuName",
+    sortable: true,
+  },
+  {
+    name: "menuUrl",
+    label: "Menu Url",
+    align: "left",
+    field: "menuUrl",
+    sortable: true,
+  },
+  {
+    name: "isActive",
+    label: "Status",
+    align: "left",
+    field: "isActive",
+    sortable: true,
+  },
+
   {
     name: "actions",
     label: "Action",

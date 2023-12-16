@@ -105,13 +105,13 @@ export const getUserGroupByIdRequest = async (
   context,
   { payload, responseCallback }
 ) => {
-  const withMenus = payload?.withMenus || false;
+  const withPrivileges = payload?.withPrivileges || false;
   const userGroupId = payload?.id;
   try {
     const result = await getCall(
       GET_USER_GROUP_BY_ID_URL,
       ``,
-      `userGroupId=${userGroupId}&withMenus=${withMenus}`,
+      `userGroupId=${userGroupId}&withPrivileges=${withPrivileges}`,
       GET_USER_GROUP_BY_ID_URL.headers ? {} : null
     );
     console.log({ result });

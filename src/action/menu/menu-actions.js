@@ -1,7 +1,9 @@
 import {
   GET_ALL_MENU_URL,
+  GET_MENU_BY_ID_URL,
   GET_USER_ACCESS_TYPES_URL,
   GET_USER_ALLOWED_MENU_URL,
+  SAVE_MENU_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
 import { SET_USER_PRIVATE_MENU } from "../actionTypes";
@@ -61,6 +63,53 @@ export const getAllMenusRequest = async (
       GET_ALL_MENU_URL.headers ? {} : null
     );
     console.log({ result });
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getMenuByIdRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await getCall(
+      GET_MENU_BY_ID_URL,
+      ``,
+      `menuId=${payload?.id || 0}`,
+      GET_MENU_BY_ID_URL.headers ? {} : null
+    );
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const saveMenuRequest = async (
+  context,
+  { payload = {}, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      SAVE_MENU_URL,
+      payload,
+      ``,
+      ``,
+      SAVE_MENU_URL.headers ? {} : null
+    );
     if (result.data.success) {
       responseCallback(true, result.data);
     } else {

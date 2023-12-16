@@ -91,7 +91,7 @@
         </template>
         <template v-slot:body-cell-isActiveLabel="props">
           <q-td :props="props">
-            {{ props?.row?.isActive ? "Active" : "In active" }}
+            {{ props?.row?.isActive ? "Active" : "Inactive" }}
           </q-td>
         </template>
         <template v-slot:body-cell-accesstypes="props">
@@ -105,7 +105,11 @@
                 <q-toggle
                   :model-value="
                     props?.row.allowedAccessTypes?.find(
-                      (dt) => dt?.accessTypesId == item?.accessTypesId
+                      (dt) =>
+                        dt?.menuId == props?.row?.menuId &&
+                        dt?.userAccessTypes?.find(
+                          (dta) => dta?.accessTypesId === item?.accessTypesId
+                        )
                     )
                       ? true
                       : false
@@ -138,11 +142,16 @@
         color="primary"
         size="small"
         class="q-ml-xs"
-        label="Confirm"
-        @click="confirm"
+        label="Save"
+        @click="handleOpen"
       />
     </div>
   </div>
+  <ConfirmationModal
+    :open="open"
+    :handleSubmit="confirm"
+    :handleClose="handleClose"
+  />
 </template>
 
 <script>
@@ -166,11 +175,13 @@ import {
   CREATE_ENTRY_VISITOR_URL,
   singleCollectionColumns,
   USER_GROUPS_MENUS_COLUMNS,
+  toastMessage,
 } from "@/constants";
 import { useRouter } from "vue-router";
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal.vue";
 export default defineComponent({
   name: "ManageUserGroup",
-
+  components: { ConfirmationModal },
   setup() {
     const $store = useStore();
     const $router = useRouter();
@@ -186,26 +197,46 @@ export default defineComponent({
     console.log({ params });
 
     const open = ref({
-      id: null,
-      item: null,
       bool: false,
       loading: false,
-      title: "Edit User Group Role",
-      text: "Are you sure you want to cancel this receipt",
+      title: "Edit User Group",
+      text: "Are you sure you want to save changes to this user group",
     });
 
     const handleTogg = (e, item, props) => {
-      console.log({ e });
-
       let clone = [...(currentUserGroup.value?.userGroupMenus ?? [])];
 
       let findIndex = clone?.findIndex(
         (dt) => dt?.menuId == props?.row?.menuId
       );
-      clone.splice(findIndex, 1, {
-        ...clone[findIndex],
-        allowedAccessTypes: [...clone[findIndex].allowedAccessTypes, item],
-      });
+
+      let indexOfAllowedAccesstypes = clone[
+        findIndex
+      ]?.allowedAccessTypes?.findIndex((dt) => props.row?.menuId == dt?.menuId);
+
+      if (indexOfAllowedAccesstypes < 0) {
+        clone[findIndex]?.allowedAccessTypes.push({
+          userGroupId: currentUserGroup?.value?.userGroupId,
+          menuId: props.row?.menuId,
+          userAccessTypes: [item],
+        });
+      } else {
+        const findIfAccesstypeExist = clone[findIndex]?.allowedAccessTypes[
+          indexOfAllowedAccesstypes
+        ]?.userAccessTypes?.findIndex(
+          (dt) => dt?.accessTypesId == item?.accessTypesId
+        );
+
+        if (findIfAccesstypeExist >= 0) {
+          clone[findIndex]?.allowedAccessTypes[
+            indexOfAllowedAccesstypes
+          ]?.userAccessTypes?.splice(findIfAccesstypeExist, 1);
+        } else {
+          clone[findIndex]?.allowedAccessTypes[
+            indexOfAllowedAccesstypes
+          ]?.userAccessTypes.push(item);
+        }
+      }
       currentUserGroup.value = {
         ...currentUserGroup.value,
         userGroupMenus: clone,
@@ -215,7 +246,7 @@ export default defineComponent({
     // allowed actions
 
     onBeforeMount(() => {
-      // tableLoader.value = true;
+      tableLoader.value = true;
       console.log("dsdsd");
 
       $store.dispatch(GET_ALL_ACCESSTYPES_REQUEST, {
@@ -223,18 +254,15 @@ export default defineComponent({
         responseCallback: (status, res) => {
           if (res?.data?.length) {
             accesstype.value = res?.data;
-            // currentUserGroup.value = res?.data;
-            // console.log({ currentUserGroup: currentUserGroup.value });
           }
         },
       });
       if (!currentUserGroup.value) {
         $store.dispatch(GET_USER_GROUP_ID_REQUEST, {
-          payload: { id: params?.id, withMenus: true },
+          payload: { id: params?.id, withPrivileges: true },
           responseCallback: (status, res) => {
             if (res?.data) {
               currentUserGroup.value = res?.data;
-              console.log({ currentUserGroup: currentUserGroup.value });
             }
           },
         });
@@ -243,26 +271,11 @@ export default defineComponent({
       $store.dispatch(GET_ALL_MENU_REQUEST, {
         payload: {},
         responseCallback: (status, res) => {
+          tableLoader.value = false;
+
           if (res?.data?.length) {
             allMenus.value = res?.data;
-            tableLoader.value = false;
-
-            // let newoptions = allMenus.value
-            //   ?.filter(
-            //     (item) =>
-            //       !currentUserGroup.value?.userGroupMenus.some(
-            //         (userItem) => userItem?.menuName == item?.menuName
-            //       )
-            //   )
-            //   ?.map((item) => {
-            //     return {
-            //       label: `${item?.menuName} (${item?.menuUrl})`,
-            //       value: item?.menuId,
-            //     };
-            //   });
-            // options.value = newoptions;
           }
-          console.log({ res });
         },
       });
     });
@@ -281,11 +294,11 @@ export default defineComponent({
     };
 
     const handleClose = () => {
-      open.value = { ...open.value, bool: !open.value.bool };
+      open.value = { ...open.value, loading: false, bool: !open.value.bool };
     };
 
-    const handleOpen = (value = null, bool = false) => {
-      open.value = { ...open.value, item: value, bool };
+    const handleOpen = () => {
+      open.value = { ...open.value, bool: true };
     };
 
     const filterFnAutoselect = (val, update) => {
@@ -329,14 +342,13 @@ export default defineComponent({
           ...currentUserGroup.value,
           userGroupMenus: clone,
         };
-        console.log({ clone: clone });
+        model.value = null;
       }
     };
 
     const handleDeleteMenu = (row) => {
       let clone = [...(currentUserGroup.value?.userGroupMenus ?? [])];
       let findIndex = clone?.findIndex((dt) => dt?.menuId == row?.row?.menuId);
-      console.log({ row, findIndex });
       clone.splice(findIndex, 1);
       currentUserGroup.value = {
         ...currentUserGroup.value,
@@ -345,10 +357,16 @@ export default defineComponent({
     };
 
     const confirm = () => {
+      open.value.bool = true;
       $store.dispatch(saveUserGroupRequest, {
         payload: { ...currentUserGroup.value },
         responseCallback: (status, res) => {
-          console.log({ status, res });
+          if (status) {
+            toastMessage(res?.message, true);
+          } else {
+            toastMessage("Something Went Wrong", false);
+          }
+          handleClose();
         },
       });
     };

@@ -9,7 +9,12 @@ import {
   MEMBER_VIEW_URL,
   VIEW_MEMBERS_LIST_URL,
 } from "@/constants";
-import { getUserAllowedMenusRequest, getAllMenusRequest } from "@/action";
+import {
+  getUserAllowedMenusRequest,
+  getAllMenusRequest,
+  getMenuByIdRequest,
+  saveMenuRequest,
+} from "@/action";
 
 export const menuModule = {
   state: () => ({
@@ -40,5 +45,10 @@ export const menuModule = {
     },
   },
 
-  actions: { getUserAllowedMenusRequest, getAllMenusRequest },
+  actions: {
+    getUserAllowedMenusRequest,
+    getAllMenusRequest,
+    getMenuByIdRequest,
+    saveMenuRequest,
+  },
 };

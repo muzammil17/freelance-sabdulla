@@ -53,7 +53,7 @@
                 )
               "
             />
-            <q-btn
+            <!-- <q-btn
               dense
               round
               flat
@@ -62,7 +62,7 @@
               class="edit-memberbtn"
               icon="delete"
               @click="handleOpen(props?.row, true)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>

@@ -8,6 +8,8 @@ import {
 import {
   getUserAllowedMenusRequest,
   getAllMenusRequest,
+  getMenuByIdRequest,
+  saveMenuRequest,
 } from "./menu/menu-actions";
 import {
   getMemberTypesRequest,
@@ -37,6 +39,8 @@ import {
 import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
 
 export {
+  saveMenuRequest,
+  getMenuByIdRequest,
   saveUserGroupRequest,
   getAllAccessTypeRequest,
   getUserGroupsRequest,

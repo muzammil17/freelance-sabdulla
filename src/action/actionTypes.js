@@ -94,6 +94,8 @@ export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
 
 export const GET_MENU_BY_USER_GROUP_REQUEST = "getAllMenusByUserGroupRequest";
 export const GET_ALL_MENU_REQUEST = "getAllMenusRequest";
+export const getMenuByIdRequest = "getMenuByIdRequest";
+export const saveMenuRequest = "saveMenuRequest";
 
 //member actions
 export const GET_MEMBER_TYPES_REQUEST = "getMemberTypesRequest";

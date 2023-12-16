@@ -11,14 +11,14 @@
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
       <q-table
         :loading="tableLoader"
-        title="User Groups"
+        title="Menus"
         dense
         :pagination="pagination"
         class="table-header-wrapper"
-        :rows="getUserGroupsGetter"
+        :rows="allMenus"
         :filter="search"
-        :columns="USER_GROUPS_COLUMNS"
-        row-key="memberName"
+        :columns="ALL_MENUS_COLUMNS"
+        row-key="menuName"
       >
         <template v-slot:top-right>
           <q-input
@@ -33,6 +33,11 @@
             </template>
           </q-input>
         </template>
+        <template v-slot:body-cell-isActive="props">
+          <q-td :props="props">
+            {{ props?.row?.isActive ? "Active" : "Inactive" }}
+          </q-td>
+        </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn
@@ -45,15 +50,11 @@
               icon="edit"
               @click="
                 handleRoute(
-                  EDIT_USER_GROUP_URL.url.replace(
-                    ':id',
-                    props?.row?.userGroupId
-                  ),
-                  props
+                  EDIT_MENU_URL.url.replace(':id', props?.row?.menuId)
                 )
               "
             />
-            <q-btn
+            <!-- <q-btn
               dense
               round
               flat
@@ -62,7 +63,7 @@
               class="edit-memberbtn"
               icon="delete"
               @click="handleOpen(props?.row, true)"
-            />
+            /> -->
           </q-td>
         </template>
       </q-table>
@@ -81,7 +82,6 @@
 import {
   GET_VISITORS_GETT,
   GET_USER_GROUPS_GETT,
-  GET_USER_GROUP_REQUEST,
   GET_ALL_MENU_REQUEST,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
@@ -92,9 +92,11 @@ import {
   visitorDetailColumns,
   pagination,
   // toastMessage,
+  ALL_MENUS_COLUMNS,
   CREATE_ENTRY_VISITOR_URL,
   singleCollectionColumns,
   EDIT_USER_GROUP_URL,
+  EDIT_MENU_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import { ConfirmationModal } from "@/components";
@@ -123,20 +125,14 @@ export default defineComponent({
 
     onBeforeMount(() => {
       tableLoader.value = true;
-      $store.dispatch(GET_USER_GROUP_REQUEST, {
-        payload: {},
-        responseCallback: (status, res) => {
-          console.log({ status, res });
-          tableLoader.value = false;
-        },
-      });
+
       $store.dispatch(GET_ALL_MENU_REQUEST, {
         payload: {},
         responseCallback: (status, res) => {
           if (res?.data?.length) {
             allMenus.value = res?.data;
+            tableLoader.value = false;
           }
-          console.log({ res });
         },
       });
     });
@@ -150,8 +146,7 @@ export default defineComponent({
       return $store.getters[GET_VISITORS_GETT];
     });
 
-    const handleRoute = (url, prp) => {
-      console.log({ prp });
+    const handleRoute = (url) => {
       $router.push(url);
     };
 
@@ -184,6 +179,8 @@ export default defineComponent({
       search,
       allMenus,
       EDIT_USER_GROUP_URL,
+      ALL_MENUS_COLUMNS,
+      EDIT_MENU_URL,
       //handlers
       handleOpen,
       handleSubmit,
