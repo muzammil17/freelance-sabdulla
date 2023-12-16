@@ -156,24 +156,16 @@
 
 <script>
 import {
-  GET_VISITORS_GETT,
-  GET_USER_GROUPS_GETT,
-  // GET_USER_GROUP_REQUEST,
   GET_ALL_MENU_REQUEST,
   GET_USER_GROUP_ID_REQUEST,
   GET_ALL_ACCESSTYPES_REQUEST,
   saveUserGroupRequest,
 } from "@/action/actionTypes";
-import { defineComponent, ref, onBeforeMount, computed } from "vue";
+import { defineComponent, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import {
-  allVisitorColumns,
-  USER_GROUPS_COLUMNS,
-  visitorDetailColumns,
   pagination,
   // toastMessage,
-  CREATE_ENTRY_VISITOR_URL,
-  singleCollectionColumns,
   USER_GROUPS_MENUS_COLUMNS,
   toastMessage,
 } from "@/constants";
@@ -280,19 +272,6 @@ export default defineComponent({
       });
     });
 
-    //getters
-    const getUserGroupsGetter = computed(() => {
-      return $store.getters[GET_USER_GROUPS_GETT];
-    });
-
-    const getVisitorsGetter = computed(() => {
-      return $store.getters[GET_VISITORS_GETT];
-    });
-
-    const handleRoute = (url) => {
-      $router.push(url);
-    };
-
     const handleClose = () => {
       open.value = { ...open.value, loading: false, bool: !open.value.bool };
     };
@@ -373,17 +352,10 @@ export default defineComponent({
     return {
       //states
       tableLoader,
-      CREATE_ENTRY_VISITOR_URL,
-      getVisitorsGetter,
       pagination,
 
-      allVisitorColumns,
-      USER_GROUPS_COLUMNS,
-      visitorDetailColumns,
       $router,
-      singleCollectionColumns,
       open,
-      getUserGroupsGetter,
       search,
       allMenus,
       currentUserGroup,
@@ -398,7 +370,6 @@ export default defineComponent({
       handleDeleteMenu,
       filterFnAutoselect,
       handleOpen,
-      handleRoute,
       handleClose,
     };
   },

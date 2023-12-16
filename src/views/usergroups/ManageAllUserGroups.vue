@@ -79,7 +79,6 @@
 
 <script>
 import {
-  GET_VISITORS_GETT,
   GET_USER_GROUPS_GETT,
   GET_USER_GROUP_REQUEST,
   GET_ALL_MENU_REQUEST,
@@ -87,13 +86,9 @@ import {
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
 import {
-  allVisitorColumns,
   USER_GROUPS_COLUMNS,
-  visitorDetailColumns,
   pagination,
   // toastMessage,
-  CREATE_ENTRY_VISITOR_URL,
-  singleCollectionColumns,
   EDIT_USER_GROUP_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
@@ -146,10 +141,6 @@ export default defineComponent({
       return $store.getters[GET_USER_GROUPS_GETT];
     });
 
-    const getVisitorsGetter = computed(() => {
-      return $store.getters[GET_VISITORS_GETT];
-    });
-
     const handleRoute = (url, prp) => {
       console.log({ prp });
       $router.push(url);
@@ -170,15 +161,10 @@ export default defineComponent({
     return {
       //states
       tableLoader,
-      CREATE_ENTRY_VISITOR_URL,
-      getVisitorsGetter,
       pagination,
 
-      allVisitorColumns,
       USER_GROUPS_COLUMNS,
-      visitorDetailColumns,
       $router,
-      singleCollectionColumns,
       open,
       getUserGroupsGetter,
       search,
