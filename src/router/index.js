@@ -5,9 +5,9 @@ import { computed } from "vue";
 import { IS_AUTHENTICATED } from "@/action/actionTypes";
 import {
   ALL_ROUTES,
-  // DefaultPrivate,
-  // LOGIN_VIEW_URL,
-  // PAGE_404_VIEW_URL,
+  DefaultPrivate,
+  LOGIN_VIEW_URL,
+  PAGE_404_VIEW_URL,
   ROUTE_ROLES,
 } from "@/constants";
 
@@ -34,68 +34,68 @@ let routes = ALL_ROUTES.map((dt) => {
       name: dt?.title,
       component: dt?.component,
 
-      // beforeEnter: (to, from, next) => {
-      //   if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
-      //   else {
-      //     const menus = store.state.menu?.userAllowedMenu;
-      //     console.log({ menus });
-      //     const findRoute = ALL_ROUTES?.find(
-      //       (dt) =>
-      //         dt?.url !== "/" &&
-      //         (dt?.view?.includes(to?.matched[0].path) ||
-      //           dt?.create?.includes(to?.matched[0].path) ||
-      //           dt?.update?.includes(to?.matched[0].path) ||
-      //           dt?.delete?.includes(to?.matched[0].path) ||
-      //           dt?.print?.includes(to?.matched[0].path))
-      //     );
-      //     const menuFind = menus?.find(
-      //       (dt) =>
-      //         dt?.menuUrl !== "/" &&
-      //         (findRoute?.view?.includes(dt?.menuUrl) ||
-      //           findRoute?.create?.includes(dt?.menuUrl) ||
-      //           findRoute?.update?.includes(dt?.menuUrl) ||
-      //           findRoute?.delete?.includes(dt?.menuUrl) ||
-      //           findRoute?.print?.includes(dt?.menuUrl))
-      //     );
-      //     console.log({ menuFind });
-      //     if (menuFind) {
-      //       for (const item of menuFind?.accessMenu) {
-      //         if (item?.accessTypeId === 1) {
-      //           if (findRoute?.view?.includes(to?.matched[0].path)) {
-      //             next();
-      //           }
-      //         } else if (item?.accessTypeId === 3) {
-      //           if (findRoute?.create?.includes(to?.matched[0].path)) {
-      //             next();
-      //           }
-      //         } else if (item?.accessTypeId === 2) {
-      //           if (findRoute?.update?.includes(to?.matched[0].path)) {
-      //             next();
-      //           }
-      //         } else if (item?.accessTypeId === 4) {
-      //           if (findRoute?.print?.includes(to?.matched[0].path)) {
-      //             next();
-      //           }
-      //         } else if (item?.accessTypeId === 5) {
-      //           if (findRoute?.delete?.includes(to?.matched[0].path)) {
-      //             next();
-      //           }
-      //         }
-      //       }
-      //       if (DefaultPrivate.includes(to.path)) {
-      //         next();
-      //       } else {
-      //         next(PAGE_404_VIEW_URL.url);
-      //       }
-      //     } else {
-      //       if (DefaultPrivate.includes(to.path)) {
-      //         next();
-      //       } else {
-      //         next(PAGE_404_VIEW_URL.url);
-      //       }
-      //     }
-      //   }
-      // },
+      beforeEnter: (to, from, next) => {
+        if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
+        else {
+          const menus = store.state.menu?.userAllowedMenu;
+          console.log({ menus });
+          const findRoute = ALL_ROUTES?.find(
+            (dt) =>
+              dt?.url !== "/" &&
+              (dt?.view?.includes(to?.matched[0].path) ||
+                dt?.create?.includes(to?.matched[0].path) ||
+                dt?.update?.includes(to?.matched[0].path) ||
+                dt?.delete?.includes(to?.matched[0].path) ||
+                dt?.print?.includes(to?.matched[0].path))
+          );
+          const menuFind = menus?.find(
+            (dt) =>
+              dt?.menuUrl !== "/" &&
+              (findRoute?.view?.includes(dt?.menuUrl) ||
+                findRoute?.create?.includes(dt?.menuUrl) ||
+                findRoute?.update?.includes(dt?.menuUrl) ||
+                findRoute?.delete?.includes(dt?.menuUrl) ||
+                findRoute?.print?.includes(dt?.menuUrl))
+          );
+          console.log({ menuFind });
+          if (menuFind) {
+            for (const item of menuFind?.accessMenu) {
+              if (item?.accessTypeId === 1) {
+                if (findRoute?.view?.includes(to?.matched[0].path)) {
+                  next();
+                }
+              } else if (item?.accessTypeId === 3) {
+                if (findRoute?.create?.includes(to?.matched[0].path)) {
+                  next();
+                }
+              } else if (item?.accessTypeId === 2) {
+                if (findRoute?.update?.includes(to?.matched[0].path)) {
+                  next();
+                }
+              } else if (item?.accessTypeId === 4) {
+                if (findRoute?.print?.includes(to?.matched[0].path)) {
+                  next();
+                }
+              } else if (item?.accessTypeId === 5) {
+                if (findRoute?.delete?.includes(to?.matched[0].path)) {
+                  next();
+                }
+              }
+            }
+            if (DefaultPrivate.includes(to.path)) {
+              next();
+            } else {
+              next(PAGE_404_VIEW_URL.url);
+            }
+          } else {
+            if (DefaultPrivate.includes(to.path)) {
+              next();
+            } else {
+              next(PAGE_404_VIEW_URL.url);
+            }
+          }
+        }
+      },
     };
   } else {
     return {

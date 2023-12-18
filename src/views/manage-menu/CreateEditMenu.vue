@@ -30,6 +30,39 @@
             />
           </div>
           <div class="col-12 col-sm-6">
+            <q-input
+              v-model="menu.sortOrder"
+              outlined
+              type="number"
+              label="Sort Order *"
+              :rules="[
+                (val) =>
+                  (val?.length > 0 && val >= 0) ||
+                  'Sort must be a positive Number',
+              ]"
+              hint="ex: 1"
+              lazy-rules
+              class="input-field"
+            />
+          </div>
+          <div class="col-12 col-sm-6">
+            <q-select
+              outlined
+              label="Select Parent Menu"
+              v-model="menu.parentMenuId"
+              behavior="menu"
+              :options="option"
+            >
+              <template v-slot:no-option>
+                <q-item>
+                  <q-item-section class="text-grey">
+                    No results
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
+          </div>
+          <div class="col-12 col-sm-6">
             <q-toggle label="Menu Active" v-model="menu.isActive" />
           </div>
 
@@ -54,7 +87,11 @@
 </template>
 
 <script>
-import { getMenuByIdRequest, saveMenuRequest } from "@/action/actionTypes";
+import {
+  GET_ALL_MENU_REQUEST,
+  getMenuByIdRequest,
+  saveMenuRequest,
+} from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { toastMessage } from "@/constants";
@@ -72,8 +109,9 @@ export default defineComponent({
       menuName: "",
       menuUrl: "",
       isActive: false,
+      sortOrder: 0,
     });
-
+    const option = ref([]);
     const params = $router.currentRoute.value.params;
     console.log({ params });
 
@@ -93,8 +131,32 @@ export default defineComponent({
         responseCallback: (status, res) => {
           console.log({ res });
           if (res?.data) {
-            menu.value = res?.data;
+            menu.value = {
+              ...res?.data,
+            };
           }
+          $store.dispatch(GET_ALL_MENU_REQUEST, {
+            payload: {},
+            responseCallback: (status, res) => {
+              if (res?.data?.length) {
+                const options = res?.data?.map((item) => {
+                  return {
+                    value: item?.menuId,
+                    label: item?.menuName,
+                  };
+                });
+                let findMenu = options?.find(
+                  (dt) => dt?.value == menu?.value.parentMenuId
+                );
+                option.value = options;
+                if (findMenu) {
+                  menu.value.parentMenuId = findMenu;
+                }
+                // allMenus.value = res?.data;
+                tableLoader.value = false;
+              }
+            },
+          });
         },
       });
     });
@@ -113,11 +175,20 @@ export default defineComponent({
 
     const confirm = () => {
       open.value.bool = true;
+      console.log({ menu });
+      let payload = {
+        ...menu.value,
+        sortOrder: Number(menu.value.sortOrder),
+        parentMenuId: menu.value.parentMenuId?.value
+          ? menu.value.parentMenuId?.value
+          : null,
+      };
       $store.dispatch(saveMenuRequest, {
-        payload: { ...menu.value },
+        payload: { ...payload },
         responseCallback: (status, res) => {
           if (status) {
             toastMessage(res?.message, true);
+            $router.back();
           } else {
             toastMessage("Something Went Wrong", false);
           }
@@ -133,6 +204,7 @@ export default defineComponent({
       open,
       allMenus,
       menu,
+      option,
       //handlers
       confirm,
 

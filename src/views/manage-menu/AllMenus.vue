@@ -2,9 +2,13 @@
   <div class="row q-mx-md q-col-gutter-sm">
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
       <div class="row justify-end">
-        <!-- <div>
-            <q-btn color="primary" label="Add Menu Role" />
-          </div> -->
+        <div>
+          <q-btn
+            color="primary"
+            label="Add Menu"
+            @click="handleRoute(ADD_MENU_URL.url)"
+          />
+        </div>
       </div>
     </div>
 
@@ -75,7 +79,6 @@
     :open="open"
     :handleClose="handleClose"
   />
-  <!-- :handleSubmit="handleSubmitCancel"  -->
 </template>
 
 <script>
@@ -97,6 +100,7 @@ import {
   singleCollectionColumns,
   EDIT_USER_GROUP_URL,
   EDIT_MENU_URL,
+  ADD_MENU_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import { ConfirmationModal } from "@/components";
@@ -181,6 +185,7 @@ export default defineComponent({
       EDIT_USER_GROUP_URL,
       ALL_MENUS_COLUMNS,
       EDIT_MENU_URL,
+      ADD_MENU_URL,
       //handlers
       handleOpen,
       handleSubmit,

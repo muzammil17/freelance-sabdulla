@@ -42,8 +42,6 @@
         :options="options"
         @filter="filterFnAutoselect"
       >
-        <!-- @filter="filterFn"
-                @filter-abort="abortFilterFn" -->
         <template v-slot:no-option>
           <q-item>
             <q-item-section class="text-grey"> No results </q-item-section>
@@ -342,6 +340,7 @@ export default defineComponent({
         responseCallback: (status, res) => {
           if (status) {
             toastMessage(res?.message, true);
+            $router.back();
           } else {
             toastMessage("Something Went Wrong", false);
           }

@@ -20,8 +20,8 @@ import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-// export const API_URL = "https://api.ribat.com.pk/";
-export const API_URL = "https://stagingapi.ribat.com.pk/";
+export const API_URL = "https://api.ribat.com.pk/";
+// export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
@@ -398,6 +398,13 @@ export const Home_URL = {
   component: DashboardEmpty,
 };
 
+export const EDIT_USER_GROUP_URL = {
+  title: "Edit User Group",
+  url: "/edit-usergroup/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ManageUserGroup,
+};
+
 export const VIEW_MANAGE_MENU_URL = {
   title: "User Group",
   url: "/manage-groups",
@@ -405,34 +412,11 @@ export const VIEW_MANAGE_MENU_URL = {
   component: ManageAllUserGroups,
   view: ["/manage-groups"],
   create: [""],
-  update: ["/edit-usergroup"],
+  update: [EDIT_USER_GROUP_URL.url],
   print: [],
   delete: [],
 };
 
-export const EDIT_USER_GROUP_URL = {
-  title: "Edit User Group",
-  url: "/edit-usergroup/:id",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: ManageUserGroup,
-  // view: ["/manage-menu"],
-  // create: [""],
-  // update: [],
-  // print: [],
-  // delete: [],
-};
-
-export const VIEW_ALL_MENUS_URL = {
-  title: "Manage Menus",
-  url: "/manage-menus",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: AllMenus,
-  view: ["/manage-menus"],
-  create: [""],
-  update: [""],
-  print: [],
-  delete: [],
-};
 export const EDIT_MENU_URL = {
   title: "Edit Menu",
   url: "/edit-menu/:id",
@@ -445,6 +429,18 @@ export const ADD_MENU_URL = {
   url: "/add-menu",
   auth: ROUTE_ROLES.PRIVATE,
   component: CreateEditMenu,
+};
+
+export const VIEW_ALL_MENUS_URL = {
+  title: "Manage Menus",
+  url: "/manage-menus",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AllMenus,
+  view: ["/manage-menus"],
+  create: [ADD_MENU_URL.url],
+  update: [EDIT_MENU_URL.url],
+  print: [],
+  delete: [],
 };
 
 export const ALL_ROUTES = [
