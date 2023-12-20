@@ -195,6 +195,7 @@ export const programModule = {
             cancelleddBy: item?.cancelleddBy ? item?.cancelleddBy : "-",
             isCancelled: item?.isCancelled ? "Yes" : "No",
             phone: item?.phone || "-",
+            colTypeDescLabel: item?.colTypeDesc || "-",
           });
         });
       }

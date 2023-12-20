@@ -256,7 +256,7 @@ export const getReceiptsByDateRequest = async (
   context,
   {
     payload: {
-      validOnly = true,
+      validOnly = false,
       fromDate = moment().subtract(2, "months").toISOString(),
       toDate = moment().toISOString(),
     },

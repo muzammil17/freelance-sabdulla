@@ -178,7 +178,11 @@ export default defineComponent({
     const tableLoader = ref(false);
     const search = ref("");
     const allMenus = ref([]);
-    const currentUserGroup = ref(null);
+    const currentUserGroup = ref({
+      userGroupName: "",
+      userGroupActive: false,
+      userGroupMenus: [],
+    });
     const model = ref("");
     const options = ref([]);
     const accesstype = ref([]);
@@ -247,7 +251,7 @@ export default defineComponent({
           }
         },
       });
-      if (!currentUserGroup.value) {
+      if (params.id) {
         $store.dispatch(GET_USER_GROUP_ID_REQUEST, {
           payload: { id: params?.id, withPrivileges: true },
           responseCallback: (status, res) => {

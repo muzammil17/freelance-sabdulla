@@ -2,9 +2,14 @@
   <div class="row q-mx-md q-col-gutter-sm">
     <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
       <div class="row justify-end">
-        <!-- <div>
-            <q-btn color="primary" label="Add Menu Role" />
-          </div> -->
+        <div>
+          <q-btn
+            color="primary"
+            size="small"
+            label="Add User Group"
+            @click="handleRoute(ADD_USER_GROUP_URL.url)"
+          />
+        </div>
       </div>
     </div>
 
@@ -90,6 +95,7 @@ import {
   pagination,
   // toastMessage,
   EDIT_USER_GROUP_URL,
+  ADD_USER_GROUP_URL,
 } from "@/constants";
 import { useRouter } from "vue-router";
 import { ConfirmationModal } from "@/components";
@@ -170,6 +176,7 @@ export default defineComponent({
       search,
       allMenus,
       EDIT_USER_GROUP_URL,
+      ADD_USER_GROUP_URL,
       //handlers
       handleOpen,
       handleSubmit,

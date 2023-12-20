@@ -20,8 +20,8 @@ import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-export const API_URL = "https://api.ribat.com.pk/";
-// export const API_URL = "https://stagingapi.ribat.com.pk/";
+// export const API_URL = "https://api.ribat.com.pk/";
+export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
@@ -405,13 +405,20 @@ export const EDIT_USER_GROUP_URL = {
   component: ManageUserGroup,
 };
 
+export const ADD_USER_GROUP_URL = {
+  title: "Add User Group",
+  url: "/add-usergroup",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ManageUserGroup,
+};
+
 export const VIEW_MANAGE_MENU_URL = {
   title: "User Group",
   url: "/manage-groups",
   auth: ROUTE_ROLES.PRIVATE,
   component: ManageAllUserGroups,
   view: ["/manage-groups"],
-  create: [""],
+  create: [ADD_USER_GROUP_URL.url],
   update: [EDIT_USER_GROUP_URL.url],
   print: [],
   delete: [],
@@ -444,6 +451,7 @@ export const VIEW_ALL_MENUS_URL = {
 };
 
 export const ALL_ROUTES = [
+  ADD_USER_GROUP_URL,
   ADD_MENU_URL,
   EDIT_MENU_URL,
   EDIT_USER_GROUP_URL,
@@ -842,10 +850,10 @@ export const allCollectionsByDateColumns = [
   },
 
   {
-    name: "phone",
-    label: "Phone",
+    name: "colTypeDescLabel",
+    label: " Col. Type",
     align: "left",
-    field: "phone",
+    field: "colTypeDescLabel",
     sortable: true,
   },
 

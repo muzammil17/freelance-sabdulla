@@ -78,16 +78,25 @@
             <q-input
               outlined
               v-model="formState.dob"
-              mask="##/##/####"
+              mask="####/##/##"
               label="Date of birth"
-              hint="ex: 12/06/2000"
+              hint="ex: 2000/12/30"
               lazy-rules
               class="input-field"
               :rules="[
-                (val) =>
-                  !val ||
-                  moment(val).isBefore(moment().format(`YYYY/MM/DD`), `day`) ||
-                  'DOB is invalid',
+                (val) => {
+                  if (!val) {
+                    return 'DOB is Required';
+                  } else if (!moment(val, 'YYYY/MM/DD').isValid()) {
+                    return 'DOB is invalid';
+                  } else if (
+                    !moment(val).isBefore(moment().format(`YYYY/MM/DD`), 'day')
+                  ) {
+                    return 'DOB is invalid';
+                  } else {
+                    return true;
+                  }
+                },
               ]"
             >
               <template v-slot:append>
@@ -106,7 +115,7 @@
                             `day`
                           )
                       "
-                      mask="DD/MM/YYYY"
+                      mask="YYYY/MM/DD"
                     >
                       <div class="row items-center justify-end">
                         <q-btn
@@ -550,6 +559,15 @@ export default defineComponent({
     });
 
     const onSubmit = () => {
+      let dobDate = formState.value.dob.split("/");
+      let dob = moment()
+        .set({
+          date: Number(dobDate[2]),
+          month: Number(dobDate[1]) - 1,
+          year: Number(dobDate[0]),
+        })
+        .format();
+
       loader.value = true;
       let payloadObj = {
         ...formState.value,
@@ -557,7 +575,8 @@ export default defineComponent({
         ...(EDIT_MEMBER_URL.title === pageName
           ? { memberId: Number(memberId) }
           : {}),
-        dob: formState.value.dob.replaceAll("/", "-"),
+        // dob: moment(formState.value.dob.replaceAll("/", "-")).format(),
+        dob,
         membershipTypeId: formState.value.membershipTypeId.value,
         membershipTypeDesc: formState.value.membershipTypeId.label,
         cityId: formState.value.cityId?.value,
