@@ -20,8 +20,8 @@ import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-// export const API_URL = "https://api.ribat.com.pk/";
-export const API_URL = "https://stagingapi.ribat.com.pk/";
+export const API_URL = "https://api.ribat.com.pk/";
+// export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
