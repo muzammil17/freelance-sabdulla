@@ -1,150 +1,168 @@
 <template>
-  <div class="row q-mx-md q-col-gutter-sm">
-    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
-      <div class="row">
-        <!-- <div>
-            <q-btn color="primary" label="Add Menu Role" />
-          </div> -->
-        <div class="col-12 col-sm-6">
-          <q-input
-            outlined
-            v-model="currentUserGroup.userGroupName"
-            label="User Group Name *"
-            hint="ex: John"
-            lazy-rules
-            class="input-field"
-          />
+  <q-form @submit="handleOpen">
+    <div class="row q-mx-md q-col-gutter-sm">
+      <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 q-my-sm">
+        <div class="row q-col-gutter-sm">
+          <div class="col-12 col-sm-6">
+            <q-input
+              outlined
+              v-model="currentUserGroup.userGroupName"
+              label="User Group Name *"
+              hint="ex: John"
+              lazy-rules
+              class="input-field"
+              :rules="[
+                (val) =>
+                  (val && val?.length > 0) || 'User Group Name is required',
+              ]"
+            />
+          </div>
+          <div class="col-12 col-sm-6">
+            <q-input
+              outlined
+              v-model="currentUserGroup.userGroupId"
+              label="User Group ID *"
+              hint="ex: 01"
+              lazy-rules
+              :rules="[
+                (val) =>
+                  (val && val?.length > 0) || 'User Group ID is required',
+              ]"
+              class="input-field"
+            />
+          </div>
+          <div class="col-12 col-sm-6">
+            <div>
+              <q-toggle
+                v-model="currentUserGroup.userGroupActive"
+                label="User Group Active"
+              />
+            </div>
+          </div>
+          <!-- :rules="[
+                    (val) => (val && val.length > 0) || 'First Name is required',
+                    (val) => (val && val.length <= 20) || 'Limit exceeded',
+                  ]" -->
         </div>
-        <div class="col-12 col-sm-6">
-          <div class="flex justify-end">
-            <q-toggle
-              v-model="currentUserGroup.userGroupActive"
-              label="User Group Active"
+      </div>
+      <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12">
+        <q-select
+          v-model="model"
+          filled
+          clearable
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"
+          label="Search Menus"
+          :options="options"
+          @filter="filterFnAutoselect"
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey"> No results </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
+      </div>
+      <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12 q-my-sm">
+        <div class="row justify-end">
+          <div>
+            <q-btn
+              color="primary"
+              size="small"
+              label="Add Menu"
+              @click="handleAddMenu"
             />
           </div>
         </div>
-        <!-- :rules="[
-            (val) => (val && val.length > 0) || 'First Name is required',
-            (val) => (val && val.length <= 20) || 'Limit exceeded',
-          ]" -->
       </div>
-    </div>
-    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12">
-      <q-select
-        v-model="model"
-        filled
-        clearable
-        use-input
-        hide-selected
-        fill-input
-        input-debounce="0"
-        label="Search Menus"
-        :options="options"
-        @filter="filterFnAutoselect"
-      >
-        <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey"> No results </q-item-section>
-          </q-item>
-        </template>
-      </q-select>
-    </div>
-    <div class="col-lg-6 col-xl-6 col-md-6 col-sm-6 col-xs-12 q-my-sm">
-      <div class="row justify-end">
-        <div>
-          <q-btn
-            color="primary"
-            size="small"
-            label="Add Menu"
-            @click="handleAddMenu"
-          />
-        </div>
-      </div>
-    </div>
 
-    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
-      <q-table
-        :loading="tableLoader"
-        title="User Group Menus"
-        dense
-        :rows="currentUserGroup.userGroupMenus"
-        :pagination="pagination"
-        class="table-header-wrapper"
-        :filter="search"
-        :columns="USER_GROUPS_MENUS_COLUMNS"
-        row-key="menuName"
-      >
-        <template v-slot:top-right>
-          <q-input
-            v-model="search"
-            borderless
-            dense
-            debounce="300"
-            placeholder="Search"
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </template>
-        <template v-slot:body-cell-isActiveLabel="props">
-          <q-td :props="props">
-            {{ props?.row?.isActive ? "Active" : "Inactive" }}
-          </q-td>
-        </template>
-        <template v-slot:body-cell-accesstypes="props">
-          <q-td :props="props">
-            <div class="row">
-              <div
-                class="col-12 col-sm-6 col-md-3"
-                v-for="(item, index) in accesstype"
-                :key="index"
-              >
-                <q-toggle
-                  :model-value="
-                    props?.row.allowedAccessTypes?.find(
-                      (dt) =>
-                        dt?.menuId == props?.row?.menuId &&
-                        dt?.userAccessTypes?.find(
-                          (dta) => dta?.accessTypesId === item?.accessTypesId
-                        )
-                    )
-                      ? true
-                      : false
-                  "
-                  @update:model-value="(e) => handleTogg(e, item, props)"
-                  :label="item?.accessTypeName"
-                />
-              </div>
-            </div>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn
+      <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+        <q-table
+          :loading="tableLoader"
+          title="User Group Menus"
+          dense
+          :rows="currentUserGroup.userGroupMenus"
+          :pagination="pagination"
+          class="table-header-wrapper"
+          :filter="search"
+          :columns="USER_GROUPS_MENUS_COLUMNS"
+          row-key="menuName"
+        >
+          <template v-slot:top-right>
+            <q-input
+              v-model="search"
+              borderless
               dense
-              @click="handleDeleteMenu(props)"
-              round
-              color="primary"
-              size="sm"
-              class="edit-memberbtn"
-              icon="delete"
-            />
-          </q-td>
-        </template>
-      </q-table>
+              debounce="300"
+              placeholder="Search"
+            >
+              <template v-slot:append>
+                <q-icon name="search" />
+              </template>
+            </q-input>
+          </template>
+          <template v-slot:body-cell-isActiveLabel="props">
+            <q-td :props="props">
+              {{ props?.row?.isActive ? "Active" : "Inactive" }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-accesstypes="props">
+            <q-td :props="props">
+              <div class="row">
+                <div
+                  class="col-12 col-sm-6 col-md-3"
+                  v-for="(item, index) in accesstype"
+                  :key="index"
+                >
+                  <q-toggle
+                    :model-value="
+                      props?.row.allowedAccessTypes?.find(
+                        (dt) =>
+                          dt?.menuId == props?.row?.menuId &&
+                          dt?.userAccessTypes?.find(
+                            (dta) => dta?.accessTypesId === item?.accessTypesId
+                          )
+                      )
+                        ? true
+                        : false
+                    "
+                    @update:model-value="(e) => handleTogg(e, item, props)"
+                    :label="item?.accessTypeName"
+                  />
+                </div>
+              </div>
+            </q-td>
+          </template>
+
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <q-btn
+                dense
+                @click="handleDeleteMenu(props)"
+                round
+                color="primary"
+                size="sm"
+                class="edit-memberbtn"
+                icon="delete"
+              />
+            </q-td>
+          </template>
+        </q-table>
+      </div>
+      <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 text-right">
+        <q-btn
+          color="primary"
+          size="small"
+          class="q-ml-xs"
+          label="Save"
+          type="submit"
+        />
+        <!-- @click="handleOpen" -->
+      </div>
     </div>
-    <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12 text-right">
-      <q-btn
-        color="primary"
-        size="small"
-        class="q-ml-xs"
-        label="Save"
-        @click="handleOpen"
-      />
-    </div>
-  </div>
+  </q-form>
   <ConfirmationModal
     :open="open"
     :handleSubmit="confirm"
@@ -182,6 +200,7 @@ export default defineComponent({
       userGroupName: "",
       userGroupActive: false,
       userGroupMenus: [],
+      userGroupId: "",
     });
     const model = ref("");
     const options = ref([]);
@@ -352,6 +371,9 @@ export default defineComponent({
         },
       });
     };
+
+    const onSubmit = () => {};
+
     return {
       //states
       tableLoader,
@@ -366,7 +388,10 @@ export default defineComponent({
       options,
       model,
       accesstype,
+      params,
       //handlers
+      onSubmit,
+
       handleTogg,
       confirm,
       handleAddMenu,

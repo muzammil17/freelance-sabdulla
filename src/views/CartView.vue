@@ -480,6 +480,15 @@ export default defineComponent({
     });
 
     const handleCheckout = () => {
+      let billStartedDate = billingStartDateInput.value.split("/");
+      let billStart = moment()
+        .set({
+          date: Number(billStartedDate[2]),
+          month: Number(billStartedDate[1]) - 1,
+          year: Number(billStartedDate[0]),
+        })
+        .format();
+
       if (!cartData.value?.length) {
         toastMessage("Your Cart is empty", false);
       } else if (!memberInput?.value?.memberId) {
@@ -490,6 +499,10 @@ export default defineComponent({
         toastMessage("Select a Collection type", false);
       } else if (!billingStartDateInput.value) {
         toastMessage("Select a Billing Start Date", false);
+      } else if (!moment(billStart, "YYYY/MM/DD").isValid()) {
+        toastMessage("Billing date is invalid", false);
+      } else if (moment().isAfter(moment(billStart).format(), "day")) {
+        toastMessage("Billing date is invalid", false);
       } else if (
         !paymentInput.value.defaultRealized &&
         !selectBankInput.value
@@ -503,16 +516,7 @@ export default defineComponent({
         let cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
         console.log(cartData.value);
-        let billStartedDate = billingStartDateInput.value.split("/");
-        let billStart = moment()
-          .set({
-            date: Number(billStartedDate[2]),
-            month: Number(billStartedDate[1]) - 1,
-            year: Number(billStartedDate[0]),
-          })
-          .format();
 
-        console.log({ billStart });
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
