@@ -108,6 +108,18 @@
         </q-list>
 
         <!-- ************************** -->
+        <q-item
+          clickable
+          @click="handleRoute('/profile')"
+          v-show="IsAuthenticated"
+        >
+          <q-item-section avatar>
+            <q-icon name="fa fa-user" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Profile</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item clickable @click="handleLogout" v-show="IsAuthenticated">
           <q-item-section avatar>
             <q-icon name="logout" />

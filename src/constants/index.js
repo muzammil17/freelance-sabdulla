@@ -15,13 +15,14 @@ import ManageAllUserGroups from "@/views/usergroups/ManageAllUserGroups.vue";
 import ManageUserGroup from "@/views/manage-usergroup/EditUserGroup.vue";
 import AllMenus from "@/views/manage-menu/AllMenus.vue";
 import CreateEditMenu from "@/views/manage-menu/CreateEditMenu.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
-export const API_URL = "https://api.ribat.com.pk/";
-// export const API_URL = "https://stagingapi.ribat.com.pk/";
+// export const API_URL = "https://api.ribat.com.pk/";
+export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
   quasarUserOptions.plugins.Notify.create({
@@ -43,6 +44,12 @@ export const ROUTE_ROLES = {
 export const LOGIN_URL = {
   url: "v1/Authenticate",
   accesstoken: false,
+  headers: false,
+};
+
+export const PROFILE_URL = {
+  url: "v1/UserAccount/ChangePassword",
+  accesstoken: true,
   headers: false,
 };
 
@@ -450,8 +457,16 @@ export const VIEW_ALL_MENUS_URL = {
   delete: [],
 };
 
+export const PROFILE_VIEW_URL = {
+  title: "Profile",
+  url: "/profile",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: ProfileView,
+};
+
 export const ALL_ROUTES = [
   ADD_USER_GROUP_URL,
+  PROFILE_VIEW_URL,
   ADD_MENU_URL,
   EDIT_MENU_URL,
   EDIT_USER_GROUP_URL,
@@ -913,20 +928,13 @@ export const singleCollectionColumns = [
   },
 
   {
-    name: "phone",
-    label: "Phone",
+    name: "colTypeDescLabel",
+    label: " Col. Type",
     align: "left",
-    field: "phone",
+    field: "colTypeDescLabel",
     sortable: true,
   },
 
-  {
-    name: "billStartDate",
-    label: "Billing Date",
-    align: "left",
-    field: "billStartDate",
-    sortable: true,
-  },
   {
     name: "isCancelled",
     label: "Cancelled (Yes/No)",

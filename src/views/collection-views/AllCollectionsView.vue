@@ -148,7 +148,7 @@
     >
       <div class="row justify-between q-col-gutter-lg">
         <div>
-          <div class="text-h5">Visitor Detail</div>
+          <div class="text-h5">Collection Detail</div>
         </div>
         <div>
           <q-btn

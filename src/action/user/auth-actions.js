@@ -5,6 +5,7 @@ import {
   // GET_USER_GROUP_BY_ID_URL,
   GET_USER_GROUP_URL,
   LOGIN_URL,
+  PROFILE_URL,
   SAVE_USER_GROUP_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
@@ -20,6 +21,33 @@ export const loginRequest = async (context, { payload, responseCallback }) => {
 
     if (result.data.data?.isAuthenticated) {
       context.commit(LOGIN_SUCCESS, result.data?.data);
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const changePasswordRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    let makeQuery = `userId=${payload?.userId}&oldPassword=${payload?.oldPassword}&newPassword=${payload?.newPassword}`;
+    const result = await postCall(
+      PROFILE_URL,
+      {},
+      "",
+      makeQuery,
+      PROFILE_URL.headers ? {} : null
+    );
+
+    if (result.data.data?.isAuthenticated) {
+      // context.commit(LOGIN_SUCCESS, result.data?.data);
       responseCallback(true, result.data);
     } else {
       responseCallback(false, result.data);

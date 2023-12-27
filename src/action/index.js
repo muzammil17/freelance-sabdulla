@@ -4,6 +4,7 @@ import {
   getUserGroupByIdRequest,
   getAllAccessTypeRequest,
   saveUserGroupRequest,
+  changePasswordRequest,
 } from "./user/auth-actions";
 import {
   getUserAllowedMenusRequest,
@@ -39,6 +40,7 @@ import {
 import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
 
 export {
+  changePasswordRequest,
   saveMenuRequest,
   getMenuByIdRequest,
   saveUserGroupRequest,
