@@ -16,6 +16,8 @@ import ManageUserGroup from "@/views/manage-usergroup/EditUserGroup.vue";
 import AllMenus from "@/views/manage-menu/AllMenus.vue";
 import CreateEditMenu from "@/views/manage-menu/CreateEditMenu.vue";
 import ProfileView from "@/views/ProfileView.vue";
+import AllUserView from "@/views/user-views/AllUserView.vue";
+import AddUserView from "@/views/user-views/AddUserView.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
@@ -93,14 +95,33 @@ export const GET_USER_GROUP_URL = {
   accesstoken: true,
   headers: false,
 };
+
 export const GET_USER_GROUP_BY_ID_URL = {
   url: "v1/UserGroup/GetUserGroupById",
   accesstoken: true,
   headers: false,
 };
 
+export const GET_USERS_URL = {
+  url: "v1/UserAccount/GetUsers",
+  accesstoken: true,
+  headers: false,
+};
+
+export const GET_SINGLE_USERS_URL = {
+  url: "v1/UserAccount/GetUserByUserId",
+  accesstoken: true,
+  headers: false,
+};
+
 export const SAVE_USER_GROUP_URL = {
   url: "v1/UserGroup/SaveUserGroup",
+  accesstoken: true,
+  headers: false,
+};
+
+export const SAVE_USER_URL = {
+  url: "v1/UserAccount/SaveUser",
   accesstoken: true,
   headers: false,
 };
@@ -464,7 +485,35 @@ export const PROFILE_VIEW_URL = {
   component: ProfileView,
 };
 
+export const VIEW_ALL_USER_URL = {
+  title: "Manage User",
+  url: "/manage-user",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AllUserView,
+  view: ["/manage-user"],
+  create: [ADD_USER_VIEW_URL.url],
+  update: [EDIT_USER_VIEW_URL.url],
+  print: [],
+  delete: [],
+};
+export const ADD_USER_VIEW_URL = {
+  title: "Add User",
+  url: "/add-user",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AddUserView,
+};
+
+export const EDIT_USER_VIEW_URL = {
+  title: "Edit User",
+  url: "/edit-user/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AddUserView,
+};
+
 export const ALL_ROUTES = [
+  EDIT_USER_VIEW_URL,
+  ADD_USER_VIEW_URL,
+  VIEW_ALL_USER_URL,
   ADD_USER_GROUP_URL,
   PROFILE_VIEW_URL,
   ADD_MENU_URL,
@@ -838,6 +887,60 @@ export const allVisitorColumns = [
   },
 ];
 
+//user columns
+export const allUsersColumns = [
+  {
+    name: "userId",
+    label: "User ID",
+    align: "left",
+    field: "userId",
+    sortable: true,
+  },
+  {
+    name: "userName",
+    label: "User Name",
+    align: "left",
+    field: "userName",
+    sortable: true,
+  },
+  {
+    name: "displayName",
+    label: "Name",
+    align: "left",
+    field: "displayName",
+    sortable: true,
+  },
+  {
+    name: "email",
+    label: "Email",
+    align: "left",
+    field: "email",
+    sortable: true,
+  },
+  {
+    name: "userGroupId",
+    label: "User Group ID",
+    align: "left",
+    field: "userGroupId",
+    sortable: true,
+  },
+  {
+    name: "isActive",
+    label: "Active",
+    align: "left",
+    field: "isActive",
+    sortable: true,
+  },
+
+  {
+    name: "actions",
+    label: "Action",
+    align: "left",
+    field: "actions",
+    sortable: true,
+  },
+];
+
 // reciptt columns
 
 export const allCollectionsByDateColumns = [
@@ -1165,3 +1268,11 @@ export const visitorDetailColumns = [
     sortable: true,
   },
 ];
+
+export const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};

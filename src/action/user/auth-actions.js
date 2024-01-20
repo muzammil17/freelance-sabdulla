@@ -1,12 +1,15 @@
 import {
   GET_ACCESS_TYPE_URL,
   GET_MENU_BY_USER_GROUP_URL,
+  GET_SINGLE_USERS_URL,
+  GET_USERS_URL,
   GET_USER_GROUP_BY_ID_URL,
   // GET_USER_GROUP_BY_ID_URL,
   GET_USER_GROUP_URL,
   LOGIN_URL,
   PROFILE_URL,
   SAVE_USER_GROUP_URL,
+  SAVE_USER_URL,
 } from "@/constants";
 import { getCall, postCall } from "@/services/services";
 import { LOGIN_SUCCESS, SET_USER_GROUPS_MUT } from "../actionTypes";
@@ -168,6 +171,74 @@ export const saveUserGroupRequest = async (
       SAVE_USER_GROUP_URL.headers ? {} : null
     );
     console.log({ result });
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getUsersRequest = async (context, { responseCallback }) => {
+  try {
+    const result = await getCall(
+      GET_USERS_URL,
+      ``,
+      ``,
+      GET_USERS_URL.headers ? {} : null
+    );
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getSingleUserRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  const userId = payload?.id;
+  try {
+    const result = await getCall(
+      GET_SINGLE_USERS_URL,
+      ``,
+      `userId=${userId}`,
+      GET_SINGLE_USERS_URL.headers ? {} : null
+    );
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const saveUserRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      SAVE_USER_URL,
+      payload,
+      ``,
+      "",
+      SAVE_USER_URL.headers ? {} : null
+    );
     if (result.data.success) {
       responseCallback(true, result.data);
     } else {

@@ -88,6 +88,9 @@ export const GET_USER_GROUP_ID_REQUEST = "getUserGroupByIdRequest";
 export const GET_ALL_ACCESSTYPES_REQUEST = "getAllAccessTypeRequest";
 export const saveUserGroupRequest = "saveUserGroupRequest";
 export const changePasswordRequest = "changePasswordRequest";
+export const getUsersRequest = "getUsersRequest";
+export const saveUserRequest = "saveUserRequest";
+export const getSingleUserRequest = "getSingleUserRequest";
 
 //menu actions
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
