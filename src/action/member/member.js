@@ -229,7 +229,7 @@ export const visitorLoginRequest = async (
 
     if (result.data.success) {
       console.log("result", result.data.data);
-      responseCallback(true, result.data);
+      responseCallback(result.data.data ? true : false, result.data);
     } else {
       responseCallback(false, result.data);
     }

@@ -108,6 +108,18 @@
         </q-list>
 
         <!-- ************************** -->
+        <q-item
+          clickable
+          @click="handleRoute('/profile')"
+          v-show="IsAuthenticated"
+        >
+          <q-item-section avatar>
+            <q-icon name="fa fa-user" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Profile</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item clickable @click="handleLogout" v-show="IsAuthenticated">
           <q-item-section avatar>
             <q-icon name="logout" />
@@ -168,7 +180,9 @@ export default {
       if (isLoggedIn.value) {
         $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
           payload: getUserGetter.value,
-          responseCallback: () => {},
+          responseCallback: (res) => {
+            console.log({ res });
+          },
         });
       }
     });
@@ -178,7 +192,7 @@ export default {
 
     watch($router.currentRoute, (currentRoute) => {
       const pageMetadata = {
-        title: `Ribaat ${currentRoute.name ? currentRoute.name : ""}`,
+        title: `Ribat ${currentRoute.name ? currentRoute.name : ""}`,
       };
       pageName.value = currentRoute.name;
       useMeta(pageMetadata);
@@ -188,7 +202,9 @@ export default {
       if (isLoggedIn.value) {
         $store.dispatch(GET_USER_ALLOWED_MENU_ACTION_REQUEST, {
           payload: getUserGetter.value,
-          responseCallback: () => {},
+          responseCallback: (res) => {
+            console.log({ res });
+          },
         });
       }
     });
@@ -222,7 +238,6 @@ export default {
       return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
     });
 
-    console.log("getPrivateMenu", getUserAllowedMenusGetter.value);
     const handleRoute = (url) => {
       $router.push(url);
     };
@@ -250,6 +265,7 @@ export default {
       Cart,
       VIEW_CART_LIST_URL,
       getCartItemsGetter,
+      LOGIN_VIEW_URL,
       // functions
       handleLogout,
       toastMessage,

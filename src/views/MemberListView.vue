@@ -13,7 +13,11 @@
         </div>
         <div class="col-lg-8 col-xl-8 col-md-6 col-sm-11 col-xs-11">
           <span class="add-member-btn-wrapper">
-            <q-btn class="add-memberbtn" @click="handleRoute">
+            <q-btn
+              class="add-memberbtn"
+              @click="handleRoute"
+              v-if="allowed.addMember"
+            >
               Add a member
             </q-btn>
           </span>
@@ -32,6 +36,10 @@
               ? dt?.fullName?.toLowerCase()?.includes(search?.toLowerCase())
                 ? dt
                 : dt?.gender?.toLowerCase()?.includes(search?.toLowerCase())
+                ? dt
+                : dt?.activeRFCard
+                    ?.toLowerCase()
+                    ?.includes(search?.toLowerCase())
                 ? dt
                 : dt?.phoneMobile
                     ?.toLowerCase()
@@ -54,6 +62,17 @@
         :columns="memberColumns"
         row-key="name"
       >
+        <template v-slot:top-right>
+          <q-btn
+            color="primary"
+            icon="sync"
+            dense
+            round
+            flat
+            @click="getMembers"
+          >
+          </q-btn>
+        </template>
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn
@@ -63,6 +82,7 @@
               class="edit-memberbtn"
               @click="editRow(props)"
               icon="edit"
+              v-if="allowed.editMember"
             ></q-btn>
             <q-btn
               dense
@@ -77,28 +97,92 @@
               round
               flat
               class="edit-memberbtn"
-              @click="deleteRow(props)"
-              icon="delete"
+              @click="handleOpenRFID(props.row)"
+              icon="badge"
+              v-if="allowed.editMember"
             ></q-btn>
           </q-td>
         </template>
-
-        <!-- <template v-slot:top-right>
-          <q-input
-            borderless
-            dense
-            debounce="300"
-            v-model="search"
-            placeholder="Search"
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </template> -->
       </q-table>
     </div>
   </div>
+
+  <!-- Assign rfid card popup  -->
+
+  <!-- visitor's detail dialog -->
+  <q-dialog v-model="openDetailMember.bool">
+    <q-card-section
+      style="max-width: 800px; width: 700px; min-height: 200px"
+      class="bg-white visitor-detail-card"
+    >
+      <q-form @submit="onSubmit">
+        <div class="row justify-between q-col-gutter-lg">
+          <div class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10">
+            <div class="text-h6">
+              Assign RFID to
+              {{
+                `${openDetailMember.data?.title} ${openDetailMember.data?.fullName}`
+              }}
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-xl-2 col-md-2 col-sm-2 col-xs-2">
+            <div class="row justify-end">
+              <div>
+                <q-btn
+                  dense
+                  round
+                  flat
+                  color="primary"
+                  icon="ion-close-circle"
+                  @click="handleCloseRFID"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <q-input
+              outlined
+              v-model="openDetailMember.rfid"
+              type="text"
+              class="input-field"
+              label="RFID Number *"
+              :rules="[
+                (val) => (val && val.length > 0) || 'RFID number is required',
+                (val) =>
+                  (val && openDetailMember.data?.activeRFCard !== val) ||
+                  'This RFID number is already assigned',
+              ]"
+            />
+          </div>
+          <div
+            class="col-lg-10 col-xl-10 col-md-10 col-sm-10 col-xs-10"
+            v-if="openDetailMember.data?.activeRFCard"
+          >
+            <div class="text-subtitle1 text-primary">
+              * Existing Card No :
+              <span class="text-weight-bold">
+                {{ openDetailMember.data?.activeRFCard }}
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="row justify-end">
+              <div>
+                <q-btn color="primary" label="Assign RFID" type="submit" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </q-form>
+    </q-card-section>
+  </q-dialog>
+  <ConfirmationModal
+    :open="open"
+    :handleSubmit="handleSubmitConfirmation"
+    :handleClose="handleClose"
+  />
 </template>
 
 <script>
@@ -108,31 +192,53 @@ import {
   GET_MEMBERS_LIST_GETT,
   GET_MEMBERS_REQUEST,
   IS_AUTHENTICATED,
+  ASSIGN_RFID_CARD_REQUEST,
+  GET_USER_ALLOWED_MENUS_GETT,
 } from "@/action/actionTypes";
 import { useRouter } from "vue-router";
 import {
   MEMBER_VIEW_URL,
   EDIT_MEMBER_URL,
   VIEW_MEMBER_DETAIL_URL,
+  // ALL_ROUTES,
 } from "@/constants";
 import { useQuasar } from "quasar";
-import { memberColumns } from "@/constants";
+import { memberColumns, handleAllowedActions } from "@/constants";
 
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal.vue";
+import { toastMessage } from "@/constants";
 export default defineComponent({
   name: "MemberListView",
 
-  components: {},
+  components: { ConfirmationModal },
 
   setup() {
     const $store = useStore();
     const $q = useQuasar();
+    const $router = useRouter();
+    const rfids = ref([]);
+    const open = ref({
+      bool: false,
+      loading: false,
+      title: "Confirmation",
+      text: "This member already has active RF Card assigned. Do want to re-assign new RF Card?",
+    });
+    const openDetailMember = ref({ bool: false, data: null, rfid: "" });
+
+    const currentRoute = $router.currentRoute.value;
+
+    // allowed actions
+    const allowed = ref({
+      addMember: false,
+      editMember: false,
+    });
+
     const initialPagination = {
       sortBy: "desc",
       descending: false,
       rowsPerPage: 10,
       // rowsNumber: xx if getting data from a server
     };
-    const $router = useRouter();
 
     const search = ref(null);
     const membersList = ref([]);
@@ -142,18 +248,32 @@ export default defineComponent({
       return $store.getters[GET_MEMBERS_LIST_GETT];
     });
 
-    onBeforeMount(() => {
+    const getMembers = () => {
       $q.loading.show({
         delay: 400, // ms
       });
-      console.log("onbeforemounted");
-
       $store.dispatch(GET_MEMBERS_REQUEST, {
         payload: null,
         responseCallback: () => {
           $q.loading.hide();
         },
       });
+    };
+
+    onBeforeMount(() => {
+      getMembers();
+
+      let actions = handleAllowedActions(
+        currentRoute,
+        getUserAllowedMenusGetter,
+        "",
+        "addMember",
+        "editMember"
+      );
+
+      if (actions && Object.keys(actions)?.length) {
+        allowed.value = { ...allowed.value, ...actions };
+      }
     });
 
     watch(membersListGetter, (currentVal) => {
@@ -168,7 +288,10 @@ export default defineComponent({
           rowsTemp.push({
             ...item,
             membershipTypeDesc: item?.membershipTypeDesc || "-",
-            fullName: `${item?.firstName} ${item?.lastName}`,
+            fullName: `${item?.title ? item?.title + " " : ""}${
+              item?.firstName
+            } ${item?.lastName}`,
+            activeRFCardNumber: item?.activeRFCard || "-",
           });
         }
         membersRows.value = rowsTemp;
@@ -197,8 +320,63 @@ export default defineComponent({
       );
     };
 
+    const handleCloseRFID = () => {
+      openDetailMember.value = { bool: false, data: null };
+    };
+
+    const handleOpenRFID = (data) => {
+      console.log({ data });
+      openDetailMember.value = {
+        bool: data?.activeRFCard ? false : true,
+        data,
+        rfid: "",
+      };
+      data?.activeRFCard ? handleClose() : null;
+    };
+
+    const handleClose = () => {
+      open.value = { ...open.value, bool: !open.value.bool };
+    };
+
+    const handleSubmitConfirmation = () => {
+      handleClose();
+      openDetailMember.value = {
+        ...openDetailMember.value,
+        bool: true,
+      };
+    };
+
+    const onSubmit = () => {
+      $store.dispatch(ASSIGN_RFID_CARD_REQUEST, {
+        payload: {
+          rfCardNo: openDetailMember.value.rfid,
+          memberId: openDetailMember.value.data.memberId,
+        },
+        responseCallback: (status, res) => {
+          if (res.data) {
+            toastMessage(res.message, true);
+            getMembers();
+          } else {
+            toastMessage(res.message, false);
+          }
+          console.log({ res });
+          openDetailMember.value = {
+            bool: false,
+            data: null,
+            rfid: null,
+          };
+          console.log({ res });
+        },
+      });
+    };
+
+    const getUserAllowedMenusGetter = computed(() => {
+      return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
+    });
+
     return {
       //states
+      rfids,
       search,
       isLoggedIn,
       membersListGetter,
@@ -207,10 +385,19 @@ export default defineComponent({
       memberColumns,
       initialPagination,
       $q,
+      openDetailMember,
+      open,
+      allowed,
       //handlers
+      onSubmit,
+      handleSubmitConfirmation,
+      handleClose,
+      handleOpenRFID,
+      handleCloseRFID,
       handleRoute,
       memberInfo,
       editRow,
+      getMembers,
     };
   },
 });
@@ -239,6 +426,9 @@ export default defineComponent({
     // background-color: #c36 !important;
     // color: #fff !important;
   }
+}
+.visitor-detail-card {
+  border-radius: 15px;
 }
 .search-wrapper {
   margin-bottom: 20px;
