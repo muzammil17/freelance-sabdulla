@@ -200,10 +200,10 @@ import {
   MEMBER_VIEW_URL,
   EDIT_MEMBER_URL,
   VIEW_MEMBER_DETAIL_URL,
-  ALL_ROUTES,
+  // ALL_ROUTES,
 } from "@/constants";
 import { useQuasar } from "quasar";
-import { memberColumns } from "@/constants";
+import { memberColumns, handleAllowedActions } from "@/constants";
 
 import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal.vue";
 import { toastMessage } from "@/constants";
@@ -262,7 +262,18 @@ export default defineComponent({
 
     onBeforeMount(() => {
       getMembers();
-      handleAllowedActions();
+
+      let actions = handleAllowedActions(
+        currentRoute,
+        getUserAllowedMenusGetter,
+        "",
+        "addMember",
+        "editMember"
+      );
+
+      if (actions && Object.keys(actions)?.length) {
+        allowed.value = { ...allowed.value, ...actions };
+      }
     });
 
     watch(membersListGetter, (currentVal) => {
@@ -322,9 +333,6 @@ export default defineComponent({
       };
       data?.activeRFCard ? handleClose() : null;
     };
-    watch(openDetailMember, () => {
-      console.log({ openDetailMember: openDetailMember.value });
-    });
 
     const handleClose = () => {
       open.value = { ...open.value, bool: !open.value.bool };
@@ -365,45 +373,6 @@ export default defineComponent({
     const getUserAllowedMenusGetter = computed(() => {
       return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
     });
-    const handleAllowedActions = () => {
-      const findRoute = ALL_ROUTES?.find(
-        (dt) =>
-          dt?.url !== "/" &&
-          (dt?.view?.includes(currentRoute.matched[0].path) ||
-            dt?.create?.includes(currentRoute?.matched[0].path) ||
-            dt?.update?.includes(currentRoute?.matched[0].path) ||
-            dt?.delete?.includes(currentRoute?.matched[0].path) ||
-            dt?.print?.includes(currentRoute?.matched[0].path))
-      );
-      const menuFind = getUserAllowedMenusGetter.value?.find(
-        (dt) =>
-          dt?.menuUrl !== "/" &&
-          (findRoute?.view?.includes(dt?.menuUrl) ||
-            findRoute?.create?.includes(dt?.menuUrl) ||
-            findRoute?.update?.includes(dt?.menuUrl) ||
-            findRoute?.delete?.includes(dt?.menuUrl) ||
-            findRoute?.print?.includes(dt?.menuUrl))
-      );
-      if (menuFind) {
-        for (const item of menuFind?.accessMenu) {
-          // if (item?.accessTypeId === 1) {
-          //   allowed.value.viewCollection = true;
-          // }
-          if (item?.accessTypeId === 3) {
-            allowed.value.addMember = true;
-          } else if (item?.accessTypeId === 2) {
-            // if (findRoute?.update?.includes(currentRoute?.matched[0].path)) {
-            allowed.value.editMember = true;
-            // }
-          }
-          //  else if (item?.accessTypeId === 4) {
-          //   allowed.value.printCollection = true;
-          // } else if (item?.accessTypeId === 5) {
-          //   allowed.value.deleteCollection = true;
-          // }
-        }
-      }
-    };
 
     return {
       //states

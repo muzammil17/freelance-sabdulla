@@ -91,6 +91,7 @@ export const changePasswordRequest = "changePasswordRequest";
 export const getUsersRequest = "getUsersRequest";
 export const saveUserRequest = "saveUserRequest";
 export const getSingleUserRequest = "getSingleUserRequest";
+export const resetPasswordRequest = "resetPasswordRequest";
 
 //menu actions
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =

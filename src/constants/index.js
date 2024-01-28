@@ -126,6 +126,12 @@ export const SAVE_USER_URL = {
   headers: false,
 };
 
+export const RESET_PASSWORD_URL = {
+  url: "v1/UserAccount/ResetPassword",
+  accesstoken: true,
+  headers: false,
+};
+
 export const GET_ACCESS_TYPE_URL = {
   url: "v1/AccessType/GetAllAccessTypes",
   accesstoken: true,
@@ -484,7 +490,18 @@ export const PROFILE_VIEW_URL = {
   auth: ROUTE_ROLES.PRIVATE,
   component: ProfileView,
 };
-
+export const ADD_USER_VIEW_URL = {
+  title: "Add User",
+  url: "/add-user",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AddUserView,
+};
+export const EDIT_USER_VIEW_URL = {
+  title: "Edit User",
+  url: "/edit-user/:id",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: AddUserView,
+};
 export const VIEW_ALL_USER_URL = {
   title: "Manage User",
   url: "/manage-user",
@@ -495,19 +512,6 @@ export const VIEW_ALL_USER_URL = {
   update: [EDIT_USER_VIEW_URL.url],
   print: [],
   delete: [],
-};
-export const ADD_USER_VIEW_URL = {
-  title: "Add User",
-  url: "/add-user",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: AddUserView,
-};
-
-export const EDIT_USER_VIEW_URL = {
-  title: "Edit User",
-  url: "/edit-user/:id",
-  auth: ROUTE_ROLES.PRIVATE,
-  component: AddUserView,
 };
 
 export const ALL_ROUTES = [
@@ -1275,4 +1279,52 @@ export const validateEmail = (email) => {
     .match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
+};
+
+// handler for button action permissions in views use this function on mount
+
+export const handleAllowedActions = (
+  currentRoute = {}, //required
+  getUserAllowedMenusGetter = {}, //required
+  viewKey = "",
+  createKey = "",
+  updateKey = "",
+  deleteKey = "",
+  printKey = ""
+) => {
+  let obj = {};
+  const findRoute = ALL_ROUTES?.find(
+    (dt) =>
+      dt?.url !== "/" &&
+      (dt?.view?.includes(currentRoute.matched[0].path) ||
+        dt?.create?.includes(currentRoute?.matched[0].path) ||
+        dt?.update?.includes(currentRoute?.matched[0].path) ||
+        dt?.delete?.includes(currentRoute?.matched[0].path) ||
+        dt?.print?.includes(currentRoute?.matched[0].path))
+  );
+  const menuFind = getUserAllowedMenusGetter.value?.find(
+    (dt) =>
+      dt?.menuUrl !== "/" &&
+      (findRoute?.view?.includes(dt?.menuUrl) ||
+        findRoute?.create?.includes(dt?.menuUrl) ||
+        findRoute?.update?.includes(dt?.menuUrl) ||
+        findRoute?.delete?.includes(dt?.menuUrl) ||
+        findRoute?.print?.includes(dt?.menuUrl))
+  );
+  if (menuFind) {
+    for (const item of menuFind?.accessMenu) {
+      if (item?.accessTypeId === 1 && viewKey) {
+        obj[viewKey] = true;
+      } else if (item?.accessTypeId === 4 && printKey) {
+        obj[printKey] = true;
+      } else if (item?.accessTypeId === 3 && createKey) {
+        obj[createKey] = true;
+      } else if (item?.accessTypeId === 2 && updateKey) {
+        obj[updateKey] = true;
+      } else if (item?.accessTypeId === 5 && deleteKey) {
+        obj[deleteKey] = true;
+      }
+    }
+  }
+  return obj;
 };

@@ -48,6 +48,16 @@
               round
               flat
               class="edit-memberbtn"
+              icon="lock"
+              :loading="props.row.userId === open.id ? resetPassloading : false"
+              @click="handleResetPassword(props.row.userId)"
+            />
+            <q-btn
+              v-if="allowed.updateUser"
+              dense
+              round
+              flat
+              class="edit-memberbtn"
               icon="edit"
               @click="handleRouteEdit(props)"
             />
@@ -56,43 +66,53 @@
       </q-table>
     </div>
   </div>
+  <ConfirmationModal
+    :open="open"
+    :handleSubmit="handleSubmitConfirmation"
+    :handleClose="handleClose"
+  />
 </template>
 
 <script>
 import {
   GET_USER_ALLOWED_MENUS_GETT,
   getUsersRequest,
+  resetPasswordRequest,
 } from "@/action/actionTypes";
 import { defineComponent, ref, onBeforeMount, computed } from "vue";
 import { useStore } from "vuex";
+import ConfirmationModal from "@/components/ConfirmationModal/ConfirmationModal.vue";
 import {
   allUsersColumns,
-  visitorDetailColumns,
   pagination,
   ADD_USER_VIEW_URL,
-  ALL_ROUTES,
   EDIT_USER_VIEW_URL,
+  toastMessage,
+  handleAllowedActions,
 } from "@/constants";
 import { useRouter } from "vue-router";
-import { useQuasar } from "quasar";
 
 export default defineComponent({
   name: "AllVisitorsView",
 
-  components: {},
+  components: { ConfirmationModal },
 
   setup() {
     const $store = useStore();
     const $router = useRouter();
     const tableLoader = ref(false);
-    const $q = useQuasar();
     const allUsers = ref([]);
+    const resetPassloading = ref(false);
+    const open = ref({
+      id: "",
+      bool: false,
+      loading: false,
+      text: "",
+      title: "Reset Password",
+    });
 
     const currentRoute = $router.currentRoute.value;
-    const initialFilter = { label: "All Visitors", value: true };
-    let filterBy = ref(initialFilter);
     let search = ref(null);
-    let logoutVisitor = ref(null);
 
     // allowed actions
     const allowed = ref({
@@ -100,70 +120,30 @@ export default defineComponent({
       updateUser: false,
     });
 
-    const initialFormState = {
-      identityReturned: false,
-      rfCardReturned: false,
-      rfNotRetReason: "",
-    };
-
-    let formState = ref(initialFormState);
-
     const getUserAllowedMenusGetter = computed(() => {
       return $store.getters[GET_USER_ALLOWED_MENUS_GETT];
     });
 
     onBeforeMount(() => {
       handleGetAllUsers();
+      let actions = handleAllowedActions(
+        currentRoute,
+        getUserAllowedMenusGetter,
+        "",
+        "addUser",
+        "updateUser"
+      );
+      console.log({ actions });
+      if (actions && Object.keys(actions)?.length) {
+        allowed.value = { ...allowed.value, ...actions };
+      }
     });
 
-    const handleAllowedActions = () => {
-      const findRoute = ALL_ROUTES?.find(
-        (dt) =>
-          dt?.url !== "/" &&
-          (dt?.view?.includes(currentRoute.matched[0].path) ||
-            dt?.create?.includes(currentRoute?.matched[0].path) ||
-            dt?.update?.includes(currentRoute?.matched[0].path) ||
-            dt?.delete?.includes(currentRoute?.matched[0].path) ||
-            dt?.print?.includes(currentRoute?.matched[0].path))
-      );
-      const menuFind = getUserAllowedMenusGetter.value?.find(
-        (dt) =>
-          dt?.menuUrl !== "/" &&
-          (findRoute?.view?.includes(dt?.menuUrl) ||
-            findRoute?.create?.includes(dt?.menuUrl) ||
-            findRoute?.update?.includes(dt?.menuUrl) ||
-            findRoute?.delete?.includes(dt?.menuUrl) ||
-            findRoute?.print?.includes(dt?.menuUrl))
-      );
-      if (menuFind) {
-        for (const item of menuFind?.accessMenu) {
-          console.log({ item });
-          if (item?.accessTypeId === 3) {
-            allowed.value.addUser = true;
-          } else if (item?.accessTypeId === 2) {
-            allowed.value.updateUser = true;
-          }
-        }
-      }
+    const handleClose = () => {
+      open.value.bool = false;
+      open.value.loading = false;
     };
 
-    const onSubmit = () => {};
-
-    const handleRowClick = () => {
-      // handleCloseVisitorDetail(prop?.row?.visitorLogId);
-    };
-
-    const toastMessage = (message, bool) => {
-      $q.notify({
-        color: bool ? "positive" : "negative",
-        textColor: "#fff",
-        message,
-        icon: "announcement",
-
-        position: "top",
-        timeout: 2000,
-      });
-    };
     function handleGetAllUsers() {
       tableLoader.value = true;
 
@@ -193,32 +173,53 @@ export default defineComponent({
       $router.push(EDIT_USER_VIEW_URL.url.replace(":id", prop?.row?.userId));
     };
 
+    const handleResetPassword = (id) => {
+      resetPassloading.value = true;
+      open.value.id = id;
+      $store.dispatch(resetPasswordRequest, {
+        payload: `userId=${id}`,
+        responseCallback: (status, res) => {
+          resetPassloading.value = false;
+
+          if (status) {
+            open.value.bool = true;
+            open.value.text = res.message;
+          } else {
+            res?.message && toastMessage(res?.message, false);
+          }
+        },
+      });
+    };
+
+    const handleSubmitConfirmation = () => {
+      handleClose();
+    };
+
     return {
       //states
       toastMessage,
       handleAllowedActions,
       allUsers,
       tableLoader,
-      logoutVisitor,
-      formState,
       pagination,
       search,
+      resetPassloading,
       handleRouteEdit,
+      handleSubmitConfirmation,
       filterOptions: [
         { label: "Active Visitors", value: false },
         { label: "All Visitors", value: true },
       ],
-      filterBy,
       allUsersColumns,
-      visitorDetailColumns,
       $router,
       getUserAllowedMenusGetter,
       ADD_USER_VIEW_URL,
       allowed,
+      open,
       //handlers
+      handleResetPassword,
       handleRoute,
-      onSubmit,
-      handleRowClick,
+      handleClose,
       EDIT_USER_VIEW_URL,
     };
   },

@@ -8,6 +8,7 @@ import {
   GET_USER_GROUP_URL,
   LOGIN_URL,
   PROFILE_URL,
+  RESET_PASSWORD_URL,
   SAVE_USER_GROUP_URL,
   SAVE_USER_URL,
 } from "@/constants";
@@ -238,6 +239,30 @@ export const saveUserRequest = async (
       ``,
       "",
       SAVE_USER_URL.headers ? {} : null
+    );
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const resetPasswordRequest = async (
+  context,
+  { payload, responseCallback }
+) => {
+  try {
+    const result = await postCall(
+      RESET_PASSWORD_URL,
+      "",
+      ``,
+      payload,
+      RESET_PASSWORD_URL.headers ? {} : null
     );
     if (result.data.success) {
       responseCallback(true, result.data);

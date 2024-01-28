@@ -3,7 +3,7 @@
     <div
       class="col-lg-12 col-xl-12 col-md-12 col-sm-10 col-xs-10 q-gutter-y-lg"
     >
-      <q-form @submit="handleSubmitVisitor">
+      <q-form @submit="handleSubmit">
         <div class="row justify-start q-col-gutter-md">
           <div class="col-lg-4 col-xl-4 col-md-6 col-sm-12 col-xs-12">
             <q-input
@@ -117,8 +117,6 @@ export default defineComponent({
     const options = ref([]);
     let btnLoader = ref(false);
 
-    console.log({ currentRoute: currentRoute.value });
-
     const initialFormState = {
       userId: "",
       userName: "",
@@ -138,7 +136,7 @@ export default defineComponent({
       }
     });
 
-    const handleSubmitVisitor = () => {
+    const handleSubmit = () => {
       btnLoader.value = true;
       const payload = {
         ...formState.value,
@@ -154,7 +152,6 @@ export default defineComponent({
           } else {
             toastMessage(res?.message || "Something went wrong", false);
           }
-          // $router.back();
         },
       });
     };
@@ -204,13 +201,6 @@ export default defineComponent({
           if (status) {
             formState.value = { ...res.data };
             getAllUserGroups();
-            // let newoptions = res?.data?.map((item) => {
-            //   return {
-            //     label: item?.userGroupName,
-            //     value: item?.userGroupId,
-            //   };
-            // });
-            // options.value = newoptions;
           }
         },
       });
@@ -226,7 +216,7 @@ export default defineComponent({
       //handlers
       validateEmail,
       toastMessage,
-      handleSubmitVisitor,
+      handleSubmit,
       checkPhoneMobile,
       checkCNIC,
     };

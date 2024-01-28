@@ -7,6 +7,7 @@ import {
   changePasswordRequest,
   saveUserRequest,
   getSingleUserRequest,
+  resetPasswordRequest,
   getUsersRequest,
 } from "./user/auth-actions";
 import {
@@ -43,6 +44,7 @@ import {
 import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
 
 export {
+  resetPasswordRequest,
   getSingleUserRequest,
   saveUserRequest,
   getUsersRequest,

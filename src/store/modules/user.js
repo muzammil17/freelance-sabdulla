@@ -17,6 +17,7 @@ import {
   changePasswordRequest,
   saveUserRequest,
   getUsersRequest,
+  resetPasswordRequest,
   getSingleUserRequest,
 } from "@/action";
 
@@ -71,6 +72,7 @@ export const userModule = {
   },
 
   actions: {
+    resetPasswordRequest,
     saveUserRequest,
     getUsersRequest,
     saveUserGroupRequest,
