@@ -1,3 +1,5 @@
+############################ ribaat-project #######################
+
 *******INSTRUCTIONS FOR RUNNING THE PROJECT*********
 
 1. CHECK YOUR NODE VERSION IT SHOULD BE NODE v16.19.1
@@ -6,6 +8,10 @@
 4: SWICH BRANCH TO DEV CMND: git checkout dev
 5. INSTALL DEPENDENCIES USING CMND: yarn
 6. TO RUN THE PROJECT USE THIS CMND: yarn serve
+
+7. FOR BUILD THE PROJECT USE: yarn build
+
+NOTE: YOU CAN CHANGE THE BASE URL FOR PRODUCTION AND STAGING IN CONSTANT FILE IN src/constants/index.js
 
 THATS IT!
 
