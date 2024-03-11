@@ -47,6 +47,7 @@
                 </template>
               </q-table>
             </div>
+
             <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
               <q-select
                 outlined
@@ -82,6 +83,47 @@
                   </q-item>
                 </template>
               </q-select>
+            </div>
+            <div class="col-lg-4 col-xl-4 col-md-4 col-sm-4 col-xs-12">
+              <q-input
+                outlined
+                v-model="billingStartDateInput"
+                mask="date"
+                label="Billing Start Date *"
+                hint="* ex: 2000/12/30"
+                lazy-rules
+                class="input-field"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      cover
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model="billingStartDateInput"
+                        :options="
+                          (val) =>
+                            moment(val).isSameOrAfter(
+                              moment().format(`YYYY/MM/DD`),
+                              `day`
+                            )
+                        "
+                      >
+                        <div class="row items-center justify-end">
+                          <q-btn
+                            v-close-popup
+                            label="Close"
+                            color="primary"
+                            flat
+                          />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
 
             <div
@@ -335,7 +377,7 @@ export default defineComponent({
     let collectionInput = ref("");
     let chequeInput = ref("");
     let chequeDateInput = ref("");
-
+    let billingStartDateInput = ref("");
     let selectBankInput = ref("");
 
     let selected = ref([]);
@@ -438,6 +480,15 @@ export default defineComponent({
     });
 
     const handleCheckout = () => {
+      let billStartedDate = billingStartDateInput.value.split("/");
+      let billStart = moment()
+        .set({
+          date: Number(billStartedDate[2]),
+          month: Number(billStartedDate[1]) - 1,
+          year: Number(billStartedDate[0]),
+        })
+        .format();
+
       if (!cartData.value?.length) {
         toastMessage("Your Cart is empty", false);
       } else if (!memberInput?.value?.memberId) {
@@ -446,6 +497,12 @@ export default defineComponent({
         toastMessage("Select a Payment method", false);
       } else if (!collectionInput.value) {
         toastMessage("Select a Collection type", false);
+      } else if (!billingStartDateInput.value) {
+        toastMessage("Select a Billing Start Date", false);
+      } else if (!moment(billStart, "YYYY/MM/DD").isValid()) {
+        toastMessage("Billing date is invalid", false);
+      } else if (moment().isAfter(moment(billStart).format(), "day")) {
+        toastMessage("Billing date is invalid", false);
       } else if (
         !paymentInput.value.defaultRealized &&
         !selectBankInput.value
@@ -456,26 +513,27 @@ export default defineComponent({
       } else {
         saveReciptLoader.value = true;
 
-        const cartItemsList = [];
+        let cartItemsList = [];
         const { memberId, lastName, firstName } = memberInput.value;
         console.log(cartData.value);
+
         for (const item of cartData.value) {
           const { standardPrice, progId } = item;
           cartItemsList.push({
             memberId: memberId,
             programId: progId,
             standardPrice,
+            billStart,
           });
         }
 
         const { payModeId, payModeDesc } = paymentInput.value;
         const { value, label } = collectionInput.value;
-        console.log({ chequeDateInput });
         const payload = {
           payModeId,
           payModeDesc,
           memberId,
-          receiptDate: moment().toISOString(),
+          receiptDate: moment().format(),
           colTypeId: value,
           colTypeDesc: label,
           ...(!paymentInput.value.defaultRealized
@@ -483,29 +541,35 @@ export default defineComponent({
                 chqBankId: selectBankInput.value?.value,
                 cheBankName: selectBankInput.value?.label,
                 chequeNo: String(chequeInput?.value),
-                chequeDate: moment(chequeDateInput.value).toISOString(),
+                chequeDate: moment(chequeDateInput.value).format(),
               }
             : {}),
           memberFullName: `${firstName} ${lastName}`,
           amount: Number(getCartItemsTotalPriceGetter.value),
         };
-        console.log({ payload });
-        $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
-          payload: cartItemsList,
-          responseCallback: (status, res) => {
-            if (status) {
-              toastMessage(res.message, true);
 
-              $store.dispatch(SAVE_RECEIPT_REQUEST, {
-                payload,
+        $store.dispatch(SAVE_RECEIPT_REQUEST, {
+          payload,
+          responseCallback: (statusreceipt, responseReceipt) => {
+            console.log({ responseReceipt });
+            const receiptId = responseReceipt?.data;
+            if (statusreceipt && receiptId) {
+              cartItemsList = cartItemsList.map((item) => {
+                return {
+                  ...item,
+                  receiptId,
+                };
+              });
+              $store.dispatch(REGISTER_TO_PROGRAM_REQUEST, {
+                payload: cartItemsList,
                 responseCallback: (status, res) => {
-                  saveReciptLoader.value = false;
-                  console.log(status, { res });
-                  $store.commit(SET_EMPTY_CART_MUT, null);
-
                   if (status) {
-                    console.log({ res });
                     toastMessage(res.message, true);
+                    saveReciptLoader.value = false;
+                    console.log(status, { res });
+                    $store.commit(SET_EMPTY_CART_MUT, null);
+
+                    console.log({ res });
                     $router.push("/");
                   } else {
                     toastMessage("Something went wrong!", false);
@@ -513,6 +577,9 @@ export default defineComponent({
                   }
                 },
               });
+            } else {
+              toastMessage("Something went wrong!", false);
+              $router.push("/");
             }
           },
         });
@@ -603,6 +670,7 @@ export default defineComponent({
 
     return {
       //states
+      moment,
       chequeDateInput,
       getBillCyclesOpionGetter,
       IS_PAYMENT_METHOD_CHEQUE,
@@ -629,6 +697,7 @@ export default defineComponent({
       collectionInput,
       selectBankInput,
       chequeInput,
+      billingStartDateInput,
       //handlers
       handleCheckout,
       toastMessage,

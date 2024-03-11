@@ -4,6 +4,7 @@ import {
   GET_BILLING_CYCLES_GETT,
   GET_CART_ITEMS_GETT,
   GET_CART_ITEMS_TOTAL_PRICE_GETT,
+  GET_COLLECTIONS_BY_DATE_GETT,
   GET_COLLECTION_TYPE_GETT,
   GET_PAYMODES_GETT,
   GET_PROGRAMS_GETT,
@@ -14,6 +15,7 @@ import {
   SET_BILLING_CYCLES_MUT,
   SET_CART_BANKS_MUT,
   SET_CART_UPDATED_ITEMS_MUT,
+  SET_COLLECTIONS_BY_DATE_MUT,
   SET_EMPTY_CART_MUT,
   SET_PAYMENT_MODES_MUT,
   SET_PROGRAMS_MUT,
@@ -29,8 +31,11 @@ import {
   saveProgramRequest,
   getBillCyclesRequest,
   getAllProgramsRequest,
+  getReceiptsByDateRequest,
+  cancelReceiptRequest,
 } from "@/action";
 import { list_to_tree } from "@/constants";
+import moment from "moment";
 
 export const programModule = {
   state: () => ({
@@ -47,6 +52,7 @@ export const programModule = {
     ],
     billingCyclesOptions: [],
     banksForCart: [],
+    receipts: [],
   }),
   mutations: {
     [SET_ALL_PROGRAMS_MUT]: (state, payload) => {
@@ -164,9 +170,38 @@ export const programModule = {
       }
       state.banksForCart = clonePayload;
     },
+    [SET_COLLECTIONS_BY_DATE_MUT]: (state, payload) => {
+      state.receipts = payload;
+    },
   },
 
   getters: {
+    [GET_COLLECTIONS_BY_DATE_GETT]: (state) => {
+      let clone = [];
+
+      if (state?.receipts?.length) {
+        state?.receipts.forEach((item) => {
+          clone.push({
+            ...item,
+            billStartDate: item?.receiptDate
+              ? moment(item?.billStartDate).format("DD/MM/YYYY")
+              : "-",
+            receiptDate: item?.receiptDate
+              ? moment(item?.receiptDate).format("DD/MM/YYYY")
+              : "-",
+            cancelledWhen: item?.cancelledWhen
+              ? moment(item?.cancelledWhen).format("DD/MM/YYYY")
+              : "-",
+            cancelleddBy: item?.cancelleddBy ? item?.cancelleddBy : "-",
+            isCancelled: item?.isCancelled ? "Yes" : "No",
+            phone: item?.phone || "-",
+            colTypeDescLabel: item?.colTypeDesc || "-",
+          });
+        });
+      }
+
+      return clone;
+    },
     [GET_BILLING_CYCLES_GETT]: (state) => {
       return state.billingCyclesOptions;
     },
@@ -235,5 +270,7 @@ export const programModule = {
     getPayModesRequest,
     getBanksRequest,
     saveProgramRequest,
+    getReceiptsByDateRequest,
+    cancelReceiptRequest,
   },
 };

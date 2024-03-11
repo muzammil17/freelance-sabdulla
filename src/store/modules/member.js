@@ -110,7 +110,8 @@ export const memberModule = {
             entryDateTime: item?.entryDateTime
               ? moment(item?.entryDateTime).format("lll")
               : "-",
-            exitDateTime: item?.exitDateTime
+
+            exitDateTimeLabel: item?.exitDateTime
               ? moment(item?.exitDateTime).format("lll")
               : "-",
             deptToVisit: item?.deptToVisit || "-",

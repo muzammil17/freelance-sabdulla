@@ -6,12 +6,14 @@ import { menuModule } from "./modules/menu";
 import { memberModule } from "./modules/member";
 import { areaModule } from "./modules/areas";
 import { programModule } from "./modules/program";
+import { rfidModule } from "./modules/rfid-card";
 
 export const vuexLocal = new VuexPersistence({
-  key: "STORAGE_KEY",
+  key: "RIBAT_ADMIN",
   storage: window.localStorage,
   reducer: (state) => ({
     user: state.user,
+    menu: state.menu,
   }),
 });
 
@@ -22,6 +24,7 @@ export const store = createStore({
     member: memberModule,
     area: areaModule,
     program: programModule,
+    rfid: rfidModule,
   },
 
   plugins: [vuexLocal.plugin],

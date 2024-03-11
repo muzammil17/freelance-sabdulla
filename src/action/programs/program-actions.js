@@ -1,10 +1,12 @@
 import {
+  CANCEL_RECEIPT_URL,
   CREATE_PROGRAM_URL,
   GET_ALL_PROGRAMS_URL,
   GET_BANKS_URL,
   GET_BILL_CYCLES_URL,
   GET_PAYMODE__URL,
   GET_PROGRAMS_URL,
+  GET_RECEIPTS_BY_DATE_URL,
   REGISTER_PROGRAM_URL,
   SAVE_RECEIPT_URL,
 } from "@/constants";
@@ -13,10 +15,12 @@ import {
   SET_ALL_PROGRAMS_MUT,
   SET_BILLING_CYCLES_MUT,
   SET_CART_BANKS_MUT,
+  SET_COLLECTIONS_BY_DATE_MUT,
   SET_PAYMENT_MODES_MUT,
   SET_PROGRAMS_MUT,
   SET_PROGRAMS_TREE_MUT,
 } from "../actionTypes";
+import moment from "moment";
 
 export const getProgramsRequest = async (
   context,
@@ -234,6 +238,69 @@ export const registerProgramRequest = async (
       "",
       "",
       REGISTER_PROGRAM_URL.headers ? {} : null
+    );
+
+    if (result.data.success) {
+      responseCallback(true, result.data);
+    } else {
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const getReceiptsByDateRequest = async (
+  context,
+  {
+    payload: {
+      validOnly = false,
+      fromDate = moment().subtract(2, "months").toISOString(),
+      toDate = moment().toISOString(),
+    },
+    responseCallback,
+  }
+) => {
+  try {
+    let query = `validOnly=${validOnly}&fromDate=${fromDate}&toDate=${toDate}`;
+    console.log({ query });
+
+    const result = await getCall(
+      GET_RECEIPTS_BY_DATE_URL,
+      "",
+      query,
+      GET_RECEIPTS_BY_DATE_URL.headers ? {} : null
+    );
+    if (result.data.success) {
+      context.commit(SET_COLLECTIONS_BY_DATE_MUT, result.data?.data);
+
+      responseCallback(true, result.data);
+    } else {
+      context.commit(SET_COLLECTIONS_BY_DATE_MUT, []);
+
+      responseCallback(false, result.data);
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
+export const cancelReceiptRequest = async (
+  context,
+  { payload: { receiptId = null }, responseCallback }
+) => {
+  const query = receiptId ? `receiptId=${receiptId}` : "";
+  try {
+    const result = await postCall(
+      CANCEL_RECEIPT_URL,
+      {},
+      "",
+      query,
+      CANCEL_RECEIPT_URL.headers ? {} : null
     );
 
     if (result.data.success) {

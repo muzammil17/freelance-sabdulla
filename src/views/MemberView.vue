@@ -78,17 +78,26 @@
             <q-input
               outlined
               v-model="formState.dob"
-              mask="date"
               label="Date of birth"
               hint="ex: 2000/12/30"
               lazy-rules
               class="input-field"
               :rules="[
-                (val) =>
-                  !val ||
-                  moment(val).isBefore(moment().format(`YYYY/MM/DD`), `day`) ||
-                  'DOB is invalid',
+                (val) => {
+                  if (!val) {
+                    return 'DOB is Required';
+                  } else if (!moment(val, 'YYYY/MM/DD').isValid()) {
+                    return 'DOB is invalid';
+                  } else if (
+                    !moment(val).isBefore(moment().format(`YYYY/MM/DD`), 'day')
+                  ) {
+                    return 'DOB is invalid';
+                  } else {
+                    return true;
+                  }
+                },
               ]"
+              mask="####/##/##"
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -106,6 +115,7 @@
                             `day`
                           )
                       "
+                      mask="YYYY/MM/DD"
                     >
                       <div class="row items-center justify-end">
                         <q-btn
@@ -324,6 +334,7 @@ import {
   checkPhoneLandline,
   checkCNIC,
   EDIT_MEMBER_URL,
+  VIEW_MEMBERS_LIST_URL,
 } from "@/constants/index";
 import moment from "moment";
 import { useQuasar } from "quasar";
@@ -548,13 +559,23 @@ export default defineComponent({
 
     const onSubmit = () => {
       loader.value = true;
+      let dobDate = formState.value.dob.split("/");
+      let dob = moment()
+        .set({
+          date: Number(dobDate[2]),
+          month: Number(dobDate[1]) - 1,
+          year: Number(dobDate[0]),
+        })
+        .format();
+
       let payloadObj = {
         ...formState.value,
         title: formState.value.title.value,
         ...(EDIT_MEMBER_URL.title === pageName
           ? { memberId: Number(memberId) }
           : {}),
-        dob: formState.value.dob.replaceAll("/", "-"),
+        // dob: formState.value.dob.replaceAll("/", "-"),
+        dob,
         membershipTypeId: formState.value.membershipTypeId.value,
         membershipTypeDesc: formState.value.membershipTypeId.label,
         cityId: formState.value.cityId?.value,
@@ -584,15 +605,19 @@ export default defineComponent({
             if (EDIT_MEMBER_URL.title !== pageName) {
               // formState.value = { ...initialState.value };
             }
+
+            // `Form ${
+            //     EDIT_MEMBER_URL.title === pageName ? "updated" : "submitted"
+            //   } successfully`,
             toastMessage(
-              `Form ${
-                EDIT_MEMBER_URL.title === pageName ? "updated" : "submitted"
-              } successfully`,
+              "Member information has been saved",
+
               status
             );
           } else {
             toastMessage("Something went wrong", status);
           }
+          $router.replace(VIEW_MEMBERS_LIST_URL.url);
         },
       });
     };

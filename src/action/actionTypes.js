@@ -1,12 +1,14 @@
 ///////////////////////////////////vuex getters///////////////////////////////////////
 export const GET_USER_TOKEN = "getUserToken";
 export const IS_AUTHENTICATED = "IS_AUTHENTICATED";
+export const GET_USER_GROUPS_GETT = "GET_USER_GROUPS_GETT";
 
 export const GET_PUBLIC_MENU = "GET_PUBLIC_MENU";
 export const GET_PRIVATE_MENU = "GET_PRIVATE_MENU";
 export const GET_JWT_TOKEN = "GET_JWT_TOKEN";
 export const GET_USER_DETAIL_GETTER = "GET_USER_DETAIL_GETTER";
 export const GET_USER_ALLOWED_MENUS_GETT = "GET_USER_ALLOWED_MENUS_GETT";
+export const GET_MENU_BY_USER_GROUP_GETT = "GET_MENU_BY_USER_GROUP_GETT";
 
 //member getters
 export const GET_MEMBER_TYPES = "GET_MEMBER_TYPES";
@@ -36,11 +38,18 @@ export const GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION =
   "GET_PROGRAMS_OPTIONS_FOR_PROGRAMS_CREATION";
 export const GET_BILLING_CYCLES_GETT = "GET_BILLING_CYCLES_GETT";
 export const GET_PROGRAMS_TREE_GETT = "GET_PROGRAMS_TREE_GETT";
+export const GET_COLLECTIONS_BY_DATE_GETT = "GET_COLLECTIONS_BY_DATE_GETT";
+
+//RFID CARD GETTERS
+export const GET_RFID_CARDS_GETT = "GET_RFID_CARDS_GETT";
 
 ////////////////////////////////////vuex MUTATIONS/////////////////////////////////////
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
+export const SET_USER_GROUPS_MUT = "SET_USER_GROUPS_MUT";
+
 export const SET_USER_PRIVATE_MENU = "SET_USER_PRIVATE_MENU";
+export const GET_MENU_BY_USER_GROUP_MUT = "GET_MENU_BY_USER_GROUP_MUT";
 
 //member MUTATIONS
 export const SET_MEMBER_TYPES = "SET_MEMBER_TYPES";
@@ -65,12 +74,35 @@ export const SET_CART_BANKS_MUT = "SET_CART_BANKS_MUT";
 export const SET_BILLING_CYCLES_MUT = "SET_BILLING_CYCLES_MUT";
 export const SET_PROGRAMS_MUT = "SET_PROGRAMS_MUT";
 export const SET_PROGRAMS_TREE_MUT = "SET_PROGRAMS_TREE_MUT";
+export const SET_COLLECTIONS_BY_DATE_MUT = "SET_COLLECTIONS_BY_DATE_MUT";
+
+//RFID MUTATIONS
+export const SET_RFID_CARD_MUT = "SET_RFID_CARD_MUT";
 
 ////////////////////////////////////vuex actions/////////////////////////////////////////////
 
+//auth actions
 export const LOGIN_ACTION_REQUEST = "loginRequest";
+export const GET_USER_GROUP_REQUEST = "getUserGroupsRequest";
+export const GET_USER_GROUP_ID_REQUEST = "getUserGroupByIdRequest";
+export const GET_ALL_ACCESSTYPES_REQUEST = "getAllAccessTypeRequest";
+export const saveUserGroupRequest = "saveUserGroupRequest";
+export const changePasswordRequest = "changePasswordRequest";
+export const getUsersRequest = "getUsersRequest";
+export const saveUserRequest = "saveUserRequest";
+export const getSingleUserRequest = "getSingleUserRequest";
+export const resetPasswordRequest = "resetPasswordRequest";
+
+//menu actions
 export const GET_USER_ALLOWED_MENU_ACTION_REQUEST =
   "getUserAllowedMenusRequest";
+
+export const GET_MENU_BY_USER_GROUP_REQUEST = "getAllMenusByUserGroupRequest";
+export const GET_ALL_MENU_REQUEST = "getAllMenusRequest";
+export const getMenuByIdRequest = "getMenuByIdRequest";
+export const saveMenuRequest = "saveMenuRequest";
+
+//member actions
 export const GET_MEMBER_TYPES_REQUEST = "getMemberTypesRequest";
 export const SAVE_MEMBER_REQUEST = "saveMemberRequest";
 export const GET_MEMBERS_REQUEST = "getMembersRequest";
@@ -92,6 +124,8 @@ export const GET_PROGRAMS_REQUEST = "getProgramsRequest";
 export const REGISTER_TO_PROGRAM_REQUEST = "registerProgramRequest";
 export const SAVE_PROGRAM_REQUEST = "saveProgramRequest";
 export const GET_ALL_PROGRAMS_REQUEST = "getAllProgramsRequest";
+export const GET_RECEIPTS_BY_DATE_REQUEST = "getReceiptsByDateRequest";
+export const CANCEL_RECEIPT_REQUEST = "cancelReceiptRequest";
 
 //banks actions
 export const GET_BANKS_FOR_RECEIPT_REQUEST = "getBanksRequest";
@@ -102,3 +136,6 @@ export const SAVE_RECEIPT_REQUEST = "saveReceiptRequest";
 
 //billing actions
 export const GET_BILLING_CYCLES_REQUEST = "getBillCyclesRequest";
+//RFID ACTIONS
+export const GET_RFID_CARDS_REQUEST = "getRfidCardsRequest";
+export const ASSIGN_RFID_CARD_REQUEST = "assignRfidCardRequest";
