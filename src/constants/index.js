@@ -18,12 +18,16 @@ import CreateEditMenu from "@/views/manage-menu/CreateEditMenu.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import AllUserView from "@/views/user-views/AllUserView.vue";
 import AddUserView from "@/views/user-views/AddUserView.vue";
+import SaveDonationView from "@/views/donation-views/saveDonation.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
 import quasarUserOptions from "@/quasar-user-options";
 
+// PRODUCTION URL
 // export const API_URL = "https://api.ribat.com.pk/";
+
+// STAGING URL
 export const API_URL = "https://stagingapi.ribat.com.pk/";
 
 export const toastMessage = (message, bool) => {
@@ -386,6 +390,13 @@ export const VIEW_CART_LIST_URL = {
   component: CartView,
 };
 
+export const VIEW_DONATION_LIST_URL = {
+  title: "Donations",
+  url: "/donations",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: SaveDonationView,
+};
+
 // export const VIEW_UPDATE_PROGRAM_URL = {
 //   title: "Update Program",
 //   url: "/update-program/:progId",
@@ -540,9 +551,14 @@ export const ALL_ROUTES = [
   LOGIN_VIEW_URL,
   ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
+  VIEW_DONATION_LIST_URL,
   // PAGE_404_VIEW_URL,
 ];
-export const DefaultPrivate = [Home_URL.url, VIEW_CART_LIST_URL.url];
+export const DefaultPrivate = [
+  Home_URL.url,
+  VIEW_CART_LIST_URL.url,
+  VIEW_DONATION_LIST_URL.url,
+];
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 export const pagination = {
   sortBy: "desc",

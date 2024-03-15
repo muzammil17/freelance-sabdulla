@@ -37,6 +37,11 @@ let routes = ALL_ROUTES.map((dt) => {
       beforeEnter: (to, from, next) => {
         if (!IsAuthenticated.value) next(LOGIN_VIEW_URL.url);
         else {
+          // let a = 1;
+          // if (a == 1) {
+          //   next();
+          //   return;
+          // }
           const menus = store.state.menu?.userAllowedMenu;
           console.log({ menus });
           const findRoute = ALL_ROUTES?.find(
