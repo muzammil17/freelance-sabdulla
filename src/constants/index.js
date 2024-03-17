@@ -19,6 +19,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import AllUserView from "@/views/user-views/AllUserView.vue";
 import AddUserView from "@/views/user-views/AddUserView.vue";
 import SaveDonationView from "@/views/donation-views/saveDonation.vue";
+import GetDonationsView from "@/views/donation-views/getDonations.vue";
 
 import CartView from "@/views/CartView.vue";
 import PageNotFound from "@/views/Page404View.vue";
@@ -268,6 +269,13 @@ export const GET_RECEIPTS_BY_DATE_URL = {
   headers: false,
 };
 
+// DONATIONS REQUEST
+export const SAVE_DONATION_URL = {
+  url: "v1/Receipt/SaveDonation",
+  accesstoken: true,
+  headers: false,
+};
+
 //VISITORS REQUESTS
 
 export const VISITOR_LOGIN_URL = {
@@ -390,9 +398,18 @@ export const VIEW_CART_LIST_URL = {
   component: CartView,
 };
 
-export const VIEW_DONATION_LIST_URL = {
+export const ALL_DONATION_URL = {
   title: "Donations",
   url: "/donations",
+  auth: ROUTE_ROLES.PRIVATE,
+  component: GetDonationsView,
+  create: ["/create-donation"],
+  view: ["/donations"],
+};
+
+export const CREATE_DONATION_URL = {
+  title: "Create Donation",
+  url: "/create-donation",
   auth: ROUTE_ROLES.PRIVATE,
   component: SaveDonationView,
 };
@@ -551,14 +568,11 @@ export const ALL_ROUTES = [
   LOGIN_VIEW_URL,
   ALL_COLLECTION_URL,
   ALL_VISITOR_URL,
-  VIEW_DONATION_LIST_URL,
+  ALL_DONATION_URL,
+  CREATE_DONATION_URL,
   // PAGE_404_VIEW_URL,
 ];
-export const DefaultPrivate = [
-  Home_URL.url,
-  VIEW_CART_LIST_URL.url,
-  VIEW_DONATION_LIST_URL.url,
-];
+export const DefaultPrivate = [Home_URL.url, VIEW_CART_LIST_URL.url];
 //////////////////////////////////UI CONSTANTS//////////////////////////////////////////////
 export const pagination = {
   sortBy: "desc",

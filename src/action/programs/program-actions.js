@@ -259,12 +259,13 @@ export const getReceiptsByDateRequest = async (
       validOnly = false,
       fromDate = moment().subtract(2, "months").toISOString(),
       toDate = moment().toISOString(),
+      colTypeId = 1,
     },
     responseCallback,
   }
 ) => {
   try {
-    let query = `validOnly=${validOnly}&fromDate=${fromDate}&toDate=${toDate}`;
+    let query = `validOnly=${validOnly}&fromDate=${fromDate}&toDate=${toDate}&colTypeId=${colTypeId}`;
     console.log({ query });
 
     const result = await getCall(

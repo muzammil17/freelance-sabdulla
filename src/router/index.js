@@ -53,6 +53,7 @@ let routes = ALL_ROUTES.map((dt) => {
                 dt?.delete?.includes(to?.matched[0].path) ||
                 dt?.print?.includes(to?.matched[0].path))
           );
+
           const menuFind = menus?.find(
             (dt) =>
               dt?.menuUrl !== "/" &&

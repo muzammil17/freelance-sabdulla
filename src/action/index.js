@@ -42,6 +42,7 @@ import {
   cancelReceiptRequest,
 } from "./programs/program-actions";
 import { getRfidCardsRequest, assignRfidCardRequest } from "./rfid/rfid";
+import { saveDonationRequest } from "./donation/donation";
 
 export {
   resetPasswordRequest,
@@ -82,4 +83,5 @@ export {
   saveMemberRequest,
   getAllMenusRequest,
   getUserGroupByIdRequest,
+  saveDonationRequest,
 };

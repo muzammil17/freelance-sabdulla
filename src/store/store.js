@@ -7,6 +7,7 @@ import { memberModule } from "./modules/member";
 import { areaModule } from "./modules/areas";
 import { programModule } from "./modules/program";
 import { rfidModule } from "./modules/rfid-card";
+import { donationModule } from "./modules/donation";
 
 export const vuexLocal = new VuexPersistence({
   key: "RIBAT_ADMIN",
@@ -25,6 +26,7 @@ export const store = createStore({
     area: areaModule,
     program: programModule,
     rfid: rfidModule,
+    donation: donationModule,
   },
 
   plugins: [vuexLocal.plugin],

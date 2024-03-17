@@ -121,6 +121,7 @@
                 behavior="menu"
                 :options="getCollectionTypeGetter"
                 hint="* Select Collection Type"
+                disable
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -209,7 +210,7 @@
       <span class="checkout-wrapper">
         <q-btn
           color="primary"
-          label="Checkout"
+          label="Save"
           :loading="saveReciptLoader"
           @click="handleCheckout"
         />
@@ -292,13 +293,13 @@ import {
   GET_MEMBERS_REQUEST,
   GET_MEMBERS_LIST_AS_SELECT_OPTIONS_GETT,
   GET_PAY_MODES_REQUEST,
-  SAVE_RECEIPT_REQUEST,
   GET_PAYMODES_GETT,
   GET_COLLECTION_TYPE_GETT,
   GET_BANKS_FOR_RECEIPT_REQUEST,
   GET_BANKS_FOR_RECEIPTS_GETT,
   GET_BILLING_CYCLES_REQUEST,
   GET_BILLING_CYCLES_GETT,
+  SAVE_DONATION_REQUEST,
 } from "@/action/actionTypes";
 import { defineComponent, onBeforeMount, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
@@ -374,6 +375,16 @@ export default defineComponent({
       }
     });
 
+    watch(memberInput, (currentVal) => {
+      console.log("memberInput", currentVal);
+
+      if (currentVal) {
+        donorName.value = currentVal?.fullName;
+        donorPhoneNumber.value = currentVal?.phoneMobile;
+        donorCnicNumber.value = currentVal?.cnic;
+      }
+    });
+
     ////////////////modal state and handlers
 
     const initialPagination = {
@@ -413,6 +424,19 @@ export default defineComponent({
 
     const getCollectionTypeGetter = computed(() => {
       return $store.getters[GET_COLLECTION_TYPE_GETT];
+    });
+
+    console.log({ getCollectionTypeGetter: getCollectionTypeGetter?.value });
+
+    const finaDonation = getCollectionTypeGetter?.value?.find(
+      (item) => item.label?.toLowerCase() === "donation"
+    );
+    collectionInput.value = finaDonation;
+
+    console.log({ collectionInput: collectionInput?.value });
+
+    watch(collectionInput, (currentVal) => {
+      console.log("collectionInput ==>>", { currentVal });
     });
 
     const getBillCyclesOpionGetter = computed(() => {
@@ -479,11 +503,13 @@ export default defineComponent({
         payModeId,
         payModeDesc,
         refMemberId: memberId,
-        donorName,
-        phoneMobile: donorPhoneNumber,
+        donorName: donorName?.value,
+        phoneMobile: donorPhoneNumber?.value,
+        DonorContact: donorPhoneNumber?.value,
         donationDate: moment().format(),
         colTypeId: value,
         colTypeDesc: label,
+        cnic: donorCnicNumber?.value,
         ...(!paymentInput.value.defaultRealized
           ? {
               chqBankId: selectBankInput.value?.value,
@@ -494,13 +520,15 @@ export default defineComponent({
           : {}),
       };
 
-      $store.dispatch(SAVE_RECEIPT_REQUEST, {
+      $store.dispatch(SAVE_DONATION_REQUEST, {
         payload,
         responseCallback: (statusreceipt, responseReceipt) => {
           console.log({ responseReceipt });
           const receiptId = responseReceipt?.data;
           if (statusreceipt && receiptId) {
             console.log("helo");
+            toastMessage(responseReceipt?.message, true);
+            $router.push(`/donations}`);
           } else {
             toastMessage("Something went wrong!", false);
             $router.push("/");
